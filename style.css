@@ -1,0 +1,280 @@
+:root {
+    --bg-start: #052a4b;
+    --bg-end: #083b61;
+    --card-bg: rgba(255, 255, 255, 0.04);
+    --accent: #3fc0ff;
+    --primary: #0b6fb0;
+    --white: #ffffff;
+    --glass: rgba(255, 255, 255, 0.06);
+    --success: #2ecc71;
+    --danger: #ff5c5c;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+    color: var(--white)
+}
+
+.centered {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px
+}
+
+.intro-card {
+    display: flex;
+    gap: 24px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.02));
+    padding: 30px;
+    border-radius: 18px;
+    width: 1100px;
+    max-width: 96%;
+    align-items: center
+}
+
+.left-art {
+    flex: 0 0 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+#mascote {
+    max-width: 380px;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45))
+}
+
+.right-ui {
+    flex: 1;
+    padding: 10px
+}
+
+.title {
+    margin: 0;
+    font-size: 40px;
+    line-height: 0.9;
+    letter-spacing: 2px
+}
+
+.title .big {
+    font-size: 56px
+}
+
+.subtitle {
+    margin: 6px 0 20px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600
+}
+
+.input-label input {
+    width: 100%;
+    padding: 18px;
+    border-radius: 12px;
+    border: none;
+    font-size: 18px;
+    outline: none;
+    background: var(--glass);
+    color: var(--white)
+}
+
+.primary-btn {
+    display: inline-block;
+    padding: 18px 28px;
+    margin-top: 18px;
+    border-radius: 12px;
+    border: none;
+    background: var(--accent);
+    color: #00303a;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer
+}
+
+.primary-btn:hover {
+    filter: brightness(.95)
+}
+
+.credits {
+    margin-top: 12px;
+    opacity: .8;
+    font-size: 13px
+}
+
+/* --- Fase 1 styles --- */
+.game-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: transparent
+}
+
+.left-info {
+    display: flex;
+    gap: 12px;
+    align-items: center
+}
+
+#mascote-small {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    object-fit: contain
+}
+
+.player-area {
+    font-size: 14px
+}
+
+.game-area {
+    display: flex;
+    gap: 18px;
+    padding: 18px
+}
+
+.mail-column,
+.drop-column,
+.help-column {
+    background: var(--card-bg);
+    padding: 14px;
+    border-radius: 12px;
+    min-height: 420px
+}
+
+.mail-column {
+    flex: 1
+}
+
+.drop-column {
+    flex: 0 0 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch
+}
+
+.help-column {
+    flex: 0 0 260px
+}
+
+.mail-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+    padding: 6px;
+    height: 380px
+}
+
+.mail-item {
+    padding: 12px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    cursor: grab;
+    display: flex;
+    flex-direction: column;
+    gap: 6px
+}
+
+.mail-item.dragging {
+    opacity: .6;
+    transform: scale(.98)
+}
+
+.mail-title {
+    font-weight: 700
+}
+
+.mail-sender {
+    opacity: .8;
+    font-size: 13px
+}
+
+.drop-zones {
+    display: flex;
+    flex-direction: column;
+    gap: 12px
+}
+
+.drop-zone {
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px dashed rgba(255, 255, 255, 0.06);
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700
+}
+
+.drop-zone.over {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(63, 192, 255, 0.6)
+}
+
+.inbox {
+    border-color: rgba(46, 245, 162, 0.12)
+}
+
+.trash {
+    border-color: rgba(255, 92, 92, 0.12)
+}
+
+.secondary-btn {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--white);
+    cursor: pointer;
+    margin-top: 8px
+}
+
+.feedback-box {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    min-height: 92px
+}
+
+/* modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5)
+}
+
+.modal.hidden {
+    display: none
+}
+
+.modal-inner {
+    background: linear-gradient(180deg, #062a47, #0b3f5b);
+    padding: 20px;
+    border-radius: 12px;
+    min-width: 320px;
+    color: var(--white);
+    text-align: center
+}
+
+/* small helpers */
+.hint {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85)
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fase 1 — Triagem de E-mails</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="game-topbar">
+        <div class="left-info">
+            <img id="mascote-small" src="assets/mascote.png" alt="Mascote" />
+            <div class="player-area">
+                <div id="playerDisplay">Jogador: —</div>
+                <div id="scoreDisplay">Pontos: 0</div>
+            </div>
+        </div>
+
+        <div class="right-info">
+            <div id="timer">Tempo: 60</div>
+        </div>
+    </div>
+
+    <main class="game-area">
+        <section class="mail-column">
+            <h3>E-mails</h3>
+            <div id="mailList" class="mail-list" aria-label="Lista de emails"></div>
+        </section>
+
+        <section class="drop-column">
+            <h3>Caixas</h3>
+            <div class="drop-zones">
+                <div id="inbox" class="drop-zone inbox">📥 Caixa (Legítimos)</div>
+                <div id="trash" class="drop-zone trash">🗑️ Lixeira (Phishing)</div>
+            </div>
+        </section>
+
+        <aside class="help-column">
+            <div class="lupa">
+                <button id="inspectBtn" class="secondary-btn">🔍 Lupa Segura</button>
+                <p class="hint">Use a Lupa para ver mais detalhes do e-mail (pontos extras)</p>
+            </div>
+
+            <div id="feedbackBox" class="feedback-box">Feedback aparecerá aqui</div>
+
+        </aside>
+    </main>
+
+    <div id="endModal" class="modal hidden">
+        <div class="modal-inner">
+            <h2>Missão concluída!</h2>
+            <p id="endText">Você fez X pontos</p>
+            <button id="retryBtn" class="primary-btn">Jogar novamente</button>
+            <button id="backBtn" class="secondary-btn">Voltar ao Início</button>
+        </div>
+    </div>
+
+    <script src="scripts/fase1.js"></script>
+</body>
+
+</html>
