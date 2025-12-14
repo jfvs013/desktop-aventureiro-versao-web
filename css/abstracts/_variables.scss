@@ -1,0 +1,32 @@
+// ------------------------------------------
+// ARQUIVO: css/abstracts/_variables.scss
+// ------------------------------------------
+
+// == 1. Paleta de Cores "Cruas" (Raw Colors) ==
+// Estas são as cores usadas para compor os gradientes e elementos
+$navy-darkest: #0a2342; // Usado no gradiente da arte
+$navy-dark:    #1f3a5f; // Usado no fundo e gradiente
+$navy-light:   #204167; // Usado no input
+
+$blue-vibrant: #40a0ff; // Botão
+$blue-hover:   #007bff; // Botão Hover
+
+$white:        #ffffff;
+$white-muted:  rgba(255, 255, 255, 0.6);
+
+// == 2. Variáveis Semânticas (Tema) ==
+// Aqui mapeamos as cores acima para suas funções no layout
+$color-bg-body:    $navy-dark;
+$color-bg-card:    $navy-darkest;
+$color-bg-input:   $navy-light;
+
+$color-text-main:  $white;
+$color-text-muted: $white-muted;
+
+$color-primary:      $blue-vibrant;
+$color-primary-dark: $blue-hover;
+
+// == 3. Configurações Globais ==
+$font-stack: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+$card-max-width: 900px;
+$mobile-breakpoint: 768px;
