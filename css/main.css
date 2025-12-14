@@ -1,0 +1,136 @@
+body {
+  background-color: #1f3a5f;
+  color: #ffffff;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.centered {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.intro-card {
+  display: flex;
+  background-color: #0a2342;
+  border-radius: 12px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 900px;
+  overflow: hidden;
+}
+@media (max-width: 768px) {
+  .intro-card {
+    flex-direction: column;
+  }
+}
+
+.left-art {
+  flex: 1;
+  background: linear-gradient(135deg, #1f3a5f, #0a2342);
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+.left-art #mascote {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.right-ui {
+  flex: 1.2;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+@media (max-width: 768px) {
+  .right-ui {
+    padding: 30px;
+    text-align: center;
+  }
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+.title .big {
+  font-size: 2.8rem;
+  display: block;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+
+.input-label {
+  width: 100%;
+  margin-bottom: 20px;
+  display: block;
+}
+.input-label input {
+  width: 100%;
+  padding: 18px;
+  background-color: #204167;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 1.1rem;
+  outline: none;
+  transition: 0.3s;
+}
+.input-label input::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+.input-label input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+.input-label input:focus {
+  box-shadow: 0 0 0 2px #40a0ff;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 18px;
+  background-color: #40a0ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.primary-btn:hover {
+  background-color: #007bff;
+}
+
+.credits {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 0.7;
+}/*# sourceMappingURL=main.css.map */
