@@ -1,10 +1,14 @@
-// css/sass/main.scss
+// 1. Configurações (Abstracts)
+@use 'abstracts/main' as abstracts;
 
-// 1. Ferramentas (variáveis, mixins)
-@use './abstracts/variables' as *;
-@use './abstracts/mixins' as *;
+// 2. Base
+@use 'base/main' as base;
 
+// 3. Componentes
+@use 'componentes/main' as componentes;
 
-// 2. Layout (estrutura de páginas)
-@use 'layout/index';
-
+// 4. Layout
+@use 'layout/body';
+@use 'layout/desktop';
+@use 'layout/mascote';
+@use 'layout/fase2';

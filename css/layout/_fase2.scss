@@ -1,0 +1,108 @@
+@use '../abstracts/main' as abs;
+
+.fase2-body {
+    background-color: abs.$color-bg-body; // Usa a cor azul do seu tema
+    overflow: hidden; // Impede barra de rolagem quando encher de popups
+    position: relative;
+    height: 100vh;
+}
+
+.desktop-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 40px;
+    align-content: flex-start;
+}
+
+// Estilo dos Ícones
+.icon-file {
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 1; // Fica atrás dos popups
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+    }
+
+    .icon-img {
+        width: 50px;
+        height: 50px;
+        background-color: #ccc; // Cor provisória (substituir por imagem depois)
+        border-radius: 8px;
+        margin-bottom: 8px;
+        
+        // Cores para diferenciar
+        &.doc { background-color: #40a0ff; }
+        &.photo { background-color: #ffca28; }
+        &.exe { background-color: #ff4040; border: 2px dashed yellow; } // O vírus chama atenção
+    }
+
+    .icon-label {
+        color: abs.$color-text-main;
+        font-size: 0.9rem;
+        text-align: center;
+        text-shadow: 1px 1px 2px black;
+    }
+}
+
+// O Estilo do POP-UP (O Caos)
+.popup-window {
+    position: absolute;
+    width: 250px;
+    background-color: #fff;
+    border: 2px solid red;
+    box-shadow: 10px 10px 0 rgba(0,0,0,0.5);
+    z-index: 100; // Fica na frente de tudo
+    animation: popup-appear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    .popup-header {
+        background-color: red;
+        color: white;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 0.8rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .popup-body {
+        padding: 20px;
+        color: black;
+        text-align: center;
+        font-weight: bold;
+    }
+}
+
+// Animação de surgimento
+@keyframes popup-appear {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+// Modal de Vitória
+.hidden { display: none !important; }
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 999;
+    @include abs.flex-center;
+}
+
+.modal-content {
+    background: abs.$color-bg-card;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid abs.$color-primary;
+    
+    h2 { color: abs.$color-primary; margin-bottom: 10px; }
+}
