@@ -309,7 +309,7 @@ export const Phase2 = {
             boss.style.cursor = 'pointer';
             boss.classList.remove('scary-shake'); // Para de tremer para facilitar o clique
             
-            $('#boss-face').innerText = '👹'; // Demônio/Monstro
+            $('#boss-face').innerText = '🤬'; // Demônio/Monstro
             
             MascotUI.say("AGORA!!! ACABE COM ELE!!!");
         }
