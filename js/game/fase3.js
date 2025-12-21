@@ -1,129 +1,219 @@
+/**
+ * js/game/fase3.js
+ * Lógica da Fase 3: O Laboratório de Poções Mágicas
+ * Foco: Drag & Drop, Feedback Visual e Educação sobre Senhas.
+ */
 import { $, $$, on } from '../core/helpers.js';
 import { GameState } from '../core/state.js';
 import { MascotUI } from '../ui/mascote.js';
-import { PopupUI } from '../../fase3/js/ui/popup.js';
+import { PopupUI } from '../ui/popup.js';
 
-const ARCADE_SETTINGS = {
-    weakPasswords: ['12345', 'senha123', 'admin', 'qwerty'],
-    strongChars: ['@', '#', '$', '!', '&', 'K', '9'],
-    spawnRate: 1200,
-    itemSpeed: 4
-};
+// 1. Definição dos Ingredientes (O "Banco de Dados" da Fase)
+const INGREDIENTS = [
+    // Ingredientes Fortes (Aumentam a segurança)
+    { id: 's1', emoji: '💎', label: '@#$', type: 'strong', msg: "Incrível! Símbolos tornam a poção indestrutível!" },
+    { id: 's2', emoji: '🧬', label: 'AbC', type: 'strong', msg: "Misturar letras grandes e pequenas é pura magia!" },
+    { id: 's3', emoji: '⚡', label: '789', type: 'strong', msg: "Números dão um choque de energia na segurança!" },
+    { id: 's4', emoji: '🧪', label: '&!?', type: 'strong', msg: "Mais símbolos! O hacker não vai perceber nada!" },
+    
+    // Ingredientes Fracos (Diminuem a segurança)
+    { id: 'w1', emoji: '🦴', label: '123', type: 'weak', msg: "Eca! Sequências como '123' são ingredientes estragados." },
+    { id: 'w2', emoji: '👟', label: 'nome', type: 'weak', msg: "Usar o próprio nome? Isso é muito fácil de descobrir!" },
+    { id: 'w3', emoji: '🎂', label: '2015', type: 'weak', msg: "Datas de nascimento? O vilão vai adivinhar num segundo!" }
+];
 
-let gameActive = false;
-let arcadeInterval = null;
-let itemsInField = [];
-let strengthLevel = 50;
+let potionStrength = 15; // Começa com um pouco de base
+let isPhaseActive = false;
 
 export const Phase3 = {
+    /**
+     * Inicialização da Fase
+     */
     init() {
+        console.log("Laboratório de Alquimia Digital: Iniciado.");
         GameState.setPhase(3);
+        
+        isPhaseActive = true;
+        potionStrength = 15;
+
+        // Transição de ecrãs no HTML
         $('#virtual-desktop').classList.add('hidden');
-        $('#phase3-arcade').classList.remove('hidden');
+        $('#phase3-lab').classList.remove('hidden');
 
-        strengthLevel = 50;
-        gameActive = true;
-        itemsInField = [];
-        
-        this.updateHUD();
-        this.setupControls();
-        
-        MascotUI.say("FASE FINAL! Bloqueie as senhas fracas e pegue os símbolos brilhantes com o ESCUDO!");
+        this.renderShelf();
+        this.bindEvents();
+        this.updateUI();
 
-        arcadeInterval = setInterval(() => {
-            if (gameActive) this.spawnItem();
-        }, ARCADE_SETTINGS.spawnRate);
-
-        this.gameLoop();
+        MascotUI.celebrate();
+        MascotUI.say("Bem-vindo ao meu laboratório! Arraste os ingredientes BRILHANTES para criar a poção secreta.");
     },
 
-    setupControls() {
-        const shield = $('#player-shield');
-        const gameArea = $('#arcade-game-area');
-        on(document, 'mousemove', (e) => {
-            if (!gameActive) return;
-            const rect = gameArea.getBoundingClientRect();
-            let x = e.clientX - rect.left;
-            x = Math.max(40, Math.min(x, rect.width - 40));
-            shield.style.left = x + 'px';
+    /**
+     * Renderiza os frascos na prateleira de forma aleatória
+     */
+    renderShelf() {
+        const shelf = $('#ingredients-pool');
+        if (!shelf) return;
+        
+        shelf.innerHTML = '';
+        
+        // Baralhar para cada jogo ser diferente
+        const shuffled = [...INGREDIENTS].sort(() => Math.random() - 0.5);
+
+        shuffled.forEach(item => {
+            const flask = document.createElement('div');
+            flask.className = 'flask';
+            flask.setAttribute('draggable', 'true');
+            flask.dataset.id = item.id;
+            
+            flask.innerHTML = `
+                <div class="flask-icon">${item.emoji}</div>
+                <small>${item.label}</small>
+            `;
+            
+            shelf.appendChild(flask);
         });
     },
 
-    spawnItem() {
-        const area = $('#arcade-game-area');
-        const isStrong = Math.random() > 0.6;
-        const item = document.createElement('div');
-        item.className = `falling-item ${isStrong ? 'good-char' : 'bad-pass'}`;
-        item.innerText = isStrong ? ARCADE_SETTINGS.strongChars[Math.floor(Math.random() * ARCADE_SETTINGS.strongChars.length)] : ARCADE_SETTINGS.weakPasswords[Math.floor(Math.random() * ARCADE_SETTINGS.weakPasswords.length)];
-        item.style.left = (Math.random() * 80 + 10) + '%';
-        item.style.top = '-50px';
-        area.appendChild(item);
-        itemsInField.push({ el: item, y: -50, type: isStrong ? 'good' : 'bad' });
+    /**
+     * Configuração do Drag and Drop (API Nativa)
+     */
+    bindEvents() {
+        const cauldron = $('#magic-cauldron');
+        const flasks = $$('.flask');
+
+        flasks.forEach(flask => {
+            on(flask, 'dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', flask.dataset.id);
+                flask.classList.add('dragging');
+            });
+
+            on(flask, 'dragend', () => {
+                flask.classList.remove('dragging');
+            });
+        });
+
+        // Eventos do Caldeirão (Zona de Drop)
+        on(cauldron, 'dragover', (e) => {
+            e.preventDefault(); // Necessário para permitir o drop
+            cauldron.classList.add('drag-over');
+        });
+
+        on(cauldron, 'dragleave', () => {
+            cauldron.classList.remove('drag-over');
+        });
+
+        on(cauldron, 'drop', (e) => {
+            e.preventDefault();
+            cauldron.classList.remove('drag-over');
+            
+            const ingredientId = e.dataTransfer.getData('text/plain');
+            this.handleDrop(ingredientId);
+        });
     },
 
-    gameLoop() {
-        if (!gameActive) return;
-        const shield = $('#player-shield');
-        const shieldRect = shield.getBoundingClientRect();
+    /**
+     * Lógica disparada quando um item cai no caldeirão
+     */
+    handleDrop(id) {
+        const item = INGREDIENTS.find(i => i.id === id);
+        if (!item) return;
 
-        for (let i = itemsInField.length - 1; i >= 0; i--) {
-            const item = itemsInField[i];
-            item.y += ARCADE_SETTINGS.itemSpeed;
-            item.el.style.top = item.y + 'px';
-            const itemRect = item.el.getBoundingClientRect();
-
-            if (this.checkCollision(shieldRect, itemRect)) {
-                this.handleCollision(item, i);
-            } else if (item.y > window.innerHeight - 150) {
-                this.handleMiss(item, i);
-            }
-        }
-        requestAnimationFrame(() => this.gameLoop());
-    },
-
-    checkCollision(rect1, rect2) {
-        return !(rect1.right < rect2.left || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.top > rect2.bottom);
-    },
-
-    handleCollision(item, index) {
-        if (item.type === 'bad') {
-            MascotUI.celebrate();
-            GameState.addScore(10);
-            strengthLevel = Math.min(100, strengthLevel + 5);
+        if (item.type === 'strong') {
+            this.onSuccess(item);
         } else {
-            strengthLevel = Math.max(0, strengthLevel - 10);
-            MascotUI.scared();
+            this.onError(item);
         }
-        this.removeItem(item, index);
-        this.updateHUD();
+
+        this.updateUI();
+        this.checkVictory();
     },
 
-    handleMiss(item, index) {
-        if (item.type === 'bad') {
-            strengthLevel = Math.max(0, strengthLevel - 15);
-            MascotUI.scared();
+    onSuccess(item) {
+        potionStrength += 20;
+        GameState.addScore(25);
+        
+        this.playEffect('stars');
+        MascotUI.celebrate();
+        
+        this.setFeedback(item.msg, '#00ffcc');
+    },
+
+    onError(item) {
+        potionStrength = Math.max(0, potionStrength - 15);
+        GameState.addError(); // Registamos o erro no estado global
+        
+        this.playEffect('smoke');
+        MascotUI.scared();
+        
+        this.setFeedback(item.msg, '#ff4040');
+    },
+
+    /**
+     * Efeitos Visuais (Partículas de Emojis)
+     */
+    playEffect(type) {
+        const container = $('#cauldron-fx');
+        const particle = document.createElement('div');
+        particle.className = 'effect-particle';
+        particle.innerText = type === 'stars' ? '✨' : '💨';
+        
+        container.appendChild(particle);
+
+        // Animação via código para ser dinâmica
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 50 + Math.random() * 50;
+        
+        particle.animate([
+            { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+            { transform: `translate(${Math.cos(angle)*dist}px, ${-dist}px) scale(2)`, opacity: 0 }
+        ], { duration: 1000, easing: 'ease-out' }).onfinish = () => particle.remove();
+    },
+
+    setFeedback(text, color) {
+        const log = $('#alchemy-feedback');
+        log.innerText = text;
+        log.style.color = color;
+        log.style.fontWeight = 'bold';
+    },
+
+    updateUI() {
+        const bar = $('#potion-strength-bar');
+        const status = $('#potion-status-text');
+        
+        const displayWidth = Math.min(100, potionStrength);
+        bar.style.width = displayWidth + '%';
+
+        // Atualiza o texto semântico
+        if (displayWidth < 40) status.innerText = "POÇÃO VULNERÁVEL";
+        else if (displayWidth < 80) status.innerText = "POÇÃO EM PREPARO";
+        else status.innerText = "POÇÃO MESTRE ATIVADA!";
+    },
+
+    checkVictory() {
+        if (potionStrength >= 100 && isPhaseActive) {
+            isPhaseActive = false; // Evita disparar múltiplos popups
+            
+            setTimeout(() => {
+                PopupUI.show(
+                    "MESTRE DA SEGURANÇA!",
+                    "Incrível! Criaste uma poção de invisibilidade contra hackers. O teu computador está agora totalmente seguro!",
+                    "VER CERTIFICADO",
+                    () => {
+                        this.showFinalScore();
+                    }
+                );
+            }, 800);
         }
-        this.removeItem(item, index);
-        this.updateHUD();
     },
 
-    removeItem(item, index) {
-        item.el.remove();
-        itemsInField.splice(index, 1);
-    },
-
-    updateHUD() {
-        const bar = $('#password-strength-bar');
-        const text = $('#strength-text');
-        bar.style.width = strengthLevel + '%';
-        text.textContent = strengthLevel < 40 ? "FRACA" : strengthLevel < 80 ? "MÉDIA" : "FORTE";
-        if (strengthLevel <= 0) this.endGame(false);
-        if (strengthLevel >= 100) this.endGame(true);
-    },
-
-    endGame(win) {
-        gameActive = false;
-        clearInterval(arcadeInterval);
-        PopupUI.show(win ? "SENHA MESTRE!" : "SISTEMA INVADIDO!", win ? "Sua senha é indestrutível!" : "As senhas fracas quebraram sua defesa.", "Reiniciar", () => location.reload());
+    showFinalScore() {
+        const finalScore = GameState.getScore();
+        PopupUI.show(
+            "MISSÃO CUMPRIDA!",
+            `Pontuação Total: ${finalScore} pontos.\nObrigado por ajudares o Cãozinho Azul!`,
+            "JOGAR NOVAMENTE",
+            () => location.reload()
+        );
     }
 };

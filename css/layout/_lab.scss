@@ -1,0 +1,189 @@
+
+@use '../abstracts/main' as *;
+// ------------------------------------------
+// ARQUIVO: css/sass/layout/_lab.scss
+// FASE 3: O Laboratório de Poções (Estilos)
+// ------------------------------------------
+
+// ------------------------------------------
+// ARQUIVO: css/sass/layout/_lab.scss
+// FASE 3: Laboratório de Poções (Paleta Navy/Blue)
+// ------------------------------------------
+
+.lab-mode {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    // Uso das suas variáveis navy para profundidade
+    background: radial-gradient(circle at center, $navy-dark, $navy-darkest);
+    display: flex;
+    flex-direction: column;
+    z-index: 300;
+    overflow: hidden;
+
+    &.hidden { display: none; }
+}
+
+// --- HUD: BARRA DE PROGRESSO ---
+.lab-hud {
+    padding: 20px;
+    background: rgba($navy-darkest, 0.9);
+    border-bottom: 3px solid $blue-vibrant;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+
+    .potion-metrics {
+        max-width: 500px;
+        margin: 0 auto;
+        text-align: center;
+
+        .hud-label {
+            font-weight: bold;
+            color: $blue-vibrant;
+            text-shadow: 0 0 10px rgba($blue-vibrant, 0.4);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .potion-bar-container {
+            height: 22px;
+            background: $navy-light;
+            border: 2px solid $white-muted;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .potion-fill {
+            height: 100%;
+            // Transição suave para a criança ver a barra crescer
+            background: linear-gradient(90deg, $blue-vibrant, #00ffcc);
+            box-shadow: 0 0 15px #00ffcc;
+            transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    }
+}
+
+// --- ÁREA DE ALQUIMIA ---
+.lab-main-area {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 30px;
+
+    // Prateleira
+    .shelf {
+        width: 220px;
+        background: rgba($navy-light, 0.3);
+        border: 2px solid $blue-vibrant;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 10px 10px 20px rgba(0,0,0,0.4);
+
+        .shelf-title {
+            color: $white-muted;
+            font-size: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid $white-muted;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+        }
+
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+    }
+}
+
+// Estilo dos Frascos (Itens de Drag)
+.flask {
+    font-size: 2.8rem;
+    cursor: grab;
+    transition: all 0.2s ease;
+    text-align: center;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+
+    &:hover {
+        transform: scale(1.2) rotate(10deg);
+        filter: drop-shadow(0 0 12px $blue-vibrant);
+    }
+
+    &:active { cursor: grabbing; }
+
+    small {
+        display: block;
+        color: $white;
+        font-weight: bold;
+        background: rgba($navy-darkest, 0.6);
+        border-radius: 4px;
+    }
+}
+
+// Caldeirão (Drop Zone)
+.cauldron-center {
+    .cauldron-wrapper {
+        position: relative;
+        padding: 50px;
+        border: 3px dashed transparent;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+
+        &.drag-over {
+            border-color: $blue-vibrant;
+            background: rgba($blue-vibrant, 0.15);
+            transform: scale(1.1);
+        }
+    }
+
+    .emoji-cauldron {
+        font-size: 10rem;
+        display: block;
+        filter: drop-shadow(0 0 25px rgba(0,0,0,0.6));
+    }
+
+    .drop-zone-label {
+        margin-top: 15px;
+        color: $blue-vibrant;
+        font-weight: bold;
+        text-align: center;
+        animation: pulseText 2s infinite;
+    }
+}
+
+// Container de Partículas (✨ e 💨)
+#cauldron-fx {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 10;
+}
+
+// --- RODAPÉ DE FEEDBACK ---
+.alchemy-log {
+    background: $navy-darkest;
+    border-top: 2px solid $blue-hover;
+    padding: 15px;
+    text-align: center;
+    min-height: 60px;
+
+    #alchemy-feedback {
+        color: $white;
+        font-size: 1.2rem;
+        text-shadow: 1px 1px 2px #000;
+    }
+}
+.hidden {
+    display: none !important;
+}
+
+// --- ANIMAÇÕES ---
+@keyframes pulseText {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}

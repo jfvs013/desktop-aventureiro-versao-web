@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fase 03</title>
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+    <section id="phase3-lab" class="game-phase lab-mode hidden" aria-hidden="true">
+    
+    <div class="lab-hud">
+        <div class="potion-metrics">
+            <span class="hud-label">🧪 POTÊNCIA DA POÇÃO:</span>
+            <div class="potion-bar-container">
+                <div id="potion-strength-bar" class="potion-fill" style="width: 15%;"></div>
+            </div>
+            <span id="potion-status-text" class="status-msg">POÇÃO FRACA</span>
+        </div>
+    </div>
+
+    <div class="lab-main-area">
+        
+        <aside class="shelf">
+            <h3 class="shelf-title">INGREDIENTES</h3>
+            <div id="ingredients-pool" class="ingredients-grid">
+                </div>
+        </aside>
+
+        <div class="cauldron-center">
+            <div id="magic-cauldron" class="cauldron-wrapper">
+                <div class="cauldron-graphics">
+                    <span class="emoji-cauldron">⚗️</span>
+                    <div id="cauldron-fx" class="cauldron-bubbles"></div>
+                </div>
+                <div class="drop-zone-label">ARRASTE OS INGREDIENTES AQUI!</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="alchemy-log">
+        <p id="alchemy-feedback">O Cãozinho Azul está esperando seus ingredientes mágicos...</p>
+    </div>
+
+</section>
+    <script type="module" src="../js/init.js"></script>
+</body>
+</html>
