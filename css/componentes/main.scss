@@ -1,7 +1,3 @@
-// css/sass/abstracts/_main.scss
-
-// Encaminha todas as variáveis e mixins dos outros arquivos
-// para que eles possam ser importados com um único @use em outro lugar
 @forward '_buttons';
 @forward '_cards';
 @forward '_popups';
