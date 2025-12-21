@@ -18,6 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = playerName.value.trim() || 'Gerente';
         localStorage.setItem('da_player', name);
         // navegar para fase1
-        window.location.href = 'fase1.html';
+        window.location.href = 'fase1/fase1.html';
     }
 });
