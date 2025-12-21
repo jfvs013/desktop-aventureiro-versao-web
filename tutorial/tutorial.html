@@ -455,7 +455,7 @@
         <div class="tutorial-card">
             <div class="mascot-section">
                 <div class="mascot-avatar" id="mascot-container">
-                    <img src="..//assets/mascote.png.png" alt="Mascote Cãozinho Azul" id="tutorial-mascot">
+                    <img src="assets/mascote.png.png" alt="Mascote Cãozinho Azul" id="tutorial-mascot">
                 </div>
 
                 <div class="dialogue-box">
@@ -464,9 +464,6 @@
                     </p>
 
                     <div class="button-group">
-                        <button class="btn btn-secondary" id="btn-skip" style="display: none;">
-                            Pular Tutorial
-                        </button>
                         <button class="btn btn-primary" id="btn-next">
                             Continuar ➤
                         </button>
@@ -514,7 +511,7 @@
             },
             {
                 text: `📚 <strong>As Fases de Treinamento:</strong><br><br>
-                       <strong>Fase 1 - E-mails Maliciosos:</strong> Aprenda a identificar e-mails verdadeiros de falsos usando dicas visuais.<br><br>
+                       <strong>Fase 1 - E-mails Maliciosos:</strong> Aprenda a identificar e-mails verdadeiros de falsos usando dicas visuais. Use a lupa 🔍 para obter ajuda!<br><br>
                        <strong>Fase 2 - Limpeza de Vírus:</strong> Organize arquivos e elimine vírus do desktop.<br><br>
                        <strong>Fase 3 - O Desafio Real:</strong> Aqui começa a verdadeira aventura! Você enfrentará desafios sem ajuda, testando tudo que aprendeu! 🔥`,
                 animation: 'speaking'
@@ -539,7 +536,6 @@
         let currentStep = 0;
         const dialogueText = document.getElementById('dialogue-text');
         const btnNext = document.getElementById('btn-next');
-        const btnSkip = document.getElementById('btn-skip');
         const mascotContainer = document.getElementById('mascot-container');
         const progressDots = document.querySelectorAll('.progress-dot');
 
@@ -559,16 +555,11 @@
                 dot.classList.toggle('active', index === step);
             });
 
-            // Mostrar botão de pular após primeiro step
-            if (step > 0) {
-                btnSkip.style.display = 'block';
-            }
-
             // Mudar texto do botão no último step
             if (step === tutorialSteps.length - 1) {
-                btnNext.textContent = '🎮 Iniciar Jogo!';
+                btnNext.innerHTML = '🎮 Iniciar Fase 1!';
             } else {
-                btnNext.textContent = 'Continuar ➤';
+                btnNext.innerHTML = 'Continuar ➤';
             }
         }
 
@@ -578,15 +569,8 @@
                 currentStep++;
                 updateDialogue(currentStep);
             } else {
-                // Redirecionar para o jogo
-                window.location.href = 'fase2.html';
-            }
-        });
-
-        // Pular tutorial
-        btnSkip.addEventListener('click', () => {
-            if (confirm('Tem certeza que deseja pular o tutorial?')) {
-                window.location.href = 'fase2.html';
+                // Redirecionar para Fase 1
+                window.location.href = 'fase1/fase1.html';
             }
         });
 
