@@ -1,0 +1,246 @@
+// ------------------------------------------
+// ARQUIVO: css/sass/layout/_arcade.scss
+// FASE 3: Estilos do Modo Arcade (Defense)
+// ------------------------------------------
+
+// Cores Locais (Apenas para o Arcade)
+@use '../abstracts/main' as *;
+$neon-green: #00ff88;
+$neon-red:   #ff4040;
+$neon-blue:  $blue-vibrant;
+
+.arcade-mode {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $navy-darkest;
+    background-image: 
+        linear-gradient(rgba($neon-blue, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba($neon-blue, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 100; // Fica acima do desktop
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Courier New', monospace; // Fonte estilo Terminal
+
+    &.hidden {
+        display: none;
+    }
+}
+
+// --- HUD (Painel Superior) ---
+.arcade-hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba($navy-dark, 0.9);
+    border-bottom: 2px solid $neon-blue;
+    box-shadow: 0 0 15px rgba($neon-blue, 0.3);
+    z-index: 10;
+
+    .hud-label {
+        font-weight: bold;
+        color: $white;
+        margin-right: 10px;
+        text-shadow: 0 0 5px $neon-blue;
+    }
+
+    // Barra de Força
+    .strength-meter-container {
+        display: flex;
+        align-items: center;
+        width: 400px;
+
+        .strength-bar-track {
+            flex: 1;
+            height: 20px;
+            background: $navy-darkest;
+            border: 2px solid $white-muted;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-right: 10px;
+            position: relative;
+        }
+
+        .strength-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, $neon-red, $neon-green);
+            width: 50%; // Controlado via JS
+            transition: width 0.3s ease-out;
+            box-shadow: 0 0 10px $white;
+        }
+
+        .status-text {
+            color: $white;
+            font-weight: bold;
+            min-width: 80px;
+        }
+    }
+
+    // Combo Slots
+    .combo-container {
+        display: flex;
+        align-items: center;
+
+        .slots-grid {
+            display: flex;
+            gap: 5px;
+        }
+
+        .slot {
+            width: 40px;
+            height: 40px;
+            border: 2px solid $white-muted;
+            border-radius: 5px;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: $neon-green;
+            text-shadow: 0 0 5px $neon-green;
+
+            &.filled {
+                border-color: $neon-green;
+                box-shadow: 0 0 10px $neon-green;
+            }
+        }
+    }
+}
+
+// --- ÁREA DE JOGO ---
+.arcade-field {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    cursor: none; // Esconde o cursor padrão para imersão (usaremos o escudo)
+}
+
+// O Jogador (Escudo)
+.shield-unit {
+    position: absolute;
+    bottom: 120px; // Acima da base
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 80px;
+    pointer-events: none; // O JS controla a posição
+    z-index: 50;
+    
+    .shield-graphic {
+        font-size: 4rem;
+        filter: drop-shadow(0 0 10px $neon-blue);
+        text-align: center;
+    }
+
+    .shield-aura {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        border: 2px solid rgba($neon-blue, 0.5);
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba($neon-blue, 0.2);
+        animation: pulse-aura 1.5s infinite;
+    }
+}
+
+@keyframes pulse-aura {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+}
+
+// Itens caindo (Inimigos e Power-ups)
+.falling-item {
+    position: absolute;
+    top: -50px; // Começa fora da tela
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    z-index: 20;
+
+    // Meteoro Ruim (Senha Fraca)
+    &.bad-pass {
+        background-color: $navy-darkest;
+        border: 2px solid $neon-red;
+        color: $neon-red;
+        text-shadow: 0 0 5px $neon-red;
+        
+        &:after {
+            content: '⚠️';
+            margin-left: 5px;
+        }
+    }
+
+    // Power-up Bom (Caractere Forte)
+    &.good-char {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba($neon-green, 0.2);
+        border: 2px solid $neon-green;
+        color: $neon-green;
+        font-size: 1.5rem;
+        box-shadow: 0 0 15px $neon-green;
+        animation: spin-item 3s linear infinite;
+    }
+}
+
+@keyframes spin-item {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+// --- BASE (Zona de Proteção) ---
+.protection-zone {
+    height: 100px;
+    background: linear-gradient(to top, $navy-darkest, transparent);
+    position: relative;
+    border-top: 1px solid rgba($white, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 20px;
+
+    .base-computer {
+        text-align: center;
+        z-index: 5;
+        
+        .computer-icon {
+            font-size: 3rem;
+            display: block;
+        }
+        .computer-status {
+            font-size: 0.8rem;
+            color: $neon-blue;
+            letter-spacing: 2px;
+        }
+    }
+
+    .danger-line {
+        position: absolute;
+        bottom: 80px;
+        width: 100%;
+        height: 2px;
+        background: repeating-linear-gradient(
+            90deg,
+            $neon-red,
+            $neon-red 10px,
+            transparent 10px,
+            transparent 20px
+        );
+        opacity: 0.5;
+    }
+}

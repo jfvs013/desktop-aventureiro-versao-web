@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fase 03</title>
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+    <section id="phase3-arcade" class="game-phase arcade-mode hidden" aria-hidden="true">
+            
+            <div class="arcade-hud">
+                
+                <div class="strength-meter-container">
+                    <span class="hud-label">FORÇA DA SENHA:</span>
+                    <div class="strength-bar-track">
+                        <div id="password-strength-bar" class="strength-bar-fill" style="width: 20%;"></div>
+                    </div>
+                    <span id="strength-text" class="status-text">FRACA</span>
+                </div>
+
+                <div class="combo-container">
+                    <span class="hud-label">COMBO:</span>
+                    <div id="combo-slots" class="slots-grid">
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="arcade-game-area" class="arcade-field">
+                
+                <div id="player-shield" class="shield-unit">
+                    <div class="shield-graphic">🛡️</div>
+                    <div class="shield-aura"></div>
+                </div>
+
+                </div>
+
+            <div class="protection-zone">
+                <div class="base-computer">
+                    <span class="computer-icon">💻</span>
+                    <span class="computer-status">SISTEMA SEGURO</span>
+                </div>
+                <div class="danger-line"></div>
+            </div>
+
+        </section>
+           <script type="module" src="../js/main.js"></script>
+</body>
+</html>

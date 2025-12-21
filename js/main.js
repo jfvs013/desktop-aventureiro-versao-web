@@ -12,6 +12,7 @@ import { MascotUI } from './ui/mascote.js';
 // Importação dinâmica das fases
 import { Phase1 } from './game/fase1.js';
 import { Phase2 } from './game/fase2.js';
+import { Phase3 } from './js/game/fase3.js';
 
 // --- INJEÇÃO DE ESTILOS GLOBAIS (POLIMENTO FINAL) ---
 const globalStyles = document.createElement('style');
