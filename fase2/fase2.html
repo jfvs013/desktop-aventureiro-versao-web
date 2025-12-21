@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Desktop Aventureiro - Aprenda Segurança Digital</title>
+    <link rel="stylesheet" href="/css/main.css">
+    </head>
+<body>
+
+    <main id="game-app" class="game-container" role="main">
+
+        <section id="virtual-desktop" class="desktop-screen" aria-label="Ambiente de Desktop Virtual">
+            
+            <div id="desktop-icons-area" class="desktop-icons-grid">
+                </div>
+
+            <div id="windows-area" class="windows-container">
+                </div>
+
+        </section>
+
+        <footer class="desktop-taskbar">
+            <button id="start-btn" class="taskbar-btn start-menu" aria-label="Menu Iniciar">
+                <span class="icon">🏁</span> Iniciar
+            </button>
+            
+            <div class="taskbar-apps" id="open-apps-list">
+                </div>
+
+            <div class="taskbar-clock" id="system-clock" aria-hidden="true">
+                12:00
+            </div>
+        </footer>
+
+        <aside id="mascot-hud" class="mascot-interface">
+            
+            <div class="mascot-avatar-container">
+                <img src="/assets/mascote.png.png" 
+                     alt="Mascote Cãozinho Azul de Segurança Digital" 
+                     class="mascot-image"
+                     id="mascot-img">
+            </div>
+
+            <div class="mascot-dialogue-box" role="status" aria-live="polite">
+                <p id="mascot-text" class="mascot-text">
+                    Olá! Bem-vindo ao Desktop Aventureiro. Vamos organizar essa bagunça?
+                </p>
+                <button id="next-instruction-btn" class="dialogue-btn" aria-label="Próxima instrução">
+                    Continuar ➤
+                </button>
+            </div>
+            
+        </aside>
+
+        <div id="game-overlay" class="overlay hidden" aria-hidden="true">
+            <div class="modal-content">
+                <h2 id="overlay-title">Título</h2>
+                <p id="overlay-message">Mensagem</p>
+                <button id="overlay-action-btn" class="primary-btn">Ação</button>
+            </div>
+        </div>
+
+    </main>
+    <script type="module" src="./js/main.js"></script>
+
+    </body>
+</html>
