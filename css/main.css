@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   margin: 0;
   padding: 0;
@@ -384,165 +385,224 @@ body {
   margin-bottom: 10px;
 }
 
-.lab-mode {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at center, #1f3a5f, #0a2342);
+.arcade-page {
+  background-color: #050a10;
+  color: #fff;
+  margin: 0;
+  overflow: hidden;
+  height: 100vh;
+  font-family: "Segoe UI", Roboto, monospace;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.arcade-mode {
   display: flex;
   flex-direction: column;
-  z-index: 300;
-  overflow: hidden;
-}
-.lab-mode.hidden {
-  display: none;
-}
-
-.lab-hud {
-  padding: 20px;
-  background: rgba(10, 35, 66, 0.9);
-  border-bottom: 3px solid #40a0ff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-}
-.lab-hud .potion-metrics {
-  max-width: 500px;
-  margin: 0 auto;
-  text-align: center;
-}
-.lab-hud .potion-metrics .hud-label {
-  font-weight: bold;
-  color: #40a0ff;
-  text-shadow: 0 0 10px rgba(64, 160, 255, 0.4);
-  margin-bottom: 8px;
-  display: block;
-}
-.lab-hud .potion-metrics .potion-bar-container {
-  height: 22px;
-  background: #204167;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
-}
-.lab-hud .potion-metrics .potion-fill {
   height: 100%;
-  background: linear-gradient(90deg, #40a0ff, #00ffcc);
-  box-shadow: 0 0 15px #00ffcc;
-  transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.lab-main-area {
-  flex: 1;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 30px;
-}
-.lab-main-area .shelf {
-  width: 220px;
-  background: rgba(32, 65, 103, 0.3);
-  border: 2px solid #40a0ff;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
-}
-.lab-main-area .shelf .shelf-title {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.8rem;
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
-  margin-bottom: 15px;
-  padding-bottom: 5px;
-}
-.lab-main-area .shelf .ingredients-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-.flask {
-  font-size: 2.8rem;
-  cursor: grab;
-  transition: all 0.2s ease;
-  text-align: center;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
-}
-.flask:hover {
-  transform: scale(1.2) rotate(10deg);
-  filter: drop-shadow(0 0 12px #40a0ff);
-}
-.flask:active {
-  cursor: grabbing;
-}
-.flask small {
-  display: block;
-  color: #ffffff;
-  font-weight: bold;
-  background: rgba(10, 35, 66, 0.6);
-  border-radius: 4px;
-}
-
-.cauldron-center .cauldron-wrapper {
   position: relative;
-  padding: 50px;
-  border: 3px dashed transparent;
-  border-radius: 50%;
-  transition: all 0.3s ease;
+  background-image: linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
-.cauldron-center .cauldron-wrapper.drag-over {
-  border-color: #40a0ff;
-  background: rgba(64, 160, 255, 0.15);
-  transform: scale(1.1);
+
+.arcade-hud {
+  background: rgba(5, 10, 20, 0.95);
+  border-bottom: 3px solid #00d2ff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  z-index: 100;
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
 }
-.cauldron-center .emoji-cauldron {
-  font-size: 10rem;
-  display: block;
-  filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.6));
-}
-.cauldron-center .drop-zone-label {
-  margin-top: 15px;
-  color: #40a0ff;
+.arcade-hud .hud-left, .arcade-hud .hud-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
   font-weight: bold;
-  text-align: center;
-  animation: pulseText 2s infinite;
+  color: #aaddff;
+}
+.arcade-hud .hud-value {
+  color: #fff;
+  font-family: monospace;
+  font-size: 1.4rem;
+  text-shadow: 0 0 10px #00d2ff;
 }
 
-#cauldron-fx {
+.life-bar-bg {
+  width: 200px;
+  height: 18px;
+  background: #222;
+  border: 2px solid #444;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.life-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4444, #ffcc00, #00ff88);
+  transition: width 0.3s ease;
+}
+
+#game-arena {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  cursor: none;
+}
+
+#player-shield {
   position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translateX(-50%);
-  pointer-events: none;
+  bottom: 40px;
+  width: 110px;
+  height: 12px;
+  background: #00d2ff;
+  border-radius: 6px;
+  box-shadow: 0 0 15px #00d2ff, 0 0 30px rgba(0, 210, 255, 0.4);
+  z-index: 50;
+  will-change: transform;
+}
+#player-shield.shield-ready {
+  background: #fff;
+  box-shadow: 0 0 20px #fff, 0 0 50px #00ff88;
+}
+
+.falling-rock {
+  position: absolute;
+  background: #3a3a3a;
+  color: #ccc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+  font-size: 1rem;
+  border: 2px solid #222;
+  border-bottom: 5px solid #1a1a1a;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   z-index: 10;
+  white-space: nowrap;
+}
+.falling-rock::before {
+  content: "⚠️ ";
+  filter: grayscale(1);
 }
 
-.alchemy-log {
-  background: #0a2342;
-  border-top: 2px solid #007bff;
-  padding: 15px;
+.falling-chip {
+  position: absolute;
+  background: rgba(0, 30, 0, 0.95);
+  color: #00ff88;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: "Courier New", monospace;
+  font-weight: 800;
+  font-size: 1.1rem;
+  border: 1px solid #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3), inset 0 0 15px rgba(0, 255, 136, 0.1);
+  z-index: 11;
+  white-space: nowrap;
+  animation: floatGlow 2s infinite alternate;
+}
+.falling-chip::before {
+  content: "🔒 ";
+}
+
+.super-laser {
+  position: absolute;
+  bottom: 40px;
+  width: 20px;
+  height: 150vh;
+  background: #fff;
+  box-shadow: 0 0 30px #00d2ff, 0 0 60px #00ff88;
+  transform-origin: bottom;
+  animation: laserBlast 0.5s ease-out forwards;
+  z-index: 40;
+  opacity: 0.9;
+}
+
+.floating-text {
+  text-shadow: 0 2px 0 #000;
+  font-weight: bold;
+}
+
+.particle {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.shake-anim {
+  animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.overlay-hint {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid #00d2ff;
+  padding: 30px;
+  border-radius: 12px;
   text-align: center;
-  min-height: 60px;
+  pointer-events: none;
+  animation: fadeOutHint 0.5s ease-in forwards 4s;
 }
-.alchemy-log #alchemy-feedback {
-  color: #ffffff;
-  font-size: 1.2rem;
-  text-shadow: 1px 1px 2px #000;
+.overlay-hint h2 {
+  color: #00d2ff;
+  margin: 0 0 10px 0;
+}
+.overlay-hint p {
+  color: #ccc;
+  font-size: 1.1rem;
 }
 
-.hidden {
-  display: none !important;
-}
-
-@keyframes pulseText {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
+@keyframes floatGlow {
+  from {
+    transform: translateY(0);
+    box-shadow: 0 0 5px #00ff88;
   }
-  50% {
+  to {
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px #00ff88;
+  }
+}
+@keyframes laserBlast {
+  0% {
+    transform: scaleX(0.1);
+    opacity: 0;
+  }
+  10% {
+    transform: scaleX(1.5);
     opacity: 1;
-    transform: scale(1.05);
+  }
+  100% {
+    transform: scaleX(0.1);
+    opacity: 0;
+  }
+}
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-2px, 0, 0);
+  }
+  20%, 80% {
+    transform: translate3d(4px, 0, 0);
+  }
+  30%, 50%, 70% {
+    transform: translate3d(-6px, 0, 0);
+  }
+  40%, 60% {
+    transform: translate3d(6px, 0, 0);
+  }
+}
+@keyframes fadeOutHint {
+  to {
+    opacity: 0;
+    visibility: hidden;
   }
 }
 body {
