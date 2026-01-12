@@ -5,109 +5,232 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Fase 3 — Manchetes Suspeitas</title>
-    <link rel="stylesheet" href="/css/main.css">
 
     <style>
-        /* Estilos adicionais para os botões do modal */
-        .modal-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
+        /* Estilos Baseados na Identidade Visual da Fase 1 */
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #00d4ff;
+            --success: #2ecc71;
+            --danger: #ff5c5c;
+            --warning: #ffc107;
+            --text: #f8fafc;
         }
 
-        .modal-buttons button {
-            flex: 1;
-            min-width: 150px;
-            max-width: 200px;
-        }
-
-        #nextPhaseBtn {
-            background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
-            position: relative;
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
             overflow: hidden;
         }
 
-        #nextPhaseBtn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg,
-                    transparent 30%,
-                    rgba(255, 255, 255, 0.3) 50%,
-                    transparent 70%);
-            transform: rotate(45deg);
-            transition: all 0.6s ease;
+        /* Topbar */
+        .game-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
 
-        #nextPhaseBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+        .left-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        #nextPhaseBtn:hover::before {
-            left: 100%;
+        #mascote-small {
+            width: 50px;
+            height: 50px;
+            transition: all 0.3s ease;
         }
 
-        #nextPhaseBtn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        .player-area div {
+            font-weight: bold;
+            font-size: 0.9rem;
         }
 
-        @media (max-width: 768px) {
-            .modal-buttons {
-                flex-direction: column;
-            }
-
-            .modal-buttons button {
-                width: 100%;
-                max-width: 100%;
-            }
+        .right-info #timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 15px;
+            border-radius: 8px;
         }
 
-        /* Estilos retrô adicionais para manchetes (inspirado em papel de jornal) */
-        .headline {
-            background-color: #000000;
-            /* Papel amarelado */
-            border: 1px solid #000;
-            margin: 5px 0;
-            padding: 8px;
+        /* Game Area */
+        .game-area {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 20px;
+            padding: 20px;
+            height: calc(100vh - 100px);
+        }
+
+        /* Colunas de Drop */
+        .drop-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .drop-zone {
+            flex: 1;
+            border: 3px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .drop-zone.over {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .drop-zone.verdadeira {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .drop-zone.falsa {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        /* News Feed */
+        .news-column {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .headline-card {
+            background: white;
+            color: #333;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             cursor: grab;
-            font-size: 14px;
-            font-family: 'Times New Roman', serif;
-            /* Fonte de jornal */
+            width: 90%;
+            max-width: 400px;
+            margin-top: 50px;
             position: relative;
-            border-radius: 5px;
+            border-left: 8px solid #ddd;
         }
 
-        .headline.dragging {
+        .headline-card.dragging {
             opacity: 0.5;
         }
 
-        .drop-zone.true {
-            background-color: #000000;
-            /* Verde suave para verdadeiras */
+        .headline-card h2 {
+            margin: 0 0 15px 0;
+            font-size: 1.2rem;
+            line-height: 1.4;
+            color: #111;
         }
 
-        .drop-zone.false {
-            background-color: #000000;
-            /* Vermelho suave para falsas */
+        .source-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #666;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Lupa / Verificar Fonte */
+        .source-details {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f1f5f9;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            display: none;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* Feedback Box & Buttons */
+        .help-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feedback-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .secondary-btn {
+            background: var(--warning);
+            color: #000;
+        }
+
+        .primary-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-inner {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            border: 2px solid var(--primary);
         }
     </style>
 </head>
@@ -115,232 +238,320 @@
 <body>
     <div class="game-topbar">
         <div class="left-info">
-            <img id="mascote-small" src="../assets/mascote.png.png" alt="Mascote" />
+            <img id="mascote-small" src="../assets/mascote.png" alt="Mascote"
+                onerror="this.src='https://cdn-icons-png.flaticon.com/512/616/616408.png'" />
             <div class="player-area">
                 <div id="playerDisplay">Jogador: —</div>
                 <div id="scoreDisplay">Pontos: 0</div>
             </div>
         </div>
-
         <div class="right-info">
             <div id="timer">Tempo: 60</div>
         </div>
     </div>
 
     <main class="game-area">
-        <section class="mail-column">
-            <h3>Manchetes</h3>
-            <div id="mailList" class="mail-list"></div>
+        <section class="drop-column">
+            <div id="verdadeira" class="drop-zone verdadeira">
+                <span style="font-size: 3rem;">🟩</span>
+                <p>Notícia Verdadeira<br>(Arraste aqui)</p>
+            </div>
         </section>
 
-        <section class="drop-column">
-            <h3>Caixas</h3>
-            <div class="drop-zones">
-                <div id="true-box" class="drop-zone true">
-                    ✅ Notícia Verdadeira
-                </div>
-                <div id="false-box" class="drop-zone false">
-                    ❌ Fake News
-                </div>
+        <section class="news-column">
+            <h3>📰 Verificação de Notícias</h3>
+            <div id="headlineContainer" style="width: 100%; display: flex; justify-content: center;">
             </div>
+            <p class="hint" style="margin-top: 20px; font-size: 0.8rem; opacity: 0.7;">
+                Dica: Use a "Lupa do Cãozinho" para ganhar bônus de Verificação!
+            </p>
         </section>
 
         <aside class="help-column">
-            <div class="lupa">
-                <button id="inspectBtn" class="secondary-btn">
-                    🔍 Verificar Fonte
-                </button>
-                <p class="hint">
-                    Use para ver detalhes da manchete (-3 pontos, +1s bônus no timer)
-                </p>
-            </div>
+            <button id="inspectBtn" class="secondary-btn">
+                🔍 Verificar Fonte
+            </button>
 
             <div id="feedbackBox" class="feedback-box">
-                Au au! Vamos classificar essas manchetes, aventureiro!
+                "Olá! Sou o Cãozinho Aventureiro. Analise bem as manchetes!"
+            </div>
+
+            <div id="fakeZone" class="drop-zone falsa">
+                <span style="font-size: 3rem;">🟥</span>
+                <p>Fake News<br>(Arraste aqui)</p>
             </div>
         </aside>
     </main>
 
     <div id="endModal" class="modal hidden">
         <div class="modal-inner">
-            <h2>Missão concluída!</h2>
-            <p id="endText">Você fez 0 pontos</p>
-
-            <div class="modal-buttons">
-                <button id="retryBtn" class="primary-btn">
-                    🔄 Jogar Novamente
-                </button>
-                <button id="nextPhaseBtn" class="primary-btn">
-                    ➤ Avançar para Fase 4
-                </button>
-                <button id="backBtn" class="secondary-btn">
-                    🏠 Voltar ao Início
-                </button>
+            <h2 id="endTitle">Fim da Triagem!</h2>
+            <p id="endText"></p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <button onclick="location.reload()" class="primary-btn">🔄 Tentar Novamente</button>
+                <button id="backBtn" class="secondary-btn">🏠 Início</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Dados das manchetes (igual ao anterior)
-        const headlines = [
-            { text: "Governo lança campanha nacional para combater phishing em emails", isTrue: true },
-            { text: "Pesquisa mostra que 70% dos ataques cibernéticos começam por links suspeitos", isTrue: true },
-            { text: "Empresa de tecnologia atualiza software para corrigir vulnerabilidades de segurança", isTrue: true },
-            { text: "Especialistas recomendam uso de senhas fortes e autenticação de dois fatores", isTrue: true },
-            { text: "Novo regulamento europeu exige transparência em dados pessoais online", isTrue: true },
-            { text: "URGENTE: Vacina contra vírus causa implante de chips controlados pelo governo! Fuja agora!", isTrue: false },
-            { text: "Milhões de pessoas hackeadas em segundos por app de redes sociais! O fim do mundo digital está chegando!", isTrue: false },
-            { text: "Fonte secreta revela: Bilionários estão roubando seus dados para controlar a economia global!", isTrue: false },
-            { text: "Novo vírus cibernético apaga todas as fotos de família em 24 horas! Proteja-se com este produto milagroso!", isTrue: false },
-            { text: "Governo esconde verdade: Internet vai ser desligada para sempre em 2025 por causa de aliens!", isTrue: false }
-        ];
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Configurações e Variáveis de Estado ---
+            const headlinesData = [
+                {
+                    id: 1, isFake: false,
+                    title: "Nova vacina contra a gripe começa a ser distribuída em postos de saúde de todo o país.",
+                    source: "Portal Nacional de Saúde",
+                    date: "12/01/2026",
+                    reputation: "Alta - Órgão Oficial",
+                    detail: "Informação confirmada por secretarias estaduais e canais de saúde pública.",
+                    edu: "Sites oficiais com domínios .gov ou .org de saúde são fontes confiáveis."
+                },
+                {
+                    id: 2, isFake: true,
+                    title: "URGENTE: Cientistas descobrem que comer chocolate cura todas as doenças em 24 horas!",
+                    source: "NotíciasIncríveis.xyz",
+                    date: "Hoje",
+                    reputation: "Desconhecida",
+                    detail: "Nenhuma universidade ou hospital confirmou esse estudo. O site está cheio de anúncios.",
+                    edu: "Promessas de 'curas milagrosas' são sinais clássicos de Fake News."
+                },
+                {
+                    id: 3, isFake: false,
+                    title: "NASA confirma nova missão para estudar a superfície de Marte em 2028.",
+                    source: "Agência Espacial Internacional",
+                    date: "10/01/2026",
+                    reputation: "Alta",
+                    detail: "O projeto faz parte do programa de exploração planetária decenal.",
+                    edu: "Notícias de ciência costumam citar agências espaciais conhecidas."
+                },
+                {
+                    id: 4, isFake: true,
+                    title: "CUIDADO! O governo vai cancelar a internet de quem não compartilhar esta mensagem!",
+                    source: "WhatsApp Repassado",
+                    date: "Imediato",
+                    reputation: "Nula",
+                    detail: "Texto com tom de ameaça, erros de português e sem links para portais oficiais.",
+                    edu: "Mensagens que pedem compartilhamento para evitar punições são quase sempre golpes."
+                },
+                {
+                    id: 5, isFake: true,
+                    title: "VOCÊ NÃO VAI ACREDITAR: Fruta secreta da Amazônia emagrece 10kg por dia sem exercício!",
+                    source: "DicasSaudeTop.com",
+                    date: "05/01/2026",
+                    reputation: "Baixa",
+                    detail: "A manchete usa sensacionalismo ('Você não vai acreditar') para atrair cliques.",
+                    edu: "Títulos sensacionalistas (Clickbait) tentam manipular sua curiosidade."
+                },
+                {
+                    id: 6, isFake: false,
+                    title: "Inauguração da nova biblioteca municipal atrai centenas de estudantes e famílias.",
+                    source: "Jornal da Cidade",
+                    date: "Ontem",
+                    reputation: "Local Confiável",
+                    detail: "Evento público registrado por fotos e depoimentos de moradores locais.",
+                    edu: "Fatos locais comprováveis por fotos reais tendem a ser verdadeiros."
+                }
+            ];
 
-        let score = 0;
-        let timeLeft = 60;
-        let timerInterval;
-        let verifiedCount = 0;
-        let errorCount = 0;
-        let classifiedCount = 0;
-        let currentInspectIndex = -1; // Para rastrear qual manchete está sendo inspecionada
+            let score = 0;
+            let timeLeft = 60;
+            let currentStreak = 0;
+            let totalCorrect = 0;
+            let totalAnswered = 0;
+            let activeHeadline = null;
+            let timerInterval;
 
-        // Inicializar manchetes
-        function initHeadlines() {
-            const list = document.getElementById('mailList');
-            headlines.forEach((hl, index) => {
-                const div = document.createElement('div');
-                div.className = 'headline';
-                div.draggable = true;
-                div.id = `headline-${index}`;
-                div.textContent = hl.text;
-                div.dataset.index = index;
-                div.dataset.isTrue = hl.isTrue;
-                list.appendChild(div);
-            });
-        }
+            const player = localStorage.getItem('da_player') || 'Aventureiro';
+            document.getElementById('playerDisplay').textContent = `Jogador: ${player}`;
 
-        // Verificar fonte (botão na help-column, custa -3 pontos, dá +1s no timer)
-        document.getElementById('inspectBtn').addEventListener('click', () => {
-            if (currentInspectIndex >= 0 && timeLeft > 0) {
-                score -= 3;
-                timeLeft += 1; // Bônus de 1s
-                updateScore();
-                updateTimer();
-                verifiedCount++;
-                const hl = headlines[currentInspectIndex];
-                const msg = hl.isTrue ? "Fonte: Site oficial do governo (confiável)" : "Fonte: Blog anônimo sem verificação (duvidosa)";
-                updateFeedback(`Verificado: ${msg}`);
-                updateMascot("Uau! Você checou tudo direitinho, parabéns!");
-            } else {
-                updateFeedback("Selecione uma manchete primeiro!");
+            // --- Elementos DOM ---
+            const container = document.getElementById('headlineContainer');
+            const timerEl = document.getElementById('timer');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const feedbackBox = document.getElementById('feedbackBox');
+            const inspectBtn = document.getElementById('inspectBtn');
+            const mascote = document.getElementById('mascote-small');
+
+            // --- Inicialização ---
+            shuffleArray(headlinesData);
+            renderNextHeadline();
+            startTimer();
+
+            // --- Lógica do Jogo ---
+            function startTimer() {
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerEl.textContent = `Tempo: ${timeLeft}`;
+                    if (timeLeft <= 10) timerEl.style.color = '#ff5c5c';
+                    if (timeLeft <= 0) finishGame();
+                }, 1000);
             }
-        });
 
-        // Selecionar manchete para inspeção (clique)
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('headline')) {
-                currentInspectIndex = parseInt(e.target.dataset.index);
-                updateFeedback(`Manchete selecionada: ${e.target.textContent.substring(0, 50)}...`);
+            function renderNextHeadline() {
+                container.innerHTML = '';
+                if (headlinesData.length === 0) {
+                    finishGame();
+                    return;
+                }
+
+                activeHeadline = headlinesData.shift();
+                const card = document.createElement('div');
+                card.className = 'headline-card';
+                card.draggable = true;
+                card.innerHTML = `
+                    <span class="source-tag">Fonte Suspeita: ???</span>
+                    <h2>${activeHeadline.title}</h2>
+                    <div id="details-${activeHeadline.id}" class="source-details">
+                        <strong>🔍 Detalhes da Fonte:</strong><br>
+                        Origem: ${activeHeadline.source}<br>
+                        Data: ${activeHeadline.date}<br>
+                        Reputação: ${activeHeadline.reputation}<br>
+                        <em>${activeHeadline.detail}</em>
+                    </div>
+                `;
+
+                card.addEventListener('dragstart', (e) => {
+                    card.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', activeHeadline.id);
+                });
+
+                card.addEventListener('dragend', () => card.classList.remove('dragging'));
+                container.appendChild(card);
+
+                // Reset da interface de inspeção
+                inspectBtn.disabled = false;
+                activeHeadline.checked = false;
             }
-        });
 
-        // Drag and Drop
-        document.addEventListener('dragstart', (e) => {
-            if (e.target.classList.contains('headline')) {
-                e.dataTransfer.setData('text/plain', e.target.id);
-                e.target.classList.add('dragging');
-                currentInspectIndex = parseInt(e.target.dataset.index); // Atualiza seleção
+            // Sistema de Drop
+            setupDropZone('verdadeira', false);
+            setupDropZone('fakeZone', true);
+
+            function setupDropZone(id, isFakeZone) {
+                const zone = document.getElementById(id);
+                zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+                zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('over');
+                    processChoice(isFakeZone);
+                });
             }
-        });
 
-        document.addEventListener('dragend', (e) => {
-            if (e.target.classList.contains('headline')) {
-                e.target.classList.remove('dragging');
-            }
-        });
+            function processChoice(choseFake) {
+                totalAnswered++;
+                const isCorrect = (activeHeadline.isFake === choseFake);
 
-        document.addEventListener('dragover', (e) => {
-            e.preventDefault();
-        });
+                if (isCorrect) {
+                    let gain = 100;
+                    if (activeHeadline.checked) gain += 30; // Bônus por verificar
+                    score += gain;
+                    totalCorrect++;
+                    currentStreak++;
 
-        document.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const id = e.dataTransfer.getData('text/plain');
-            const draggedEl = document.getElementById(id);
-            if (draggedEl && e.target.classList.contains('drop-zone')) {
-                const isTrue = draggedEl.dataset.isTrue === 'true';
-                const isTrueBox = e.target.id === 'true-box';
-                classifiedCount++;
-                if (isTrue === isTrueBox) {
-                    score += verifiedCount > 0 ? 15 : 10;
-                    updateMascot("Au au! Você é rápido como um raio, aventureiro!");
+                    if (currentStreak % 3 === 0) {
+                        timeLeft += 3;
+                        flashFeedback("🔥 Combo! +3 segundos!", "success");
+                    }
+
+                    updateMascote('happy', `Boa! ${activeHeadline.edu}`);
                 } else {
-                    errorCount++;
-                    score -= verifiedCount > 0 ? 2 : 5;
-                    updateMascot("Opa! Isso foi uma armadilha digital. Da próxima, verifique!");
+                    score -= 50;
+                    if (score < 0) score = 0;
+                    currentStreak = 0;
+                    updateMascote('alert', `Cuidado! ${activeHeadline.edu}`);
                 }
-                updateScore();
-                e.target.appendChild(draggedEl);
-                draggedEl.style.cursor = 'default';
-                draggedEl.draggable = false;
-                checkEndGame();
-            }
-        });
 
-        // Timer
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimer();
-                if (timeLeft <= 0) {
-                    endGame();
+                updateUI();
+                renderNextHeadline();
+            }
+
+            // Botão Verificar Fonte
+            inspectBtn.addEventListener('click', () => {
+                if (!activeHeadline) return;
+
+                const detailEl = document.getElementById(`details-${activeHeadline.id}`);
+                detailEl.style.display = 'block';
+                activeHeadline.checked = true;
+                timeLeft -= 1; // Consome tempo
+                inspectBtn.disabled = true;
+
+                flashFeedback("🔍 Verificando fonte... (-1s)", "hint");
+            });
+
+            // --- Auxiliares ---
+            function updateUI() {
+                scoreDisplay.textContent = `Pontos: ${score}`;
+            }
+
+            function updateMascote(state, text) {
+                feedbackBox.textContent = text;
+                if (state === 'happy') {
+                    mascote.style.transform = 'scale(1.2) rotate(5deg)';
+                    feedbackBox.style.color = '#2ecc71';
+                } else {
+                    mascote.style.transform = 'translateX(10px) rotate(-5deg)';
+                    feedbackBox.style.color = '#ff5c5c';
                 }
-            }, 1000);
-        }
-
-        function updateTimer() {
-            document.getElementById('timer').textContent = `Tempo: ${timeLeft}`;
-        }
-
-        // Pontuação
-        function updateScore() {
-            document.getElementById('scoreDisplay').textContent = `Pontos: ${score}`;
-        }
-
-        // Feedback
-        function updateFeedback(msg) {
-            document.getElementById('feedbackBox').textContent = msg;
-        }
-
-        // Mascote (simulado via feedback, já que não há imagem grande)
-        function updateMascot(msg) {
-            updateFeedback(msg);
-        }
-
-        // Verificar fim de jogo
-        function checkEndGame() {
-            if (classifiedCount === headlines.length) {
-                endGame();
+                setTimeout(() => mascote.style.transform = '', 600);
             }
-        }
 
-        function endGame() {
-            clearInterval(timerInterval);
-            let bonus = verifiedCount >= headlines.length * 0.5 ? 20 : 0;
-            score += bonus;
-            updateScore();
-            const endText = document.getElementById('endText');
-            endText.textContent = `Você fez ${score} pontos! ${bonus > 0 ? 'Bônus por responsabilidade conquistado!' : 'Tente verificar mais fontes na próxima.'}`;
-            document.getElementById('endModal').classList.remove('hidden');
-        }
+            function flashFeedback(text, type) {
+                const msg = document.createElement('div');
+                msg.style.position = 'fixed';
+                msg.style.top = '100px';
+                msg.style.left = '50%';
+                msg.style.transform = 'translateX(-50%)';
+                msg.style.padding = '10px 20px';
+                msg.style.borderRadius = '20px';
+                msg.style.backgroundColor = type === 'success' ? '#2ecc71' : '#ffc107';
+                msg.style.color = 'white';
+                msg.style.fontWeight = 'bold';
+                msg.style.zIndex = '2000';
+                msg.textContent = text;
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 2000);
+            }
 
-        // Botões do modal
-        document.getElementById('retryBtn').addEventListener('click', () => {
-            location.reload();
+            function finishGame() {
+                clearInterval(timerInterval);
+                const accuracy = Math.round((totalCorrect / (totalAnswered || 1)) * 100);
+
+                // Bônus final de 80% de acerto
+                if (accuracy >= 80) score += 200;
+
+                const endModal = document.getElementById('endModal');
+                const endText = document.getElementById('endText');
+
+                endText.innerHTML = `
+                    <p>Pontuação Final: <strong>${score}</strong></p>
+                    <p>Precisão: <strong>${accuracy}%</strong></p>
+                    <p>Tempo Restante: ${timeLeft}s</p>
+                    <br>
+                    <p><em>${accuracy >= 80 ? "🐶 Incrível! Você é um mestre da verdade!" : "🐶 Bom esforço! Continue treinando seu olhar crítico."}</em></p>
+                `;
+
+                endModal.classList.remove('hidden');
+
+                // Salva progresso (mesma lógica da Fase 1)
+                const progress = JSON.parse(localStorage.getItem('da_game_progress') || '{}');
+                progress.phase3Completed = true;
+                progress.phase3Score = score;
+                localStorage.setItem('da_game_progress', JSON.stringify(progress));
+            }
+
+            function shuffleArray(a) {
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [a[i], a[j]] = [a[j], a[i]];
+                }
+            }
+
+            document.getElementById('backBtn').addEventListener('click', () => {
+                window.location.href = '../index.html';
+            });
         });
-
-        // Iniciar jogo
-        initHeadlines();
-        startTimer();
     </script>
 </body>
 
