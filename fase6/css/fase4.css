@@ -1,0 +1,168 @@
+body {
+    background: linear-gradient(135deg, #0a0e27 0%, #1a0a2e 50%, #16213e 100%);
+}
+
+main {
+    width: 100vh; /* 100% da largura da janela. */
+    height: 90vh; /* 90% da altura da janela. */
+}
+
+#dialogo-mascote_1 {
+    display: none;
+}
+
+#dialogo-mascote_2 {
+    display: none;
+}
+
+#layout-falas-mascote {
+    border-radius: 20px;
+    border: 2px solid white;
+    padding: 20px; /* Aplica 20 px em todos os 4 sentidos (top, bottom, left e right). */
+}
+
+#dialogo-mascote span{
+    color: white;
+}
+
+#dialogo-mascote { /*Para controlar a div com o diálogo.*/
+    position: fixed;
+    top: 55%;
+    left: 8%;
+    z-index: 1000;
+}
+
+#dialogo-mascote img{
+    width: 70%;
+    height: 70%;
+}
+
+#dialogo-mascote span {
+    padding-right: 50px;
+}
+
+#dialogo-mascote button {
+    margin-left: 70%;
+    margin-top: 5%;
+}
+
+#organizar-layout-interno {
+    width: 70vh;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 120vh;
+}
+
+[hidden] { /* Será usado para ocultar a div do diálogo. Ou outras, se quiser. */
+    display: none !important;
+}
+
+#area-gameplay {
+    display: grid;
+    /* Define a LARGURA de cada coluna. */
+    grid-template-columns: repeat(auto-fill, 60px); 
+    /* Define a ALTURA de cada linha automaticamente. */
+    grid-auto-rows: 60px; gap: 8px;
+    width: 90vw; /* Limite a largura para não "bater" no antivírus. */
+    padding: 10px;
+}
+
+#area-gameplay div { /* Este seletor seleciona as 
+    divs aninhadas dentro da div com o identificador com o 
+    nome area-gameplay, estão divs 
+    são criadas por ../js/gameplay.js  .*/ 
+    width: 40px;          /* largura fixa para cada "célula". */
+    height: 40px;
+    text-align: center;
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente. */
+    align-items: center;
+    font-size: 40px; /* Caracteres Unicode também são considerados texto.*/
+}
+
+/* Este estilo será aplicado automaticamente quando o JS criar o id.*/
+#botaoAntivirus {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    background-color: white;
+    /* O caminho relativo aqui é a partir do arquivo .css . */
+    background-image: url("../assets/antivirusChatgpt.png"); /*Imagem feita pelo chatgpt.*/
+    background-size: cover;
+    background-position: center;
+}
+
+#botaoAntivirusDiv {
+    position: fixed; /* O botão fica fixo na tela */
+    right: 10px;     /* 20px da borda direita */
+    bottom: 83vh;    /* 80vh da borda inferior */
+    width: 100px;
+    height: 100px;
+    background-color: red; /* Usada para facilitar o desenvolvimento. */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;    /* Garante que fique acima das células */
+}
+
+#firewallDiv {
+    position: fixed; /* O botão fica fixo na tela */
+    right: 10px;     /* 20px da borda direita */
+    bottom: 65vh;    /* 80vh da borda inferior */
+    width: 100px;
+    height: 100px;
+    background-color: blue; /* Usada para facilitar o desenvolvimento. */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;    /* Garante que fique acima das células */
+}
+
+#firewallBotao {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    background-color: white;
+    /* O caminho relativo aqui é a partir do arquivo .css . */
+    background-image: url("../assets/firewallChatgpt.png"); /*Imagem feita pelo chatgpt.*/
+    background-size: cover;
+    background-position: center;
+}
+
+#exibirPontuacao { /*exibirPontuacao é um id de uma div criada no js.*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Ajusta para o centro exato. */
+    border-radius: 20px;
+    border: 2px solid white;
+    padding: 20px;
+    background-color: #222;
+    color: white;
+    font-size: 2rem;
+}
+
+#divBotoesPontuacao {
+    display: flex;
+    justify-content: center;
+    gap: 65%;
+}
+
+#botaoReiniciarFase,
+#botaoAvancarFase {
+    margin: 5% 0px 0px 0px; /* Sintaxe do margin: margin: top right bottom left; */ 
+    color: white;
+    border-radius: 10%;
+    border: 2px solid white;
+    background-color: transparent;
+    width: 20vh;
+    height: 8vh;
+}

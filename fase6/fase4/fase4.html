@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset = "utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href = "../css/fase4.css" rel = "stylesheet"/>
+    <link rel="icon" href="Site/images/logo-Paisagem.png" type="image/png">
+
+    <!--type="module" para permitir o import no gameplay.js .-->
+    <script type="module" src="../js/gameplay.js" defer> </script> <!--
+                                                    O defer garante que o script
+                                                    será carregado junto com o HTML e 
+                                                    só rodará depois que todo o HTML estiver pronto.
+                                                  -->
+
+    <title>Paisagem</title>
+    
+</head>
+
+<body class="fonte-principal-index">
+    
+    <!-- Cabeçalho da página -->
+    <header>
+    </header>
+    
+    <audio id="musica" autoplay loop> <!--As músicas serão executadas pelo recursosJogo.js .-->
+    Seu navegador não é compatível com o elemento aúdio.
+    </audio>
+
+    <main>
+        
+        <div id="area-gameplay"></div>
+
+        <div id="dialogo-mascote_1">
+            <p>Ei… parece que esses arquivos estão presos!</p>
+
+            <p>
+                Não podemos deixar isso assim. <br>
+                Clique em <strong>"Libertar"</strong>.
+            </p>
+
+            <p>
+                O quê?! <br>
+                Eles estão sendo presos de novo!
+            </p>
+
+            <p>
+                Esse vírus é teimoso… vamos tentar pará-lo.
+            </p>
+
+            <p>
+                Cuidado! <br>
+                Existe um vírus mais forte que mexe nos controles do sistema.
+                Ele tenta impedir que a gente o desligue.
+            </p>
+
+            <p>
+                Use o <strong>Antivírus</strong> para descriptografar os arquivos.
+            </p>
+        </div>
+
+        <div id="dialogo-mascote_2">
+            <p>
+                Ufa… acho que acabou.
+            </p>
+
+            <p>
+                Espera! <br>
+                Algo não está certo…
+            </p>
+
+            <p>
+                Eu não estou vendo ninguém.
+            </p>
+
+            <p>
+                Ah… entendi agora. <br>
+                Esses inimigos são espertos.
+                Eles não atacam, só observam e copiam tudo.
+            </p>
+
+            <p>
+                Um deles espia cada tecla que você aperta.
+                Outro segue todos os seus movimentos!
+            </p>
+
+            <p>
+                E tem um pior ainda… <br>
+                Ele tenta gravar tudo o que aparece na sua tela.
+            </p>
+
+            <p>
+                O Antivírus pode ajudar, mas ele não consegue cuidar de tudo sozinho.
+                Muitos inimigos estão chegando ao mesmo tempo!
+            </p>
+
+            <p>
+                Precisamos fechar as entradas deles. <br>
+                Clique no botão do <strong>Firewall</strong> e pare-os!
+            </p>
+        </div>
+
+        
+        <div id="dialogo-mascote">
+            <div id="organizar-layout-interno">
+                <div id="layout-falas-mascote">
+                    <span id="falas-mascote"></span>
+                    <button id="continuar">Continuar</button>
+                </div>
+                <img src="../assets/mascote.png.png" alt="Mascote">
+            </div>        
+        </div>
+        
+    </main>
+
+<!--A tag div aninha o seu conteúdo interno de acordo com as regras impostas
+pelo seletor .css, observe as tags de início e fim da div. -->
+
+</body>
+
+</html>

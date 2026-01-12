@@ -1,0 +1,17 @@
+// 1. Configurações (Abstracts)
+@use 'abstracts/main' as abstracts;
+
+// 2. Base
+@use 'base/main' as base;
+
+// 3. Componentes
+@use 'componentes/main' as componentes;
+
+// 4. Layout
+@use 'layout/body';
+@use 'layout/desktop';
+@use 'layout/mascote';
+@use 'layout/fase2';
+@use 'layout/lab';
+@use 'layout/fase1';
+
