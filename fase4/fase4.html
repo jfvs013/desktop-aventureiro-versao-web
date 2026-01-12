@@ -4,10 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Fase 3 — Manchetes Suspeitas</title>
+    <title>Fase 4 — Manchetes Suspeitas</title>
 
     <style>
-        /* Estilos Baseados na Identidade Visual da Fase 1 */
         :root {
             --bg-color: #0f172a;
             --card-bg: #1e293b;
@@ -534,7 +533,6 @@
 
                 endModal.classList.remove('hidden');
 
-                // Salva progresso (mesma lógica da Fase 1)
                 const progress = JSON.parse(localStorage.getItem('da_game_progress') || '{}');
                 progress.phase3Completed = true;
                 progress.phase3Score = score;
