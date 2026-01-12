@@ -54,14 +54,14 @@ export const Phase3 = {
         // Limpeza Visual
         state.dom.arena.innerHTML = '';
         if (state.dom.shield) state.dom.arena.appendChild(state.dom.shield);
-        
+
         // Reset
         state.active = true;
         state.lives = 100;
         state.charge = 0;
         state.hits = 0;
         state.time = CONFIG.timeLimit;
-        
+
         this.clearTimers();
         this.updateUI();
 
@@ -94,22 +94,22 @@ export const Phase3 = {
         }
         const container = document.createElement('div');
         container.innerHTML = `<span style="font-size:1.2rem;margin-right:5px;">⏳</span><span id="arcade-timer" style="font-family:monospace;font-size:1.5rem;color:#ffcc00;">${CONFIG.timeLimit}</span>`;
-        Object.assign(container.style, { display:'flex', alignItems:'center', marginLeft:'20px', background:'rgba(0,0,0,0.5)', padding:'5px 12px', borderRadius:'6px', border:'1px solid #ffcc00' });
-        
+        Object.assign(container.style, { display: 'flex', alignItems: 'center', marginLeft: '20px', background: 'rgba(0,0,0,0.5)', padding: '5px 12px', borderRadius: '6px', border: '1px solid #ffcc00' });
+
         const hud = document.querySelector('.arcade-hud') || document.body;
         hud.appendChild(container);
-        
+
         // Fix para caso não tenha HUD
-        if(hud === document.body) {
+        if (hud === document.body) {
             container.style.position = 'fixed'; container.style.top = '10px'; container.style.right = '10px'; container.style.zIndex = '1000';
         }
-        
+
         state.dom.timerDisplay = $('#arcade-timer');
     },
 
     startTimer() {
         if (state.timerInterval) clearInterval(state.timerInterval);
-        
+
         state.timerInterval = setInterval(() => {
             if (!state.active) { clearInterval(state.timerInterval); return; }
 
@@ -122,7 +122,7 @@ export const Phase3 = {
                 state.time = 0; // Trava no zero visualmente
                 this.updateUI();
                 this.handleTimeOut(); // Chama o fim de jogo
-            } 
+            }
             else if (state.time === 10) {
                 if (state.dom.timerDisplay) state.dom.timerDisplay.style.color = "#ff4444";
                 this.safeMascotSay("Reta final! 10 segundos!");
@@ -134,9 +134,9 @@ export const Phase3 = {
         console.log("Tempo esgotado! Verificando vitória...");
         state.active = false;
         this.clearTimers();
-        
+
         const finalScore = GameState.getScore();
-        
+
         if (finalScore >= CONFIG.winScore) {
             this.showCustomModal(true, finalScore);
         } else {
@@ -151,13 +151,13 @@ export const Phase3 = {
         if (old) old.remove();
 
         const title = victory ? "PARABÉNS! FASE CONCLUÍDA 🚀" : "GAME OVER 💀";
-        const message = victory 
-            ? `Você protegeu o sistema!\nPontuação Final: <strong style="color:#00ff88; font-size:1.5rem">${score}</strong>` 
+        const message = victory
+            ? `Você protegeu o sistema!\nPontuação Final: <strong style="color:#00ff88; font-size:1.5rem">${score}</strong>`
             : `Tempo esgotado!\nPontuação: ${score} (Meta: ${CONFIG.winScore})`;
-        
+
         const btnText = victory ? "IR PARA FASE 4 ➡️" : "TENTAR DE NOVO 🔄";
-        const btnAction = victory 
-            ? () => window.location.href = "fase4.html" // Ajuste o caminho aqui se precisar (ex: ../fase4/index.html)
+        const btnAction = victory
+            ? () => window.location.href = "fase4.html" // Ajuste o caminho aqui se precisar (ex: ../fase4/fase4.html)
             : () => location.reload();
 
         // Cria o HTML do Modal na força bruta
@@ -199,7 +199,7 @@ export const Phase3 = {
         const { arena, shield } = state.dom;
         if (!shield) return;
         shield.style.transition = 'transform 0.05s linear';
-        
+
         const newArena = arena.cloneNode(true);
         arena.parentNode.replaceChild(newArena, arena);
         state.dom.arena = newArena;
@@ -212,7 +212,7 @@ export const Phase3 = {
             let x = e.clientX - r.left - (s.offsetWidth / 2);
             x = Math.max(0, Math.min(x, r.width - s.offsetWidth));
             s.style.transform = `translateX(${x}px)`;
-            
+
             if (state.charge >= CONFIG.chargeRequired) s.classList.add('shield-ready');
             else s.classList.remove('shield-ready');
         });
@@ -228,28 +228,28 @@ export const Phase3 = {
     spawnItem() {
         const { arena } = state.dom;
         const isWeak = Math.random() > 0.4;
-        
+
         const item = document.createElement('div');
         const type = isWeak ? 'weak' : 'strong';
         const list = isWeak ? DATA.weak : DATA.strong;
         item.innerText = list[Math.floor(Math.random() * list.length)];
         item.className = isWeak ? 'falling-rock' : 'falling-chip';
         item.dataset.type = type;
-        
+
         const maxPos = arena.offsetWidth - 160;
         item.style.left = `${Math.random() * maxPos}px`;
         item.style.top = '-60px';
-        
+
         arena.appendChild(item);
 
         let posY = -60;
         const speed = isWeak ? CONFIG.gravity : (CONFIG.gravity + 0.5);
 
         const fallTimer = setInterval(() => {
-            if (!state.active || !document.body.contains(item)) { 
-                clearInterval(fallTimer); 
-                if(item.parentNode) item.remove(); 
-                return; 
+            if (!state.active || !document.body.contains(item)) {
+                clearInterval(fallTimer);
+                if (item.parentNode) item.remove();
+                return;
             }
 
             posY += speed;
@@ -276,8 +276,8 @@ export const Phase3 = {
         if (!item || !shield) return false;
         const r1 = item.getBoundingClientRect();
         const r2 = shield.getBoundingClientRect();
-        return !(r1.right < r2.left + 5 || r1.left > r2.right - 5 || 
-                 r1.bottom < r2.top + 5 || r1.top > r2.bottom - 5);
+        return !(r1.right < r2.left + 5 || r1.left > r2.right - 5 ||
+            r1.bottom < r2.top + 5 || r1.top > r2.bottom - 5);
     },
 
     // --- EVENTOS DE JOGO ---
@@ -305,7 +305,7 @@ export const Phase3 = {
         this.addSafeScore(30);
         this.createExplosion(parseFloat(item.style.left), state.dom.arena.offsetHeight - 20, '#00ff88');
         this.showFloatingText(parseFloat(item.style.left), state.dom.arena.offsetHeight - 60, "Segura!", "#00ff88");
-        
+
         if (state.charge >= CONFIG.chargeRequired) this.activateSuperLaser();
         else this.safeMascotCelebrate();
     },
@@ -315,7 +315,7 @@ export const Phase3 = {
         const { arena, shield } = state.dom;
         const laser = document.createElement('div');
         laser.className = 'super-laser';
-        
+
         const sRect = shield.getBoundingClientRect();
         const aRect = arena.getBoundingClientRect();
         laser.style.left = `${sRect.left - aRect.left + (sRect.width / 2) - 10}px`;
@@ -357,16 +357,16 @@ export const Phase3 = {
             document.body.appendChild(p);
             const dX = (Math.random() - 0.5) * 100;
             const dY = (Math.random() - 0.5) * 100;
-            p.animate([{transform:'translate(0,0) scale(1)', opacity:1}, {transform:`translate(${dX}px, ${dY}px) scale(0)`, opacity:0}], {duration:500}).onfinish = () => p.remove();
+            p.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${dX}px, ${dY}px) scale(0)`, opacity: 0 }], { duration: 500 }).onfinish = () => p.remove();
         }
     },
 
     showFloatingText(x, y, text, color) {
         const el = document.createElement('div');
         el.innerText = text;
-        Object.assign(el.style, { position:'fixed', left:`${x}px`, top:`${y}px`, color:color, fontWeight:'bold', fontSize:'1.4rem', textShadow:'0 0 4px black', pointerEvents:'none', zIndex:'1000' });
+        Object.assign(el.style, { position: 'fixed', left: `${x}px`, top: `${y}px`, color: color, fontWeight: 'bold', fontSize: '1.4rem', textShadow: '0 0 4px black', pointerEvents: 'none', zIndex: '1000' });
         document.body.appendChild(el);
-        el.animate([{transform:'translateY(0)', opacity:1}, {transform:`translateY(-50px)`, opacity:0}], {duration:1000}).onfinish = () => el.remove();
+        el.animate([{ transform: 'translateY(0)', opacity: 1 }, { transform: `translateY(-50px)`, opacity: 0 }], { duration: 1000 }).onfinish = () => el.remove();
     },
 
     updateUI() {
