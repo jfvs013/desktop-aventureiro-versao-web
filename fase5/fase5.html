@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fase 5 - O Enigma da Criptografia</title>
     <style>
-        /* --- CSS BASEADO NO TUTORIAL E FASES ANTERIORES --- */
         :root {
             --primary: #00d4ff;
             --success: #2ecc71;
@@ -16,7 +15,11 @@
             --text: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -29,21 +32,46 @@
 
         /* Fundo animado */
         body::before {
-            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-image: linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
-            background-size: 40px 40px; animation: gridMove 20s linear infinite;
-            pointer-events: none; z-index: 0;
+                linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
         }
-        @keyframes gridMove { 0% { transform: translateY(0); } 100% { transform: translateY(40px); } }
+
+        @keyframes gridMove {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(40px);
+            }
+        }
 
         .container {
-            position: relative; z-index: 1; padding: 20px; max-width: 1200px; margin: 0 auto; text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
         }
 
-        h1 { color: var(--primary); margin-bottom: 10px; text-shadow: 0 0 10px rgba(0,212,255,0.5); }
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
 
-        /* --- ÁREA DO MASCOTE PRINCIPAL --- */
+        /* --- ÁREA DO MASCOTE --- */
         .main-mascot-area {
             display: flex;
             align-items: flex-start;
@@ -64,18 +92,79 @@
             transition: transform 0.3s ease;
         }
 
-        /* Animações do Mascote */
-        .mascot-float { animation: mascotFloatAnim 3s ease-in-out infinite; }
-        .mascot-talk { animation: mascotTalkAnim 0.5s ease infinite alternate; }
-        .mascot-jump { animation: mascotJumpAnim 0.8s ease; }
-        .mascot-alert { animation: mascotShakeAnim 0.5s ease; }
+        /* Animações */
+        .mascot-float {
+            animation: mascotFloatAnim 3s ease-in-out infinite;
+        }
 
-        @keyframes mascotFloatAnim { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        @keyframes mascotTalkAnim { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-4px) scale(1.02); } }
-        @keyframes mascotJumpAnim { 0%, 100% { transform: scale(1) translateY(0); } 40% { transform: scale(1.1, 0.9) translateY(10px); } 60% { transform: scale(0.9, 1.1) translateY(-20px); } }
-        @keyframes mascotShakeAnim { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px) rotate(-2deg); } 40%, 80% { transform: translateX(8px) rotate(2deg); } }
+        .mascot-talk {
+            animation: mascotTalkAnim 0.5s ease infinite alternate;
+        }
 
-        /* Balão de Diálogo Principal */
+        .mascot-jump {
+            animation: mascotJumpAnim 0.8s ease;
+        }
+
+        .mascot-alert {
+            animation: mascotShakeAnim 0.5s ease;
+        }
+
+        @keyframes mascotFloatAnim {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes mascotTalkAnim {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+
+            100% {
+                transform: translateY(-4px) scale(1.02);
+            }
+        }
+
+        @keyframes mascotJumpAnim {
+
+            0%,
+            100% {
+                transform: scale(1) translateY(0);
+            }
+
+            40% {
+                transform: scale(1.1, 0.9) translateY(10px);
+            }
+
+            60% {
+                transform: scale(0.9, 1.1) translateY(-20px);
+            }
+        }
+
+        @keyframes mascotShakeAnim {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-8px) rotate(-2deg);
+            }
+
+            40%,
+            80% {
+                transform: translateX(8px) rotate(2deg);
+            }
+        }
+
         .dialogue-box-main {
             background: rgba(42, 49, 80, 0.95);
             border: 2px solid var(--primary);
@@ -86,79 +175,175 @@
             text-align: left;
             font-size: 1.1rem;
             line-height: 1.5;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transition: color 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .dialogue-box-main::before {
-            content: ''; position: absolute; top: 20px; left: -12px;
-            width: 0; height: 0;
-            border-top: 10px solid transparent; border-bottom: 10px solid transparent;
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -12px;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
             border-right: 12px solid var(--primary);
         }
 
         /* --- GRID DE ARQUIVOS --- */
-        .files-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-
-        .file-card {
-            background: rgba(26, 31, 58, 0.9); border: 2px solid rgba(0, 212, 255, 0.3);
-            border-radius: 20px; padding: 30px; width: 250px; cursor: pointer;
-            transition: all 0.3s ease; position: relative; overflow: hidden;
+        .files-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
         }
 
-        .file-card:hover:not(.unlocked) { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 0 30px rgba(0, 212, 255, 0.2); }
-        .file-card.unlocked { border-color: var(--success); background: rgba(46, 204, 113, 0.15); cursor: default; }
-        .icon-lock { font-size: 60px; margin-bottom: 15px; display: block; transition: 0.5s; }
-        .file-card.unlocked .icon-lock { transform: scale(1.2) rotate(-10deg); }
+        .file-card {
+            background: rgba(26, 31, 58, 0.9);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            width: 250px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-card:hover:not(.unlocked) {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .file-card.unlocked {
+            border-color: var(--success);
+            background: rgba(46, 204, 113, 0.15);
+            cursor: default;
+        }
+
+        .icon-lock {
+            font-size: 60px;
+            margin-bottom: 15px;
+            display: block;
+            transition: 0.5s;
+        }
+
+        .file-card.unlocked .icon-lock {
+            transform: scale(1.2) rotate(-10deg);
+        }
+
+        /* --- BOTÃO PRÓXIMA FASE --- */
+        #finish-area {
+            display: none;
+            margin-top: 30px;
+            padding-bottom: 50px;
+            animation: mascotFloatAnim 3s ease-in-out infinite;
+        }
 
         /* --- MODAIS --- */
         .modal {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
-            display: none; align-items: center; justify-content: center; z-index: 100;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
             backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background: var(--card-bg); border-radius: 24px; padding: 40px; max-width: 650px;
-            width: 90%; border: 2px solid var(--primary); position: relative; text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 650px;
+            width: 90%;
+            border: 2px solid var(--primary);
+            position: relative;
+            text-align: center;
         }
 
-        /* Puzzle Elements */
-        .modal-header-with-mascot { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px; }
-        .mascot-mini { width: 80px; }
-        .word-display { display: flex; justify-content: center; gap: 10px; margin: 30px 0; flex-wrap: wrap; }
-        .letter-input {
-            width: 50px; height: 60px; background: #2a3150; border: 2px solid #3d466e;
-            border-radius: 12px; color: white; font-size: 28px; text-align: center;
-            text-transform: uppercase; font-weight: bold; transition: 0.3s;
+        .word-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
         }
-        .letter-input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary); outline: none; }
+
+        .letter-input {
+            width: 50px;
+            height: 60px;
+            background: #2a3150;
+            border: 2px solid #3d466e;
+            border-radius: 12px;
+            color: white;
+            font-size: 28px;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
 
         /* Botões */
         .btn {
-            padding: 12px 25px; border-radius: 10px; border: none; font-weight: bold;
-            cursor: pointer; text-transform: uppercase; transition: 0.3s; margin: 5px;
+            padding: 12px 25px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+            margin: 5px;
         }
-        .btn-primary { background: linear-gradient(135deg, #00d4ff, #00a8cc); color: white; }
-        .btn-secondary { background: rgba(255, 107, 53, 0.2); color: var(--warning); border: 2px solid var(--warning); }
-        .btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
 
-        /* Pergaminho */
-        #knowledge-scroll {
-            background: #fdf5e6; color: #2c3e50; border: 8px solid #d4af37;
-            padding: 30px; max-height: 70vh; overflow-y: auto; text-align: left;
-            border-radius: 4px; box-shadow: inset 0 0 30px rgba(0,0,0,0.1);
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #00a8cc);
+            color: white;
         }
-        #knowledge-scroll h2 { color: #b8860b; border-bottom: 2px dashed #d4af37; padding-bottom: 10px; margin-bottom: 20px; }
-        #knowledge-scroll p, #knowledge-scroll li { line-height: 1.6; font-size: 1.1rem; margin-bottom: 10px; }
-        
-        /* Responsivo */
+
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 20px 40px;
+            font-size: 1.2rem;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--warning);
+            border: 2px solid var(--warning);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.2);
+        }
+
+        #knowledge-scroll {
+            background: #fdf5e6;
+            color: #2c3e50;
+            border: 8px solid #d4af37;
+            padding: 30px;
+            max-height: 70vh;
+            overflow-y: auto;
+            text-align: left;
+            border-radius: 4px;
+        }
+
         @media (max-width: 768px) {
-            .main-mascot-area { flex-direction: column; align-items: center; }
-            .dialogue-box-main::before { display: none; }
-            .dialogue-box-main { text-align: center; }
-            .letter-input { width: 40px; height: 50px; font-size: 20px; }
+            .main-mascot-area {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .dialogue-box-main::before {
+                display: none;
+            }
+
+            .letter-input {
+                width: 40px;
+                height: 50px;
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -172,10 +357,12 @@
 
         <section class="main-mascot-area">
             <div class="mascot-wrapper">
-                <img src="../assets/mascote.png.png" alt="Cãozinho Azul" class="mascot-img mascot-float" id="main-mascot" onerror="this.src='https://cdn-icons-png.flaticon.com/512/616/616408.png'">
+                <img src="../assets/mascote.png.png" alt="Mascote" class="mascot-img mascot-float" id="main-mascot"
+                    onerror="this.src='https://cdn-icons-png.flaticon.com/512/616/616408.png'">
             </div>
             <div class="dialogue-box-main" id="main-dialogue">
-                Olá, Aventureiro! Temos arquivos importantes trancados. Precisamos da chave correta para liberar o conhecimento!
+                Olá, Aventureiro! Temos arquivos importantes trancados por criptografia. Desvende os códigos para
+                liberar o conhecimento!
             </div>
         </section>
 
@@ -196,141 +383,75 @@
                 <p id="status-2">Criptografado</p>
             </div>
         </div>
+
+        <div id="finish-area">
+            <button class="btn btn-success" onclick="goToPhase6()">
+                AVANÇAR PARA FASE 6 ➡️
+            </button>
+        </div>
     </div>
 
     <div class="modal" id="puzzle-modal">
         <div class="modal-content">
-            <div class="modal-header-with-mascot">
-                <div class="mascot-wrapper">
-                    <img src="../assets/mascote.png.png" class="mascot-img mascot-mini mascot-float" alt="Mascote Mini" id="modal-mascot" onerror="this.src='https://cdn-icons-png.flaticon.com/512/616/616408.png'">
-                </div>
-                <div>
-                    <h2 style="color: var(--primary);">Decodificador</h2>
-                    <p id="puzzle-hint" style="margin-top: 5px; opacity: 0.8;">Dica: A palavra tem <span id="word-len"></span> letras.</p>
-                </div>
-            </div>
-            
+            <h2 style="color: var(--primary);">Decodificador</h2>
+            <p id="puzzle-hint" style="margin: 15px 0; opacity: 0.8;">A palavra tem <span id="word-len"></span> letras.
+            </p>
             <div class="word-display" id="word-inputs"></div>
-
             <div>
                 <button class="btn btn-secondary" onclick="useLupa()">🔍 Usar Lupa (Dica)</button>
                 <button class="btn btn-primary" onclick="verifyWord()">🔓 Descriptografar</button>
             </div>
-             <button class="btn" style="background: transparent; color: #aaa; margin-top: 20px;" onclick="closeModal('puzzle-modal')">Cancelar</button>
+            <button class="btn" style="background: transparent; color: #aaa; margin-top: 20px;"
+                onclick="closeModal('puzzle-modal')">Cancelar</button>
         </div>
     </div>
 
     <div class="modal" id="knowledge-modal">
-        <div class="modal-content" id="knowledge-scroll" style="background: #fdf5e6; border: 8px solid #d4af37;">
-            </div>
+        <div class="modal-content" id="knowledge-scroll"></div>
     </div>
 
     <script>
-        // Dados do Jogo
         const gameData = [
             {
                 word: "FAKENEWS",
                 hint: "Notícias falsas que se espalham rápido.",
-                info: `<h2>🛡️ Proteção contra FAKE NEWS (Guia 2026)</h2>
-                       <p>Para não cair em mentiras na rede, siga estes 5 passos rápidos:</p>
-                       <ul>
-                           <li><strong>1. Cheque a Fonte:</strong> O site é conhecido? URLs estranhas (ex: .com.co) são suspeitas.</li>
-                           <li><strong>2. Autoria Clara:</strong> Notícias sérias mostram quem escreveu a matéria.</li>
-                           <li><strong>3. Data de Publicação:</strong> Cuidado com notícias antigas compartilhadas como se fossem de hoje.</li>
-                           <li><strong>4. Saia da Bolha:</strong> Se só um site está falando algo muito bombástico, desconfie.</li>
-                           <li><strong>5. Leia Além do Título:</strong> Títulos sensacionalistas (clickbait) são feitos para enganar.</li>
-                       </ul>`
+                info: `<h2>🛡️ Guia contra FAKE NEWS</h2><p>1. Cheque a fonte.<br>2. Verifique a data.<br>3. Leia além do título.</p>`
             },
             {
                 word: "PHISHING",
                 hint: "Pescaria digital para roubar senhas.",
-                info: `<h2>🎣 O que é Phishing e como agir</h2>
-                       <p><strong>O que é:</strong> É uma técnica onde criminosos "pescam" suas informações usando e-mails ou sites falsos que parecem reais.</p>
-                       <p><strong>Como se proteger:</strong></p>
-                       <ul>
-                       <li>Nunca clique em links que pedem urgência (ex: "Sua conta será bloqueada!").</li>
-                       <li>Verifique sempre o endereço do remetente do e-mail.</li>
-                       <li>Ative a Autenticação de Dois Fatores (2FA) em todas as suas contas.</li>
-                       </ul>`
+                info: `<h2>🎣 Alerta de Phishing</h2><p>Nunca clique em links suspeitos de e-mails que pedem urgência ou dados pessoais.</p>`
             },
             {
                 word: "SENHA",
                 hint: "Sua chave mestra no mundo digital.",
-                info: `<h2>🔑 A Força da sua Senha</h2>
-                       <p>Sua senha é a primeira barreira de defesa. Torne-a forte!</p>
-                       <ul>
-                       <li><strong>Tamanho importa:</strong> Use pelo menos 12 caracteres.</li>
-                       <li><strong>Misture tudo:</strong> Use letras maiúsculas, minúsculas, números e símbolos (!@#$).</li>
-                       <li><strong>Não Repita:</strong> Nunca use a mesma senha para o e-mail, redes sociais e jogos.</li>
-                       <li><strong>Use um Gerenciador:</strong> Eles ajudam a criar e lembrar senhas complexas.</li>
-                       </ul>`
+                info: `<h2>🔑 Senhas Fortes</h2><p>Use letras, números e símbolos. Nunca repita a mesma senha em sites diferentes.</p>`
             }
         ];
 
         let currentFileIndex = null;
+        let unlockedCount = 0;
         const mainMascot = document.getElementById('main-mascot');
-        const modalMascot = document.getElementById('modal-mascot');
         const mainDialogue = document.getElementById('main-dialogue');
 
-        // --- Sistema de Feedback do Mascote ---
         function darFeedback(tipo, mensagem) {
             mainDialogue.innerHTML = mensagem;
-            mainDialogue.style.color = 'var(--text)'; // Reset cor
-
-            // Remove classes de animação anteriores para reiniciar
             mainMascot.classList.remove('mascot-float', 'mascot-talk', 'mascot-jump', 'mascot-alert');
-            modalMascot.classList.remove('mascot-float', 'mascot-talk', 'mascot-jump', 'mascot-alert');
-            
-            // Força reflow para reiniciar animação
-            void mainMascot.offsetWidth; 
-            void modalMascot.offsetWidth;
+            void mainMascot.offsetWidth;
 
-            let animClass = 'mascot-float'; // Padrão
-
-            switch(tipo) {
-                case 'foco':
-                    animClass = 'mascot-talk';
-                    break;
-                case 'sucesso':
-                    animClass = 'mascot-jump';
-                    mainDialogue.style.color = 'var(--success)';
-                    break;
-                 case 'erro':
-                    animClass = 'mascot-alert';
-                    mainDialogue.style.color = 'var(--danger)';
-                    break;
-                case 'dica':
-                    animClass = 'mascot-talk';
-                    mainDialogue.style.color = 'var(--warning)';
-                    break;
-            }
-
-            mainMascot.classList.add(animClass);
-            // O mascote do modal só reage se o modal estiver aberto
-            if(document.getElementById('puzzle-modal').style.display === 'flex') {
-                modalMascot.classList.add(animClass);
-            } else {
-                 modalMascot.classList.add('mascot-float');
-            }
+            if (tipo === 'sucesso') mainMascot.classList.add('mascot-jump');
+            else if (tipo === 'erro') mainMascot.classList.add('mascot-alert');
+            else mainMascot.classList.add('mascot-talk');
         }
 
-        // --- Lógica do Jogo ---
         function openPuzzle(index) {
-            const file = document.getElementById(`file-${index}`);
-            if (file.classList.contains('unlocked')) {
-                darFeedback('foco', "Esse arquivo já foi aberto! Relembre o conhecimento no pergaminho.");
+            if (document.getElementById(`file-${index}`).classList.contains('unlocked')) {
                 showKnowledge(index);
                 return;
             }
-
             currentFileIndex = index;
-            const data = gameData[index];
-            
-            darFeedback('foco', `Concentre-se, aventureiro! Tente descobrir a palavra-chave de ${data.word.length} letras.`);
-            document.getElementById('word-len').innerText = data.word.length;
-            // document.getElementById('puzzle-hint').innerHTML = `Dica: ${data.hint} (<span id="word-len">${data.word.length}</span> letras)`;
-
-            setupInputs(data.word.length);
+            document.getElementById('word-len').innerText = gameData[index].word.length;
+            setupInputs(gameData[index].word.length);
             document.getElementById('puzzle-modal').style.display = 'flex';
         }
 
@@ -342,92 +463,63 @@
                 input.className = 'letter-input';
                 input.maxLength = 1;
                 input.id = `l-${i}`;
-                // Auto-focus próximo input
-                input.addEventListener('input', (e) => {
-                    if (e.target.value.length === 1 && i < length - 1) {
-                        document.getElementById(`l-${i + 1}`).focus();
-                    }
-                });
-                // Backspace volta focus
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Backspace' && e.target.value === '' && i > 0) {
-                         document.getElementById(`l-${i - 1}`).focus();
-                    }
-                });
+                input.oninput = (e) => { if (e.target.value && i < length - 1) document.getElementById(`l-${i + 1}`).focus(); };
                 container.appendChild(input);
             }
-            setTimeout(() => document.getElementById('l-0')?.focus(), 100);
         }
 
         function verifyWord() {
             const data = gameData[currentFileIndex];
             let guess = "";
-            let allFilled = true;
-            for (let i = 0; i < data.word.length; i++) {
-                const val = document.getElementById(`l-${i}`).value.toUpperCase();
-                if(!val) allFilled = false;
-                guess += val;
-            }
-
-            if (!allFilled) {
-                 darFeedback('erro', "Preencha todas as letras antes de tentar descriptografar!");
-                 return;
-            }
+            for (let i = 0; i < data.word.length; i++) guess += document.getElementById(`l-${i}`).value.toUpperCase();
 
             if (guess === data.word) {
-                darFeedback('sucesso', "INCRÍVEL! Código correto. O arquivo está sendo liberado!");
+                darFeedback('sucesso', "Código correto! Arquivo liberado.");
                 closeModal('puzzle-modal');
                 unlockFile(currentFileIndex);
             } else {
-                darFeedback('erro', "Hmm, código incorreto. Tente novamente ou use a lupa se precisar de ajuda!");
-                // Limpa inputs errados (opcional, talvez frustre o jogador)
-                // setupInputs(data.word.length); 
+                darFeedback('erro', "Código incorreto. Tente novamente!");
             }
         }
 
+        function unlockFile(index) {
+            const file = document.getElementById(`file-${index}`);
+            if (!file.classList.contains('unlocked')) {
+                file.classList.add('unlocked');
+                document.getElementById(`status-${index}`).innerText = "Descriptografado!";
+                file.querySelector('.icon-lock').innerText = "🔓";
+                unlockedCount++;
+            }
+
+            if (unlockedCount === 3) {
+                setTimeout(() => {
+                    document.getElementById('finish-area').style.display = 'block';
+                    darFeedback('sucesso', "Incrível! Todos os arquivos foram abertos. O portal para a Fase 6 surgiu!");
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }, 2000);
+            }
+            setTimeout(() => showKnowledge(index), 1000);
+        }
+
         function useLupa() {
-            darFeedback('dica', "Ok, vou revelar a primeira e a última letra para te ajudar!");
             const data = gameData[currentFileIndex];
             document.getElementById('l-0').value = data.word[0];
             document.getElementById(`l-${data.word.length - 1}`).value = data.word[data.word.length - 1];
         }
 
-        function unlockFile(index) {
-            const file = document.getElementById(`file-${index}`);
-            const status = document.getElementById(`status-${index}`);
-            
-            const lock = file.querySelector('.icon-lock');
-
-            file.classList.add('unlocked');
-            status.innerText = "Descriptografado!";
-            lock.innerText = "🔓";
-            
-            setTimeout(() => {
-                 showKnowledge(index);
-            }, 1500); // Espera um pouco para o jogador ver a animação do mascote antes de abrir o pergaminho
-        }
-
         function showKnowledge(index) {
             const data = gameData[index];
-            const scrollContent = document.getElementById('knowledge-scroll');
-            scrollContent.innerHTML = data.info + '<div style="text-align:center; margin-top:20px;"><button class="btn btn-primary" onclick="closeModal(\'knowledge-modal\')">Entendido, fechar pergaminho!</button></div>';
+            const scroll = document.getElementById('knowledge-scroll');
+            scroll.innerHTML = data.info + '<br><button class="btn btn-primary" onclick="closeModal(\'knowledge-modal\')">Fechar</button>';
             document.getElementById('knowledge-modal').style.display = 'flex';
         }
 
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-            if(id === 'puzzle-modal') {
-                 darFeedback('foco', "Selecione outro arquivo para continuar a missão.");
-            }
-        }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // Fechar modal clicando fora
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = "none";
-                 darFeedback('foco', "Selecione um arquivo.");
-            }
+        function goToPhase6() {
+            window.location.href = '../fase6/fase4/fase4.html';
         }
     </script>
 </body>
+
 </html>
