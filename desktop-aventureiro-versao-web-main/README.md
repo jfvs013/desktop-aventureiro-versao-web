@@ -1,1 +1,0 @@
-# desktop-aventureiro-versao-web
