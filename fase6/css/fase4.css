@@ -60,6 +60,7 @@ main {
 }
 
 #area-gameplay {
+    position: relative;
     display: grid;
     /* Define a LARGURA de cada coluna. */
     grid-template-columns: repeat(auto-fill, 60px); 
@@ -67,6 +68,8 @@ main {
     grid-auto-rows: 60px; gap: 8px;
     width: 90vw; /* Limite a largura para não "bater" no antivírus. */
     padding: 10px;
+    top: 6vh;
+    left: 0.8vh;
 }
 
 #area-gameplay div { /* Este seletor seleciona as 
@@ -102,7 +105,7 @@ main {
     bottom: 83vh;    /* 80vh da borda inferior */
     width: 100px;
     height: 100px;
-    background-color: red; /* Usada para facilitar o desenvolvimento. */
+    /* background-color: red; Usada para facilitar o desenvolvimento. */
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -116,7 +119,7 @@ main {
     bottom: 65vh;    /* 80vh da borda inferior */
     width: 100px;
     height: 100px;
-    background-color: blue; /* Usada para facilitar o desenvolvimento. */
+    /* background-color: blue;  Usada para facilitar o desenvolvimento. */
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -135,6 +138,14 @@ main {
     background-image: url("../assets/firewallChatgpt.png"); /*Imagem feita pelo chatgpt.*/
     background-size: cover;
     background-position: center;
+}
+
+#pontuacaoEstilo {
+    position: relative;
+    color: white;
+    z-index: 1000;
+    bottom: 96vh;
+    left: 3vh;
 }
 
 #exibirPontuacao { /*exibirPontuacao é um id de uma div criada no js.*/

@@ -1,4 +1,4 @@
-import { iniciarMusica, exibirPontuacao } from "./recursosJogo.js"; // O (./) indica que está na mesma pasta.
+import { iniciarMusica, exibirPontuacao, pontuacaoAtual } from "./recursosJogo.js"; // O (./) indica que está na mesma pasta.
 
 var pontuacaoGlobal = 0;
 
@@ -20,22 +20,20 @@ function verificarCriptografia() {
 
             let contador = 0;
 
-            for(let i = 0; i < divsDeAreaGameplay.length; i++) {
+            for(let i = 0; i <= divsDeAreaGameplay.length -1; i++) {
                 if(divsDeAreaGameplay[i].innerText === "\u{1F512}") {
                     contador++;
-                }
-                
-                if(contador === divsDeAreaGameplay.lenght) {
-                    pontuacaoGlobal = subtrairPontos(pontuacaoGlobal, 1);
-                    
-                    console.log("Todas as divs criptografadas.");
-                }
-                else {
-                    console.log("Não criptografou todas as divs.");
-                }
 
+                    if(contador >= divsDeAreaGameplay.length -1) {
+                        pontuacaoGlobal = subtrairPontos(pontuacaoGlobal, 1);
+                        
+                        console.log("Todas as divs criptografadas.");
+                        alert("Lembre-se de descriptografar, clique no antivírus.");
+                    }
+                }    
             }
-        }, 15000 // Chama-se a cada 15 segundos.
+            console.log(`${contador}: valor de verificarCriptografia.`);
+        }, 45000 // Chama-se a cada 30 segundos.
     );
     return verificando; // Lembre-se de fechar o setInterval(), use clearInterval(nomeDaVariavel).
 }
@@ -189,7 +187,7 @@ function ransowareEmAcao() {
 
     const intervalo = setInterval( 
         () => {
-            if(indice < divsAninhadasAreaGameplay.length) { 
+            if(indice < divsAninhadasAreaGameplay.length -1) { 
                 indice++;
                 divsAninhadasAreaGameplay[indice].textContent = "\u{1F512}"; // Caractere Unicode do cadeado.
             }
@@ -198,7 +196,7 @@ function ransowareEmAcao() {
             }
             
             //callback(copiaIcones); // Retorna um vetor assim que terminar a execução do código, com uma cópia de cada div antes da substituição ou "criptografia".
-        }, 200 // Este codigo é executado a cada 200 milisegundos.
+        }, 20 // Este codigo é executado a cada 900 milisegundos.
     );
     return copiaIcones; // Retorna um vetor com os ícones originais.
 }
@@ -350,6 +348,12 @@ async function estagiosGameplay() {
     // O await para a execução naquela linha, até que uma condição anterior seja satisfeita.
     iniciarMusica(); // Chamando a função vinda de ./recursosJogo.js .
     // Parte 1 da gameplay.
+    const atualizarPontosAtuais = setInterval(
+        ()=> {
+            pontuacaoAtual(pontuacaoGlobal);
+        }, 3000
+    );
+
     await mascoteConversando(true); // Remove essa linhas para testar a promisse.
     await parte_1_Gameplay(); // Remove estas linhas para testar a promisse.
     const intervaloVerificacao = verificarCriptografia(); // É chamado constantemente a cada 15 segundos, precisa fechar ao finalizar a fase 4.
@@ -423,6 +427,7 @@ async function estagiosGameplay() {
             exibirPontuacao(pontuacaoGlobal);
             clearInterval(state.spywareIntervalo); // Limpa o setInterval() dentro do atributo do objeto state.
             clearInterval(intervaloVerificacao);
+            clearInterval(atualizarPontosAtuais);
             
             console.log("A fase 4 terminou.");
             console.log("exibirPontuacao(pontuacaoGlobal) deve criar elementos html para redirecionar a página, avançando para a fase seguinte.");

@@ -128,6 +128,21 @@ function exibirPontuacao(pontuacaoGlobal) { // Use ao terminar a fase 4.
     main.appendChild(divGenerica); // Adiciona a div dentro do <main>.
 }
 
-export { iniciarMusica, exibirPontuacao }; // Exportando a função iniciar música, dessa forma pode ser usado o import em outros arquivos (.js).  
+function pontuacaoAtual(pontuacaoGlobal) {
+    const divId = document.getElementById("pontuacaoEstilo");
+    const divGenerica = document.createElement("div");
+    const main = document.querySelector("main");
+    
+    if(divId === null) {
+        divGenerica.innerHTML = `<strong>Pontos:</strong> ${pontuacaoGlobal}`;
+        divGenerica.setAttribute("id", "pontuacaoEstilo");
+
+        main.appendChild(divGenerica);
+    }
+    else {
+        divId.innerHTML = `<strong>Pontos:</strong> ${pontuacaoGlobal}`
+    }
+}
+export { iniciarMusica, exibirPontuacao, pontuacaoAtual }; // Exportando a função iniciar música, dessa forma pode ser usado o import em outros arquivos (.js).  
 
 
