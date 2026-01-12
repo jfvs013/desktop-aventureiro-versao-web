@@ -2,947 +2,346 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fase 3 - Manchetes Suspeitas | Desktop Aventureiro</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fase 3 — Manchetes Suspeitas</title>
+    <link rel="stylesheet" href="/css/main.css">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #e0e0e0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Papel de jornal animado no fundo */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0px, transparent 2px, transparent 4px, rgba(255, 255, 255, 0.03) 6px),
-                repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0px, transparent 2px);
-            background-size: 100% 100%;
-            opacity: 0.5;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Header estilo jornal */
-        .game-header {
-            background: linear-gradient(180deg, #2a2a40 0%, #1a1a2e 100%);
-            border-bottom: 4px double #00d4ff;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            position: relative;
-            z-index: 10;
-        }
-
-        .newspaper-title {
-            font-family: 'Georgia', serif;
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #00d4ff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-            letter-spacing: 3px;
-            margin-bottom: 5px;
-        }
-
-        .newspaper-subtitle {
-            font-size: 0.9rem;
-            color: #ff6b35;
-            font-style: italic;
-            letter-spacing: 2px;
-        }
-
-        /* Barra de status */
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background: rgba(26, 26, 46, 0.9);
-            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
-            position: relative;
-            z-index: 10;
-        }
-
-        .mascot-status {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        #mascot-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 3px solid #00d4ff;
-            background: rgba(0, 212, 255, 0.1);
-            padding: 5px;
-            transition: transform 0.3s ease;
-        }
-
-        #mascot-avatar.happy {
-            animation: bounce 0.5s ease;
-        }
-
-        #mascot-avatar.alert {
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-5px);
-            }
-
-            75% {
-                transform: translateX(5px);
-            }
-        }
-
-        .player-info {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .stat-item {
-            font-size: 0.95rem;
-            color: #b0b0c0;
-        }
-
-        .stat-value {
-            color: #00d4ff;
-            font-weight: bold;
-        }
-
-        .timer-display {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #00d4ff;
-            padding: 10px 20px;
-            background: rgba(0, 212, 255, 0.1);
-            border: 2px solid #00d4ff;
-            border-radius: 10px;
-            min-width: 120px;
-            text-align: center;
-        }
-
-        .timer-display.warning {
-            animation: pulse 1s infinite;
-            color: #ff3b3b;
-            border-color: #ff3b3b;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.6;
-            }
-        }
-
-        /* Área principal do jogo */
-        .game-container {
-            display: flex;
-            gap: 20px;
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Coluna de manchetes */
-        .headlines-column {
-            flex: 2;
-            background: rgba(26, 31, 58, 0.95);
-            border: 2px solid rgba(0, 212, 255, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .headlines-column h2 {
-            color: #00d4ff;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
-            padding-bottom: 10px;
-        }
-
-        .headline-item {
-            background: linear-gradient(135deg, rgba(42, 49, 80, 0.8) 0%, rgba(26, 31, 58, 0.8) 100%);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 12px;
-            cursor: grab;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .headline-item:hover {
-            border-color: #00d4ff;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-            transform: translateX(5px);
-        }
-
-        .headline-item.dragging {
-            opacity: 0.5;
-            cursor: grabbing;
-        }
-
-        .headline-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 8px;
-            line-height: 1.4;
-        }
-
-        .headline-source {
-            font-size: 0.85rem;
-            color: #888;
-            font-style: italic;
-        }
-
-        .verify-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 193, 7, 0.2);
-            border: 2px solid #ffc107;
-            color: #ffc107;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .verify-btn:hover {
-            background: rgba(255, 193, 7, 0.3);
-            transform: scale(1.05);
-        }
-
-        /* Zonas de drop */
-        .drop-zones-column {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .drop-zone {
-            background: rgba(26, 31, 58, 0.95);
-            border: 3px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 30px 20px;
-            min-height: 280px;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .drop-zone h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-        }
-
-        .drop-zone.true {
-            border-color: rgba(76, 175, 80, 0.5);
-        }
-
-        .drop-zone.true h3 {
-            color: #4caf50;
-        }
-
-        .drop-zone.fake {
-            border-color: rgba(255, 59, 59, 0.5);
-        }
-
-        .drop-zone.fake h3 {
-            color: #ff3b3b;
-        }
-
-        .drop-zone.over {
-            background: rgba(0, 212, 255, 0.1);
-            border-style: solid;
-            border-width: 4px;
-            transform: scale(1.02);
-        }
-
-        .drop-zone-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            opacity: 0.7;
-        }
-
-        .drop-zone-hint {
-            font-size: 0.9rem;
-            color: #888;
-            margin-top: 10px;
-        }
-
-        /* Painel lateral */
-        .side-panel {
-            position: fixed;
-            right: 20px;
-            top: 180px;
-            width: 300px;
-            z-index: 100;
-        }
-
-        .mascot-dialogue {
-            background: rgba(26, 31, 58, 0.98);
-            border: 2px solid rgba(0, 212, 255, 0.5);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .dialogue-text {
-            color: #e0e6ed;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .tips-box {
-            background: rgba(255, 193, 7, 0.1);
-            border: 2px solid rgba(255, 193, 7, 0.3);
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .tips-box h4 {
-            color: #ffc107;
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-        }
-
-        .tips-box ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .tips-box li {
-            padding: 5px 0;
-            padding-left: 20px;
-            position: relative;
-            font-size: 0.85rem;
-            color: #b8c5d6;
-        }
-
-        .tips-box li::before {
-            content: '💡';
-            position: absolute;
-            left: 0;
-        }
-
-        /* Feedback box */
-        #feedback-box {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        #feedback-box.show {
-            opacity: 1;
-        }
-
-        #feedback-box.success {
-            border-color: #4caf50;
-            color: #4caf50;
-            background: rgba(76, 175, 80, 0.1);
-        }
-
-        #feedback-box.error {
-            border-color: #ff3b3b;
-            color: #ff3b3b;
-            background: rgba(255, 59, 59, 0.1);
-        }
-
-        #feedback-box.info {
-            border-color: #ffc107;
-            color: #ffc107;
-            background: rgba(255, 193, 7, 0.1);
-        }
-
-        /* Modal final */
-        .end-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .end-modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border: 4px solid #00d4ff;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-        }
-
-        .modal-title {
-            font-size: 2.5rem;
-            color: #00d4ff;
-            margin-bottom: 20px;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-        }
-
-        .modal-score {
-            font-size: 3rem;
-            color: #ffc107;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-
-        .modal-stats {
-            background: rgba(0, 212, 255, 0.05);
-            border: 2px solid rgba(0, 212, 255, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: left;
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .stat-row:last-child {
-            border-bottom: none;
-        }
-
-        .modal-message {
-            font-size: 1.2rem;
-            color: #e0e6ed;
-            margin: 20px 0;
-            line-height: 1.6;
-        }
-
+        /* Estilos adicionais para os botões do modal */
         .modal-buttons {
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
 
-        .btn {
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
+        .modal-buttons button {
+            flex: 1;
+            min-width: 150px;
+            max-width: 200px;
+        }
+
+        #nextPhaseBtn {
+            background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
+            color: white;
+            padding: 12px 24px;
             border: none;
             border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
-            color: white;
             box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-primary:hover {
+        #nextPhaseBtn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    transparent 70%);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        #nextPhaseBtn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
         }
 
-        .btn-secondary {
-            background: rgba(255, 107, 53, 0.2);
-            color: #ff6b35;
-            border: 2px solid #ff6b35;
+        #nextPhaseBtn:hover::before {
+            left: 100%;
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 107, 53, 0.3);
-        }
-
-        /* Responsividade */
-        @media (max-width: 1200px) {
-            .side-panel {
-                position: static;
-                width: 100%;
-                margin-top: 20px;
-            }
+        #nextPhaseBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         @media (max-width: 768px) {
-            .game-container {
+            .modal-buttons {
                 flex-direction: column;
             }
 
-            .newspaper-title {
-                font-size: 1.8rem;
+            .modal-buttons button {
+                width: 100%;
+                max-width: 100%;
             }
+        }
 
-            .status-bar {
-                flex-direction: column;
-                gap: 15px;
-            }
+        /* Estilos retrô adicionais para manchetes (inspirado em papel de jornal) */
+        .headline {
+            background-color: #000000;
+            /* Papel amarelado */
+            border: 1px solid #000;
+            margin: 5px 0;
+            padding: 8px;
+            cursor: grab;
+            font-size: 14px;
+            font-family: 'Times New Roman', serif;
+            /* Fonte de jornal */
+            position: relative;
+            border-radius: 5px;
+        }
+
+        .headline.dragging {
+            opacity: 0.5;
+        }
+
+        .drop-zone.true {
+            background-color: #000000;
+            /* Verde suave para verdadeiras */
+        }
+
+        .drop-zone.false {
+            background-color: #000000;
+            /* Vermelho suave para falsas */
         }
     </style>
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="game-header">
-        <h1 class="newspaper-title">📰 DAILY DESKTOP NEWS 📰</h1>
-        <p class="newspaper-subtitle">Fase 3: Manchetes Suspeitas - Separe Fatos de Fake News!</p>
-    </header>
-
-    <!-- Barra de Status -->
-    <div class="status-bar">
-        <div class="mascot-status">
-            <img id="mascot-avatar" src="../assets/mascote.png.png" alt="Mascote">
-            <div class="player-info">
-                <div class="stat-item">Jogador: <span class="stat-value" id="player-name">Aventureiro</span></div>
-                <div class="stat-item">Pontos: <span class="stat-value" id="score-display">0</span></div>
-                <div class="stat-item">Verificações: <span class="stat-value" id="verifications">0</span></div>
+    <div class="game-topbar">
+        <div class="left-info">
+            <img id="mascote-small" src="../assets/mascote.png.png" alt="Mascote" />
+            <div class="player-area">
+                <div id="playerDisplay">Jogador: —</div>
+                <div id="scoreDisplay">Pontos: 0</div>
             </div>
         </div>
-        <div class="timer-display" id="timer">60</div>
-    </div>
 
-    <!-- Container Principal -->
-    <div class="game-container">
-        <!-- Coluna de Manchetes -->
-        <div class="headlines-column">
-            <h2>📋 Manchetes do Dia</h2>
-            <div id="headlines-list"></div>
-        </div>
-
-        <!-- Zonas de Drop -->
-        <div class="drop-zones-column">
-            <div class="drop-zone true" id="true-zone">
-                <div class="drop-zone-icon">✅</div>
-                <h3>Notícia Verdadeira</h3>
-                <p class="drop-zone-hint">Arraste manchetes confiáveis aqui</p>
-            </div>
-
-            <div class="drop-zone fake" id="fake-zone">
-                <div class="drop-zone-icon">❌</div>
-                <h3>Fake News</h3>
-                <p class="drop-zone-hint">Arraste notícias falsas aqui</p>
-            </div>
+        <div class="right-info">
+            <div id="timer">Tempo: 60</div>
         </div>
     </div>
 
-    <!-- Painel Lateral -->
-    <aside class="side-panel">
-        <div class="mascot-dialogue">
-            <p class="dialogue-text" id="mascot-text">
-                Olá! Vamos combater fake news juntos? 🐶<br>
-                Arraste cada manchete para a caixa correta!
-            </p>
-        </div>
+    <main class="game-area">
+        <section class="mail-column">
+            <h3>Manchetes</h3>
+            <div id="mailList" class="mail-list"></div>
+        </section>
 
-        <div class="tips-box">
-            <h4>🔍 Sinais de Fake News:</h4>
-            <ul>
-                <li>Títulos sensacionalistas</li>
-                <li>Linguagem emotiva exagerada</li>
-                <li>Fontes não verificáveis</li>
-                <li>Erros de português</li>
-                <li>Teorias conspiratórias</li>
-            </ul>
-        </div>
+        <section class="drop-column">
+            <h3>Caixas</h3>
+            <div class="drop-zones">
+                <div id="true-box" class="drop-zone true">
+                    ✅ Notícia Verdadeira
+                </div>
+                <div id="false-box" class="drop-zone false">
+                    ❌ Fake News
+                </div>
+            </div>
+        </section>
 
-        <div id="feedback-box"></div>
-    </aside>
+        <aside class="help-column">
+            <div class="lupa">
+                <button id="inspectBtn" class="secondary-btn">
+                    🔍 Verificar Fonte
+                </button>
+                <p class="hint">
+                    Use para ver detalhes da manchete (-3 pontos, +1s bônus no timer)
+                </p>
+            </div>
 
-    <!-- Modal Final -->
-    <div class="end-modal" id="end-modal">
-        <div class="modal-content">
-            <h2 class="modal-title" id="modal-title">Fase Concluída!</h2>
-            <div class="modal-score" id="final-score">0</div>
+            <div id="feedbackBox" class="feedback-box">
+                Au au! Vamos classificar essas manchetes, aventureiro!
+            </div>
+        </aside>
+    </main>
 
-            <div class="modal-stats" id="stats-container"></div>
-
-            <p class="modal-message" id="modal-message"></p>
+    <div id="endModal" class="modal hidden">
+        <div class="modal-inner">
+            <h2>Missão concluída!</h2>
+            <p id="endText">Você fez 0 pontos</p>
 
             <div class="modal-buttons">
-                <button class="btn btn-primary" onclick="restartGame()">🔄 Jogar Novamente</button>
-                <button class="btn btn-secondary" onclick="goToMenu()">🏠 Menu Principal</button>
+                <button id="retryBtn" class="primary-btn">
+                    🔄 Jogar Novamente
+                </button>
+                <button id="nextPhaseBtn" class="primary-btn">
+                    ➤ Avançar para Fase 4
+                </button>
+                <button id="backBtn" class="secondary-btn">
+                    🏠 Voltar ao Início
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // === DADOS DO JOGO ===
+        // Dados das manchetes (igual ao anterior)
         const headlines = [
-            // VERDADEIRAS
-            {
-                id: 1,
-                title: "Ministério da Educação anuncia novo calendário escolar para 2026",
-                source: "Fonte: Portal G1 - Educação",
-                isFake: false,
-                details: "Notícia oficial publicada em portal de notícias reconhecido, com linguagem formal e fonte verificável."
-            },
-            {
-                id: 2,
-                title: "Estudos mostram benefícios do exercício físico regular para saúde mental",
-                source: "Fonte: Revista Científica Nature",
-                isFake: false,
-                details: "Pesquisa publicada em revista científica revisada por pares, com metodologia clara."
-            },
-            {
-                id: 3,
-                title: "Governo federal lança programa de inclusão digital para escolas públicas",
-                source: "Fonte: Agência Brasil",
-                isFake: false,
-                details: "Informação oficial de agência governamental, com dados verificáveis."
-            },
-            {
-                id: 4,
-                title: "Campanha de vacinação contra gripe começa na próxima semana",
-                source: "Fonte: Ministério da Saúde",
-                isFake: false,
-                details: "Comunicado oficial de órgão público de saúde, com datas e locais específicos."
-            },
-            {
-                id: 5,
-                title: "Bibliotecas municipais ampliam horário de funcionamento",
-                source: "Fonte: Prefeitura Municipal - Cultura",
-                isFake: false,
-                details: "Anúncio oficial da prefeitura com informações práticas e verificáveis."
-            },
-
-            // FALSAS
-            {
-                id: 6,
-                title: "URGENTE! Vírus MORTAL está se espalhando pela internet e APAGA TUDO!",
-                source: "Fonte: ZapZap Notícias Quentes",
-                isFake: true,
-                details: "Linguagem alarmista, fonte não confiável, uso excessivo de maiúsculas e informação sem comprovação."
-            },
-            {
-                id: 7,
-                title: "DESCOBERTA CHOCANTE: Água gelada causa câncer segundo médicos anônimos!",
-                source: "Fonte: Blog do Tio Zé - Saúde Alternativa",
-                isFake: true,
-                details: "Afirmação médica sem fontes identificadas, contradiz ciência estabelecida, fonte não verificável."
-            },
-            {
-                id: 8,
-                title: "Governo ESCONDE a verdade sobre aliens! Compartilhe antes que APAGUEM!",
-                source: "Fonte: Verdades Ocultas 2026",
-                isFake: true,
-                details: "Teoria conspiratória, apelo emocional para compartilhamento, fonte questionável."
-            },
-            {
-                id: 9,
-                title: "Você NÃO VAI ACREDITAR no que essa criança fez! Número 7 vai te CHOCAR!",
-                source: "Fonte: Clickbait News Network",
-                isFake: true,
-                details: "Título clickbait típico, linguagem sensacionalista, promessas vazias de conteúdo chocante."
-            },
-            {
-                id: 10,
-                title: "COMPROVADO: Comer pizza te deixa mais inteligente que estudar!",
-                source: "Fonte: Instituto de Pesquisas Imaginárias",
-                isFake: true,
-                details: "Afirmação absurda apresentada como científica, fonte inexistente, contradiz lógica básica."
-            },
-            {
-                id: 11,
-                title: "Sua conta será BLOQUEADA se você não compartilhar esta mensagem!",
-                source: "Fonte: Forward da Vovó",
-                isFake: true,
-                details: "Ameaça falsa comum em correntes, linguagem coercitiva, sem base factual."
-            },
-            {
-                id: 12,
-                title: "MILAGRE: Menino acorda de coma após ouvir música do seu cantor favorito!",
-                source: "Fonte: Histórias Emocionantes .com",
-                isFake: true,
-                details: "Apelo emocional extremo, sem detalhes verificáveis, típico de histórias virais falsas."
-            }
+            { text: "Governo lança campanha nacional para combater phishing em emails", isTrue: true },
+            { text: "Pesquisa mostra que 70% dos ataques cibernéticos começam por links suspeitos", isTrue: true },
+            { text: "Empresa de tecnologia atualiza software para corrigir vulnerabilidades de segurança", isTrue: true },
+            { text: "Especialistas recomendam uso de senhas fortes e autenticação de dois fatores", isTrue: true },
+            { text: "Novo regulamento europeu exige transparência em dados pessoais online", isTrue: true },
+            { text: "URGENTE: Vacina contra vírus causa implante de chips controlados pelo governo! Fuja agora!", isTrue: false },
+            { text: "Milhões de pessoas hackeadas em segundos por app de redes sociais! O fim do mundo digital está chegando!", isTrue: false },
+            { text: "Fonte secreta revela: Bilionários estão roubando seus dados para controlar a economia global!", isTrue: false },
+            { text: "Novo vírus cibernético apaga todas as fotos de família em 24 horas! Proteja-se com este produto milagroso!", isTrue: false },
+            { text: "Governo esconde verdade: Internet vai ser desligada para sempre em 2025 por causa de aliens!", isTrue: false }
         ];
 
-        // === VARIÁVEIS DO JOGO ===
         let score = 0;
         let timeLeft = 60;
-        let verifications = 0;
-        let correctAnswers = 0;
-        let wrongAnswers = 0;
         let timerInterval;
-        let playerName = localStorage.getItem('da_player') || 'Aventureiro';
-        let dragged = null;
+        let verifiedCount = 0;
+        let errorCount = 0;
+        let classifiedCount = 0;
+        let currentInspectIndex = -1; // Para rastrear qual manchete está sendo inspecionada
 
-        // === INICIALIZAÇÃO ===
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('player-name').textContent = playerName;
-            initializeGame();
-            startTimer();
-            showMascotMessage("Vamos começar! Analise cada manchete com cuidado. 🔍");
+        // Inicializar manchetes
+        function initHeadlines() {
+            const list = document.getElementById('mailList');
+            headlines.forEach((hl, index) => {
+                const div = document.createElement('div');
+                div.className = 'headline';
+                div.draggable = true;
+                div.id = `headline-${index}`;
+                div.textContent = hl.text;
+                div.dataset.index = index;
+                div.dataset.isTrue = hl.isTrue;
+                list.appendChild(div);
+            });
+        }
+
+        // Verificar fonte (botão na help-column, custa -3 pontos, dá +1s no timer)
+        document.getElementById('inspectBtn').addEventListener('click', () => {
+            if (currentInspectIndex >= 0 && timeLeft > 0) {
+                score -= 3;
+                timeLeft += 1; // Bônus de 1s
+                updateScore();
+                updateTimer();
+                verifiedCount++;
+                const hl = headlines[currentInspectIndex];
+                const msg = hl.isTrue ? "Fonte: Site oficial do governo (confiável)" : "Fonte: Blog anônimo sem verificação (duvidosa)";
+                updateFeedback(`Verificado: ${msg}`);
+                updateMascot("Uau! Você checou tudo direitinho, parabéns!");
+            } else {
+                updateFeedback("Selecione uma manchete primeiro!");
+            }
         });
 
-        function initializeGame() {
-            const headlinesList = document.getElementById('headlines-list');
-            shuffleArray(headlines).forEach(headline => {
-                const element = createHeadlineElement(headline);
-                headlinesList.appendChild(element);
-            });
-
-            setupDragAndDrop();
-        }
-
-        function createHeadlineElement(headline) {
-            const div = document.createElement('div');
-            div.className = 'headline-item';
-            div.draggable = true;
-            div.dataset.id = headline.id;
-            div.dataset.fake = headline.isFake;
-            div.innerHTML = `
-                <button class="verify-btn" onclick="verifySource(${headline.id})">🔍 Verificar</button>
-                <div class="headline-title">${headline.title}</div>
-                <div class="headline-source">${headline.source}</div>
-            `;
-            return div;
-        }
-
-        function setupDragAndDrop() {
-            const items = document.querySelectorAll('.headline-item');
-            const zones = document.querySelectorAll('.drop-zone');
-
-            items.forEach(item => {
-                item.addEventListener('dragstart', e => {
-                    dragged = item;
-                    item.classList.add('dragging');
-                    e.dataTransfer.effectAllowed = 'move';
-                });
-
-                item.addEventListener('dragend', () => {
-                    item.classList.remove('dragging');
-                });
-            });
-
-            zones.forEach(zone => {
-                zone.addEventListener('dragover', e => {
-                    e.preventDefault();
-                    zone.classList.add('over');
-                });
-
-                zone.addEventListener('dragleave', () => {
-                    zone.classList.remove('over');
-                });
-
-                zone.addEventListener('drop', e => {
-                    e.preventDefault();
-                    zone.classList.remove('over');
-                    handleDrop(zone.id);
-                });
-            });
-        }
-
-        function handleDrop(zoneId) {
-            if (!dragged) return;
-
-            const isFake = dragged.dataset.fake === 'true';
-            const droppedInFakeZone = (zoneId === 'fake-zone');
-            const correct = (isFake && droppedInFakeZone) || (!isFake && !droppedInFakeZone);
-
-            if (correct) {
-                score += 15;
-                correctAnswers++;
-                showFeedback('✅ Correto! Boa análise!', 'success');
-                animateMascot('happy');
-                showMascotMessage("Muito bem! Você está aprendendo rápido! 🌟");
-            } else {
-                score -= 10;
-                if (score < 0) score = 0;
-                wrongAnswers++;
-                showFeedback('❌ Ops! Essa não era a resposta certa.', 'error');
-                animateMascot('alert');
-                showMascotMessage("Cuidado! Leia com mais atenção os sinais. 🚨");
+        // Selecionar manchete para inspeção (clique)
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('headline')) {
+                currentInspectIndex = parseInt(e.target.dataset.index);
+                updateFeedback(`Manchete selecionada: ${e.target.textContent.substring(0, 50)}...`);
             }
+        });
 
-            updateScore();
-            dragged.remove();
-            dragged = null;
-
-            if (document.querySelectorAll('.headline-item').length === 0) {
-                endGame();
+        // Drag and Drop
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('headline')) {
+                e.dataTransfer.setData('text/plain', e.target.id);
+                e.target.classList.add('dragging');
+                currentInspectIndex = parseInt(e.target.dataset.index); // Atualiza seleção
             }
-        }
+        });
 
-        function verifySource(headlineId) {
-            const headline = headlines.find(h => h.id === headlineId);
-            if (!headline) return;
+        document.addEventListener('dragend', (e) => {
+            if (e.target.classList.contains('headline')) {
+                e.target.classList.remove('dragging');
+            }
+        });
 
-            verifications++;
-            timeLeft = Math.max(0, timeLeft - 1);
-            score += 5; // Bônus por verificar
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
 
-            document.getElementById('verifications').textContent = verifications;
-            updateScore();
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain');
+            const draggedEl = document.getElementById(id);
+            if (draggedEl && e.target.classList.contains('drop-zone')) {
+                const isTrue = draggedEl.dataset.isTrue === 'true';
+                const isTrueBox = e.target.id === 'true-box';
+                classifiedCount++;
+                if (isTrue === isTrueBox) {
+                    score += verifiedCount > 0 ? 15 : 10;
+                    updateMascot("Au au! Você é rápido como um raio, aventureiro!");
+                } else {
+                    errorCount++;
+                    score -= verifiedCount > 0 ? 2 : 5;
+                    updateMascot("Opa! Isso foi uma armadilha digital. Da próxima, verifique!");
+                }
+                updateScore();
+                e.target.appendChild(draggedEl);
+                draggedEl.style.cursor = 'default';
+                draggedEl.draggable = false;
+                checkEndGame();
+            }
+        });
 
-            showFeedback(`🔍 ${headline.details}`, 'info');
-            showMascotMessage("Ótimo! Verificar fontes é sempre uma boa prática! 📚");
-        }
-
+        // Timer
         function startTimer() {
-            const timerEl = document.getElementById('timer');
             timerInterval = setInterval(() => {
                 timeLeft--;
-                timerEl.textContent = timeLeft;
-
-                if (timeLeft <= 10) {
-                    timerEl.classList.add('warning');
-                }
-
+                updateTimer();
                 if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
                     endGame();
                 }
             }, 1000);
         }
 
+        function updateTimer() {
+            document.getElementById('timer').textContent = `Tempo: ${timeLeft}`;
+        }
+
+        // Pontuação
+        function updateScore() {
+            document.getElementById('scoreDisplay').textContent = `Pontos: ${score}`;
+        }
+
+        // Feedback
+        function updateFeedback(msg) {
+            document.getElementById('feedbackBox').textContent = msg;
+        }
+
+        // Mascote (simulado via feedback, já que não há imagem grande)
+        function updateMascot(msg) {
+            updateFeedback(msg);
+        }
+
+        // Verificar fim de jogo
+        function checkEndGame() {
+            if (classifiedCount === headlines.length) {
+                endGame();
+            }
+        }
+
         function endGame() {
             clearInterval(timerInterval);
-
-            // Salvar progresso
-            const progress = JSON.parse(localStorage.getItem('da_game_progress') || '{}');
-            progress.phase3Completed = true;
-            progress.phase3Score = score;
-            progress.totalScore = (progress.totalScore || 0) + score;
-            localStorage.setItem('da_game_progress', JSON.stringify(progress));
-
-            // Mostrar modal
-            document.getElementById('final-score').textContent = score + ' pontos';
-
-            const statsHtml = `
-                    <div class="stat-row">
-                        <span>Respostas Corretas:</span>
-                        <span>${correctAnswers}</span>
-                    </div>
-                    <div class="stat-row">
-                        <span>Respostas Erradas:</span>
-                        <span>${wrongAnswers}</span>
-                    </div>
-                    <div class="stat-row">
-                        <span>Verificações Realizadas:</span>
-                        <span>${verifications} (+${verifications})</span>
-                    </div>
-                `;
-
-            document.getElementById('stats-container').innerHTML = statsHtml;
-
-            const messageContent = score >= 100 ?
-                "Parabéns! Você está ficando expert em detectar fake news! 🎓" :
-                score >= 50 ?
-                    "Bom trabalho! Continue praticando para melhorar ainda mais! 📖" :
-                    "Continue tentando! Cada análise te deixa mais experiente! 💪";
-
-            document.getElementById('modal-message').textContent = messageContent;
-            document.getElementById('end-modal').classList.add('show');
+            let bonus = verifiedCount >= headlines.length * 0.5 ? 20 : 0;
+            score += bonus;
+            updateScore();
+            const endText = document.getElementById('endText');
+            endText.textContent = `Você fez ${score} pontos! ${bonus > 0 ? 'Bônus por responsabilidade conquistado!' : 'Tente verificar mais fontes na próxima.'}`;
+            document.getElementById('endModal').classList.remove('hidden');
         }
 
-        function updateScore() {
-            document.getElementById('score-display').textContent = score;
-        }
-
-        function showFeedback(message, type) {
-            const box = document.getElementById('feedback-box');
-            box.textContent = message;
-            box.className = `show ${type}`;
-            setTimeout(() => {
-                box.classList.remove('show');
-            }, 3000);
-        }
-
-        function showMascotMessage(message) {
-            document.getElementById('mascot-text').innerHTML = message;
-        }
-
-        function animateMascot(animation) {
-            const avatar = document.getElementById('mascot-avatar');
-            avatar.classList.remove('happy', 'alert');
-            avatar.classList.add(animation);
-            setTimeout(() => {
-                avatar.classList.remove(animation);
-            }, 500);
-        }
-
-        function shuffleArray(array) {
-            const shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
-
-        function restartGame() {
+        // Botões do modal
+        document.getElementById('retryBtn').addEventListener('click', () => {
             location.reload();
-        }
+        });
 
-        function goToMenu() {
-            window.location.href = '../index.html';
-        }
+        // Iniciar jogo
+        initHeadlines();
+        startTimer();
+    </script>
+</body>
+
+</html>
