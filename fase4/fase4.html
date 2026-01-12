@@ -17,7 +17,11 @@
             --text: #f8fafc;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -32,8 +36,11 @@
         body::before {
             content: '';
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
                 linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
             background-size: 40px 40px;
@@ -43,8 +50,13 @@
         }
 
         @keyframes gridMove {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(40px); }
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(40px);
+            }
         }
 
         /* Topbar */
@@ -59,7 +71,12 @@
             border-bottom: 2px solid rgba(0, 212, 255, 0.3);
         }
 
-        .player-info { display: flex; gap: 20px; font-weight: bold; color: var(--primary); }
+        .player-info {
+            display: flex;
+            gap: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
 
         #timer {
             font-size: 1.5rem;
@@ -81,7 +98,11 @@
         }
 
         /* Drop Zones */
-        .drop-column { display: flex; flex-direction: column; gap: 20px; }
+        .drop-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
         .drop-zone {
             flex: 1;
@@ -97,9 +118,20 @@
             padding: 20px;
         }
 
-        .drop-zone.over { transform: scale(1.02); background: rgba(0, 212, 255, 0.1); }
-        .drop-zone.verdadeira { border-color: var(--success); color: var(--success); }
-        .drop-zone.falsa { border-color: var(--danger); color: var(--danger); }
+        .drop-zone.over {
+            transform: scale(1.02);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .drop-zone.verdadeira {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .drop-zone.falsa {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
 
         /* News Cards */
         .news-column {
@@ -117,7 +149,7 @@
             color: #1a1f3a;
             padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             cursor: grab;
             width: 100%;
             max-width: 450px;
@@ -127,8 +159,15 @@
         }
 
         @keyframes fadeInScale {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .source-details {
@@ -160,15 +199,48 @@
             animation: mascotFloat 3s ease-in-out infinite;
         }
 
-        @keyframes mascotFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        
-        .mascot-speaking #tutorial-mascot { animation: mascotTalk 0.4s ease infinite; }
-        .mascot-celebrating #tutorial-mascot { animation: mascotJump 0.6s ease; }
+        @keyframes mascotFloat {
 
-        @keyframes mascotTalk { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .mascot-speaking #tutorial-mascot {
+            animation: mascotTalk 0.4s ease infinite;
+        }
+
+        .mascot-celebrating #tutorial-mascot {
+            animation: mascotJump 0.6s ease;
+        }
+
+        @keyframes mascotTalk {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
         @keyframes mascotJump {
-            0%, 100% { transform: scale(1) translateY(0); }
-            50% { transform: scale(1.1, 0.9) translateY(-15px); }
+
+            0%,
+            100% {
+                transform: scale(1) translateY(0);
+            }
+
+            50% {
+                transform: scale(1.1, 0.9) translateY(-15px);
+            }
         }
 
         .dialogue-box {
@@ -183,8 +255,13 @@
         }
 
         .dialogue-box::after {
-            content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            border-left: 15px solid transparent; border-right: 15px solid transparent;
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
             border-bottom: 15px solid var(--primary);
         }
 
@@ -199,19 +276,49 @@
             text-transform: uppercase;
         }
 
-        .btn-primary { background: linear-gradient(135deg, #00d4ff, #00a8cc); color: white; }
-        .btn-secondary { background: rgba(255, 107, 53, 0.2); color: #ff6b35; border: 2px solid #ff6b35; }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,212,255,0.3); }
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #00a8cc);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            border: 2px solid #ff6b35;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
 
         /* Modal */
         .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            display: flex; align-items: center; justify-content: center; z-index: 1000;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
-        .hidden { display: none; }
+
+        .hidden {
+            display: none;
+        }
+
         .modal-inner {
-            background: var(--card-bg); padding: 40px; border-radius: 24px;
-            border: 2px solid var(--primary); text-align: center; max-width: 500px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            border: 2px solid var(--primary);
+            text-align: center;
+            max-width: 500px;
         }
     </style>
 </head>
@@ -237,7 +344,7 @@
         <section class="news-column">
             <h2 style="color: var(--primary); margin-bottom: 10px;">📰 Analise a Manchete</h2>
             <div id="headlineContainer" style="width: 100%; display: flex; justify-content: center;"></div>
-            
+
             <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 10px;">
                 <button id="inspectBtn" class="btn btn-secondary">🔍 Usar Lupa de Verificação (-1s)</button>
             </div>
@@ -245,8 +352,8 @@
 
         <aside class="mascot-side">
             <div class="mascot-container" id="mascot-wrapper">
-                <img src="../assets/mascote.png.png" alt="Mascote" id="tutorial-mascot" 
-                     onerror="this.src='https://cdn-icons-png.flaticon.com/512/616/616408.png'">
+                <img src="../assets/mascote.png.png" alt="Mascote" id="tutorial-mascot"
+                    onerror="this.src='https://cdn-icons-png.flaticon.com/512/616/616408.png'">
             </div>
 
             <div class="dialogue-box" id="feedbackBox">
@@ -265,7 +372,9 @@
         <div class="modal-inner">
             <h2 id="endTitle" style="color: var(--primary); margin-bottom: 20px;">Missão Concluída!</h2>
             <div id="endText" style="margin-bottom: 30px; line-height: 1.6;"></div>
-            <div style="display: flex; gap: 15px; justify-content: center;">
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+                <button onclick="window.location.href='/../fase5/fase5.html'" class="btn btn-success">Próxima Fase
+                    ➡️</button>
                 <button onclick="location.reload()" class="btn btn-primary">Tentar Novamente</button>
                 <button id="backBtn" class="btn btn-secondary">Voltar ao Início</button>
             </div>
@@ -332,10 +441,6 @@
                 inspectBtn.disabled = false;
             }
 
-            // Drop System
-            setupDropZone('verdadeira', false);
-            setupDropZone('fakeZone', true);
-
             function setupDropZone(id, isFakeZone) {
                 const zone = document.getElementById(id);
                 zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
@@ -346,6 +451,9 @@
                     processChoice(isFakeZone);
                 });
             }
+
+            setupDropZone('verdadeira', false);
+            setupDropZone('fakeZone', true);
 
             function processChoice(choseFake) {
                 totalAnswered++;
@@ -401,4 +509,5 @@
         });
     </script>
 </body>
+
 </html>
