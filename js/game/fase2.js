@@ -1,7 +1,7 @@
 /**
  * js/game/fase2.js
  * Lógica da Fase 2: Segurança Digital
- * ATUALIZADO: Visual "Scary/Glitch" para dar susto nas crianças.
+ * ATUALIZADO: Botão de fechar (X) ultra-evidente e visual de terror.
  */
 import { DesktopUI } from '../ui/desktop.js';
 import { MascotUI } from '../ui/mascote.js';
@@ -9,8 +9,7 @@ import { GameState } from '../core/state.js';
 import { PopupUI } from '../ui/popup.js';
 import { $, $$ } from '../core/helpers.js';
 
-// --- INJEÇÃO DE ESTILOS DE TERROR (CSS in JS) ---
-// Adiciona animação de "tremor" para deixar as janelas nervosas
+// --- INJEÇÃO DE ESTILOS DE TERROR E UI ---
 const scaryStyles = document.createElement('style');
 scaryStyles.innerHTML = `
     @keyframes glitch-shake {
@@ -26,13 +25,71 @@ scaryStyles.innerHTML = `
         90% { transform: translate(1px, 2px) rotate(0deg); }
         100% { transform: translate(1px, -2px) rotate(-1deg); }
     }
+    
+    @keyframes pulse-red {
+        0% { box-shadow: 0 0 0 0 rgba(255, 64, 64, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(255, 64, 64, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 64, 64, 0); }
+    }
+
     .scary-shake {
         animation: glitch-shake 0.5s infinite;
     }
+
     .scary-text {
         font-family: 'Courier New', monospace;
         text-transform: uppercase;
         letter-spacing: 2px;
+    }
+
+    /* ESTILIZAÇÃO DO NOVO BOTÃO FECHAR (X) */
+    .window-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #222;
+        padding: 8px 12px !important;
+        border-bottom: 2px solid #ff4040;
+    }
+
+    .window-controls {
+        display: flex;
+        align-items: center;
+    }
+
+    .control-btn.close {
+        background: #ff4040 !important; /* Vermelho vibrante */
+        width: 35px !important;
+        height: 35px !important;
+        border: 2px solid #fff !important;
+        border-radius: 6px !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative;
+        transition: all 0.2s ease;
+        animation: pulse-red 2s infinite;
+        z-index: 10;
+    }
+
+    /* O caractere X dentro do botão */
+    .control-btn.close::before {
+        content: '✕';
+        color: white !important;
+        font-size: 24px !important;
+        font-weight: bold !important;
+        font-family: Arial, sans-serif !important;
+    }
+
+    .control-btn.close:hover {
+        background: #ff0000 !important;
+        transform: scale(1.15);
+        box-shadow: 0 0 20px #ff0000;
+    }
+
+    .control-btn.close:active {
+        transform: scale(0.9);
     }
 `;
 document.head.appendChild(scaryStyles);
@@ -68,10 +125,9 @@ const challenges = [
 ];
 
 let currentChallengeIndex = 0;
-let movementInterval = null; 
-let spamCount = 0; 
+let movementInterval = null;
+let spamCount = 0;
 
-// Frases aleatórias para os pop-ups de terror
 const scaryPhrases = [
     "DADOS CORROMPIDOS",
     "FALHA NO SISTEMA",
@@ -87,9 +143,9 @@ export const Phase2 = {
         console.log("Fase 2 Iniciada: Scary Mode");
         GameState.setPhase(2);
         currentChallengeIndex = 0;
-        
+
         MascotUI.say("Fase 2: Atenção! Vírus perigosos estão à solta.");
-        
+
         $('#windows-area').innerHTML = '';
         this.stopMovement();
 
@@ -109,12 +165,16 @@ export const Phase2 = {
         const winEl = document.createElement('div');
         winEl.className = 'window-card';
         winEl.dataset.id = challenge.id;
-        
+
         winEl.innerHTML = `
             <div class="window-header">
                 <span class="window-title">${challenge.title}</span>
                 <div class="window-controls">
-                    <button class="control-btn close" data-action="close-window" data-id="${challenge.id}" aria-label="Fechar Janela"></button>
+                    <button class="control-btn close" 
+                            data-action="close-window" 
+                            data-id="${challenge.id}" 
+                            aria-label="Fechar Janela">
+                    </button>
                 </div>
             </div>
             <div class="window-body">
@@ -123,28 +183,26 @@ export const Phase2 = {
         `;
 
         windowsArea.appendChild(winEl);
-        MascotUI.say("O que você faz com essa janela?");
+        MascotUI.say("O que você faz com essa janela? Dica: Procure o botão de fechar!");
     },
 
     // --- LÓGICA DO TERROR (BOSS BATTLE) ---
 
     triggerBossBattle() {
         const windowsArea = $('#windows-area');
-        windowsArea.innerHTML = ''; 
-        
-        spamCount = 7; // Mais janelas para mais caos
-        
-        // 1. Cria o CHEFE (Cranio Vermelho) - Fica atrás (z-index menor)
+        windowsArea.innerHTML = '';
+
+        spamCount = 7;
+
         const boss = document.createElement('div');
-        boss.className = 'window-card boss-virus scary-shake'; // Adiciona tremor
+        boss.className = 'window-card boss-virus scary-shake';
         boss.dataset.action = "kill-boss";
-        
+
         boss.style.position = 'absolute';
         boss.style.width = '160px';
         boss.style.height = '160px';
-        boss.style.zIndex = '100'; 
-        
-        // Visual Assustador do Chefe
+        boss.style.zIndex = '100';
+
         boss.style.border = '5px solid #ff0000';
         boss.style.borderRadius = '50%';
         boss.style.background = '#000';
@@ -152,80 +210,70 @@ export const Phase2 = {
         boss.style.alignItems = 'center';
         boss.style.justifyContent = 'center';
         boss.style.cursor = 'not-allowed';
-        boss.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.8)'; // Brilho vermelho
-        boss.style.transition = 'top 0.6s ease-out, left 0.6s ease-out'; // Movimento mais rápido e nervoso
+        boss.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.8)';
+        boss.style.transition = 'top 0.6s ease-out, left 0.6s ease-out';
 
         boss.innerHTML = `
             <div style="font-size: 5rem; pointer-events: none; filter: drop-shadow(0 0 10px red);" id="boss-face">💀</div>
         `;
         windowsArea.appendChild(boss);
 
-        // 2. Cria os Pop-ups de Spam (Glitchy Style)
         for (let i = 0; i < spamCount; i++) {
             const spam = document.createElement('div');
             spam.className = 'window-card virus-spam';
-            spam.dataset.action = "kill-spam"; 
-            
+            spam.dataset.action = "kill-spam";
+
             spam.style.position = 'absolute';
             spam.style.width = '240px';
             spam.style.minHeight = '140px';
-            spam.style.zIndex = '200'; 
-            
-            // Estilo Hacker/Terminal
-            spam.style.border = '2px solid #0f0'; // Verde Matrix
+            spam.style.zIndex = '200';
+
+            spam.style.border = '2px solid #0f0';
             spam.style.background = '#000';
             spam.style.color = '#0f0';
             spam.style.boxShadow = '0 0 10px #0f0';
             spam.style.transition = 'top 0.9s ease, left 0.9s ease';
-            
-            // Posição aleatória
+
             spam.style.top = Math.random() * 60 + 10 + '%';
             spam.style.left = Math.random() * 70 + '%';
 
-            // Texto aleatório assustador
             const randomPhrase = scaryPhrases[Math.floor(Math.random() * scaryPhrases.length)];
 
             spam.innerHTML = `
                 <div class="window-header" style="background: #000; border-bottom: 1px solid #0f0; padding: 5px;">
                     <span class="window-title scary-text" style="color: red;">☣️ ALERTA ☣️</span>
+                    <button class="control-btn close" data-action="kill-spam" style="width:25px; height:25px;"></button>
                 </div>
                 <div class="window-body scary-text" style="padding: 15px; font-size: 0.9rem; pointer-events: none; display:flex; flex-direction:column; justify-content:center; align-items:center;">
                     <p style="font-weight:bold; font-size: 1.2rem; margin-bottom:10px;">${randomPhrase}</p>
-                    <span style="font-size: 0.7rem; color: #666;">CLIQUE PARA DELETAR</span>
+                    <span style="font-size: 0.7rem; color: #666;">CLIQUE NO X PARA DELETAR</span>
                 </div>
             `;
             windowsArea.appendChild(spam);
         }
-        
-        MascotUI.say("O SISTEMA FOI INVADIDO! DELETE AS MENSAGENS PARA ACHAR O VÍRUS!");
 
+        MascotUI.say("O SISTEMA FOI INVADIDO! FECHE AS JANELAS PARA ACHAR O VÍRUS!");
         this.startChaosMovement();
     },
 
     startChaosMovement() {
         if (movementInterval) clearInterval(movementInterval);
-        
         this.moveAllElements();
-
         movementInterval = setInterval(() => {
             if (!$('.boss-virus')) {
                 this.stopMovement();
                 return;
             }
             this.moveAllElements();
-        }, 800); // Movimento um pouco mais rápido para aumentar tensão
+        }, 800);
     },
 
     moveAllElements() {
         const boss = $('.boss-virus');
-        if (boss) {
-            this.moveElementRandomly(boss, 5, 80);
-        }
+        if (boss) this.moveElementRandomly(boss, 5, 80);
 
         const spams = $$('.virus-spam');
-        spams.forEach(spam => {
-            this.moveElementRandomly(spam, 0, 75);
-        });
+        spams.forEach(spam => this.moveElementRandomly(spam, 0, 75));
     },
 
     moveElementRandomly(el, min, max) {
@@ -240,25 +288,22 @@ export const Phase2 = {
         }
     },
 
-    // --- INTERAÇÕES ---
-
     handleMascotNext() {
-        MascotUI.say("Não posso fazer nada! Limpe o sistema!");
+        MascotUI.say("Não posso fazer nada! Limpe o sistema clicando no X das janelas!");
     },
 
     handleInteraction(action, id) {
         const challenge = challenges[currentChallengeIndex];
-        
+
         if (action === 'close-window' && id === challenge.id) {
-            $('#windows-area').innerHTML = ''; 
+            $('#windows-area').innerHTML = '';
             MascotUI.say(challenge.mascotCorrect);
             GameState.addScore(20);
             this.nextLevel();
         }
-        
+
         else if (['download-virus', 'open-link'].includes(action)) {
-            // ERROU: Chama o terror
-            MascotUI.say("NÃO!!! CUIDADO!!"); // Fala curta de susto
+            MascotUI.say("NÃO!!! CUIDADO!!");
             GameState.addError();
             this.triggerBossBattle();
         }
@@ -268,10 +313,8 @@ export const Phase2 = {
             if (spamEl) {
                 spamEl.remove();
                 spamCount--;
-                
                 if (spamCount > 0) {
-                    // Texto em caixa alta para urgência
-                    MascotUI.say(`FALTAM ${spamCount}! ELIMINE ELES!`);
+                    MascotUI.say(`FALTAM ${spamCount}! CONTINUE FECHANDO!`);
                 } else {
                     this.makeBossVulnerable();
                 }
@@ -280,21 +323,15 @@ export const Phase2 = {
 
         else if (action === 'kill-boss' || (action === undefined && event.target.closest('.boss-virus'))) {
             if (spamCount > 0) {
-                MascotUI.say("ELE ESTÁ PROTEGIDO! DELETE AS JANELAS PRETAS!");
+                MascotUI.say("ELE ESTÁ PROTEGIDO! FECHE AS JANELAS NO 'X' PRIMEIRO!");
             } else {
-                // VITÓRIA
                 const boss = $('.boss-virus');
-                
-                // Animação de "explosão" do chefe
                 boss.style.transition = "all 0.5s";
                 boss.style.transform = "scale(3)";
                 boss.style.opacity = "0";
-                
                 setTimeout(() => boss.remove(), 500);
-                
                 this.stopMovement();
                 MascotUI.say("UFA! VÍRUS ELIMINADO. ESSA FOI POR POUCO!");
-                
                 this.nextLevel();
             }
         }
@@ -303,15 +340,13 @@ export const Phase2 = {
     makeBossVulnerable() {
         const boss = $('.boss-virus');
         if (boss) {
-            boss.style.zIndex = '300'; 
-            boss.style.border = '5px solid #fff'; // Borda branca pisca
-            boss.style.background = '#f00'; // Fundo Vermelho vivo
+            boss.style.zIndex = '300';
+            boss.style.border = '5px solid #fff';
+            boss.style.background = '#f00';
             boss.style.cursor = 'pointer';
-            boss.classList.remove('scary-shake'); // Para de tremer para facilitar o clique
-            
-            $('#boss-face').innerText = '🤬'; // Demônio/Monstro
-            
-            MascotUI.say("AGORA!!! ACABE COM ELE!!!");
+            boss.classList.remove('scary-shake');
+            $('#boss-face').innerText = '🤬';
+            MascotUI.say("AGORA!!! CLIQUE NO MONSTRO PARA ACABAR COM ELE!!!");
         }
     },
 
@@ -322,11 +357,19 @@ export const Phase2 = {
 
     finishPhase() {
         this.stopMovement();
+
+        // Chamada do Popup de finalização configurado para avançar de fase
         PopupUI.show(
-            "Sistema Recuperado",
-            `Você sobreviveu ao ataque!\nPontos: ${GameState.getScore()} | Erros: ${GameState.getErrors()}`,
-            "Reiniciar",
-            () => location.reload()
+            "SISTEMA RECUPERADO! 🛡️",
+            `Excelente! Você limpou todos os vírus e protegeu seus dados.\n\nPontos: ${GameState.getScore()} | Erros: ${GameState.getErrors()}`,
+            "AVANÇAR PARA FASE 3 ➡️", // Texto do botão
+            () => {
+                // Ação: Redireciona para a Fase 3
+                window.location.href = '../fase3/fase3.html';
+            }
         );
+
+        // Opcional: Uma comemoração visual final antes de sair
+        MascotUI.celebrate();
     }
 };
