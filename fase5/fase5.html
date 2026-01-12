@@ -395,6 +395,7 @@
         function unlockFile(index) {
             const file = document.getElementById(`file-${index}`);
             const status = document.getElementById(`status-${index}`);
+            
             const lock = file.querySelector('.icon-lock');
 
             file.classList.add('unlocked');
