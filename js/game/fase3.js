@@ -1,18 +1,19 @@
 /**
  * js/game/fase3.js
- * Fase 3: Escudo de Senhas (Correção de Bugs Visuais e Game Over)
+ * Fase 3: Escudo de Senhas (Versão Blindada)
+ * Correção: Popup integrado para garantir que o fim de jogo apareça.
  */
 import { $, on } from '../core/helpers.js';
 import { GameState } from '../core/state.js';
 import { MascotUI } from '../ui/mascote.js';
-import { PopupUI } from '../ui/popup.js';
 
+// --- CONFIGURAÇÕES ---
 const CONFIG = {
     spawnRate: 1300,
     gravity: 3.5,
-    winScore: 300,
+    winScore: 300,      // Pontos para passar de fase
     chargeRequired: 3,
-    timeLimit: 60,
+    timeLimit: 60,      // Tempo de jogo
     penaltyWeak: 20,
     penaltyStrong: 30
 };
@@ -35,7 +36,7 @@ let state = {
 
 export const Phase3 = {
     init() {
-        console.log("🛡️ Iniciando Fase 3 (Bugfix)...");
+        console.log("🛡️ Iniciando Fase 3 (Modo Seguro)...");
         GameState.setPhase(3);
 
         state.dom = {
@@ -50,9 +51,8 @@ export const Phase3 = {
 
         this.injectTimerUI();
 
-        // Limpa a arena de itens antigos "fantasmas"
+        // Limpeza Visual
         state.dom.arena.innerHTML = '';
-        // Re-adiciona o escudo que acabamos de limpar
         if (state.dom.shield) state.dom.arena.appendChild(state.dom.shield);
         
         // Reset
@@ -69,20 +69,23 @@ export const Phase3 = {
         this.gameLoop();
         this.startTimer();
 
-        this.safeMascotSay("Defenda o sistema! O tempo está correndo!");
+        this.safeMascotSay("O tempo está correndo! Filtre os dados!");
     },
 
+    // --- SISTEMA DE PONTOS ---
     addSafeScore(amount) {
         if (amount > 0) {
             GameState.addScore(amount);
         } else {
             const current = GameState.getScore();
+            // Evita pontuação negativa
             if (current + amount < 0) GameState.addScore(-current);
             else GameState.addScore(amount);
         }
         this.updateUI();
     },
 
+    // --- RELÓGIO ---
     injectTimerUI() {
         let timerEl = $('#arcade-timer');
         if (timerEl) {
@@ -93,57 +96,125 @@ export const Phase3 = {
         container.innerHTML = `<span style="font-size:1.2rem;margin-right:5px;">⏳</span><span id="arcade-timer" style="font-family:monospace;font-size:1.5rem;color:#ffcc00;">${CONFIG.timeLimit}</span>`;
         Object.assign(container.style, { display:'flex', alignItems:'center', marginLeft:'20px', background:'rgba(0,0,0,0.5)', padding:'5px 12px', borderRadius:'6px', border:'1px solid #ffcc00' });
         
-        const hud = document.querySelector('.arcade-hud');
-        if (hud) hud.appendChild(container);
+        const hud = document.querySelector('.arcade-hud') || document.body;
+        hud.appendChild(container);
+        
+        // Fix para caso não tenha HUD
+        if(hud === document.body) {
+            container.style.position = 'fixed'; container.style.top = '10px'; container.style.right = '10px'; container.style.zIndex = '1000';
+        }
+        
         state.dom.timerDisplay = $('#arcade-timer');
     },
 
     startTimer() {
         if (state.timerInterval) clearInterval(state.timerInterval);
+        
         state.timerInterval = setInterval(() => {
             if (!state.active) { clearInterval(state.timerInterval); return; }
+
             state.time--;
             this.updateUI();
 
+            // CHECAGEM DE FIM DE TEMPO
             if (state.time <= 0) {
                 clearInterval(state.timerInterval);
-                this.handleTimeOut();
-            } else if (state.time === 10) {
+                state.time = 0; // Trava no zero visualmente
+                this.updateUI();
+                this.handleTimeOut(); // Chama o fim de jogo
+            } 
+            else if (state.time === 10) {
                 if (state.dom.timerDisplay) state.dom.timerDisplay.style.color = "#ff4444";
+                this.safeMascotSay("Reta final! 10 segundos!");
             }
         }, 1000);
     },
 
     handleTimeOut() {
+        console.log("Tempo esgotado! Verificando vitória...");
         state.active = false;
         this.clearTimers();
-        if (GameState.getScore() >= CONFIG.winScore) this.victory();
-        else this.gameOver("Tempo esgotado! Pontuação insuficiente.");
+        
+        const finalScore = GameState.getScore();
+        
+        if (finalScore >= CONFIG.winScore) {
+            this.showCustomModal(true, finalScore);
+        } else {
+            this.showCustomModal(false, finalScore);
+        }
     },
 
+    // --- POPUP MANUAL (GARANTIA DE FUNCIONAMENTO) ---
+    showCustomModal(victory, score) {
+        // Remove modal antigo se existir
+        const old = document.getElementById('custom-modal-overlay');
+        if (old) old.remove();
+
+        const title = victory ? "PARABÉNS! FASE CONCLUÍDA 🚀" : "GAME OVER 💀";
+        const message = victory 
+            ? `Você protegeu o sistema!\nPontuação Final: <strong style="color:#00ff88; font-size:1.5rem">${score}</strong>` 
+            : `Tempo esgotado!\nPontuação: ${score} (Meta: ${CONFIG.winScore})`;
+        
+        const btnText = victory ? "IR PARA FASE 4 ➡️" : "TENTAR DE NOVO 🔄";
+        const btnAction = victory 
+            ? () => window.location.href = "fase4.html" // Ajuste o caminho aqui se precisar (ex: ../fase4/index.html)
+            : () => location.reload();
+
+        // Cria o HTML do Modal na força bruta
+        const overlay = document.createElement('div');
+        overlay.id = 'custom-modal-overlay';
+        Object.assign(overlay.style, {
+            position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+            background: 'rgba(0,0,0,0.85)', display: 'flex', justifyContent: 'center', alignItems: 'center',
+            zIndex: 9999, backdropFilter: 'blur(5px)'
+        });
+
+        const box = document.createElement('div');
+        Object.assign(box.style, {
+            background: '#0a1525', border: `2px solid ${victory ? '#00ff88' : '#ff4444'}`,
+            padding: '40px', borderRadius: '15px', textAlign: 'center', color: 'white',
+            boxShadow: `0 0 30px ${victory ? 'rgba(0,255,136,0.3)' : 'rgba(255,68,68,0.3)'}`,
+            maxWidth: '400px', width: '90%'
+        });
+
+        box.innerHTML = `
+            <h1 style="margin-top:0; color:${victory ? '#00ff88' : '#ff4444'}">${title}</h1>
+            <p style="font-size:1.2rem; line-height:1.6; white-space: pre-line;">${message}</p>
+            <button id="modal-btn" style="
+                margin-top:20px; padding:15px 30px; font-size:1.2rem; font-weight:bold; cursor:pointer;
+                background:${victory ? '#00ff88' : '#ff4444'}; color:#000; border:none; borderRadius:8px;
+                transition: transform 0.2s;
+            ">${btnText}</button>
+        `;
+
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        // Adiciona evento ao botão
+        document.getElementById('modal-btn').onclick = btnAction;
+    },
+
+    // --- CONTROLES E LOOP ---
     setupControls() {
         const { arena, shield } = state.dom;
         if (!shield) return;
         shield.style.transition = 'transform 0.05s linear';
         
-        // Remove listeners antigos para evitar duplicação (causa de bugs)
         const newArena = arena.cloneNode(true);
         arena.parentNode.replaceChild(newArena, arena);
         state.dom.arena = newArena;
-        
-        // Recupera a referência do escudo dentro da nova arena
-        const newShield = newArena.querySelector('#player-shield');
-        state.dom.shield = newShield;
+        state.dom.shield = newArena.querySelector('#player-shield');
 
         on(newArena, 'mousemove', (e) => {
             if (!state.active) return;
-            const rect = newArena.getBoundingClientRect();
-            let x = e.clientX - rect.left - (newShield.offsetWidth / 2);
-            x = Math.max(0, Math.min(x, rect.width - newShield.offsetWidth));
-            newShield.style.transform = `translateX(${x}px)`;
+            const s = state.dom.shield;
+            const r = newArena.getBoundingClientRect();
+            let x = e.clientX - r.left - (s.offsetWidth / 2);
+            x = Math.max(0, Math.min(x, r.width - s.offsetWidth));
+            s.style.transform = `translateX(${x}px)`;
             
-            if (state.charge >= CONFIG.chargeRequired) newShield.classList.add('shield-ready');
-            else newShield.classList.remove('shield-ready');
+            if (state.charge >= CONFIG.chargeRequired) s.classList.add('shield-ready');
+            else s.classList.remove('shield-ready');
         });
     },
 
@@ -175,7 +246,6 @@ export const Phase3 = {
         const speed = isWeak ? CONFIG.gravity : (CONFIG.gravity + 0.5);
 
         const fallTimer = setInterval(() => {
-            // SEGURANÇA: Se o jogo parou ou o item sumiu do DOM, para o loop
             if (!state.active || !document.body.contains(item)) { 
                 clearInterval(fallTimer); 
                 if(item.parentNode) item.remove(); 
@@ -189,17 +259,15 @@ export const Phase3 = {
             if (this.checkCollision(item, state.dom.shield)) {
                 if (type === 'weak') this.handleGoodBlock(item);
                 else this.handleBadBlock(item);
-                
                 clearInterval(fallTimer);
-                item.remove(); // Remove IMEDIATAMENTE do HTML
+                item.remove();
             }
             // PASSOU DIRETO
             else if (posY > arena.offsetHeight) {
                 if (type === 'weak') this.handleBadPass(item);
                 else this.handleGoodPass(item);
-                
                 clearInterval(fallTimer);
-                item.remove(); // Remove IMEDIATAMENTE do HTML
+                item.remove();
             }
         }, 16);
     },
@@ -212,27 +280,25 @@ export const Phase3 = {
                  r1.bottom < r2.top + 5 || r1.top > r2.bottom - 5);
     },
 
+    // --- EVENTOS DE JOGO ---
     handleGoodBlock(item) {
         this.addSafeScore(10);
         state.hits++;
         this.createExplosion(parseFloat(item.style.left), parseFloat(item.style.top), '#aaaaaa');
         this.showFloatingText(parseFloat(item.style.left), parseFloat(item.style.top), "Bloqueado!", "#fff");
     },
-
     handleBadBlock(item) {
         this.addSafeScore(-CONFIG.penaltyStrong);
         this.createExplosion(parseFloat(item.style.left), parseFloat(item.style.top), '#ff4444');
         this.showFloatingText(parseFloat(item.style.left), parseFloat(item.style.top), `-${CONFIG.penaltyStrong}`, "#ff4444");
-        this.safeMascotSay("Ops! Era seguro!");
+        this.safeMascotSay("Não bloqueie chips verdes!");
     },
-
     handleBadPass(item) {
-        this.takeDamage(20); // Dano maior
+        this.takeDamage(20);
         this.addSafeScore(-CONFIG.penaltyWeak);
         this.showFloatingText(parseFloat(item.style.left), state.dom.arena.offsetHeight - 50, "Invasão!", "#ff0000");
         this.safeMascotScared();
     },
-
     handleGoodPass(item) {
         state.charge++;
         state.hits++;
@@ -250,10 +316,9 @@ export const Phase3 = {
         const laser = document.createElement('div');
         laser.className = 'super-laser';
         
-        const shieldRect = shield.getBoundingClientRect();
-        const arenaRect = arena.getBoundingClientRect();
-        const centerX = shieldRect.left - arenaRect.left + (shieldRect.width / 2) - 10;
-        laser.style.left = `${centerX}px`;
+        const sRect = shield.getBoundingClientRect();
+        const aRect = arena.getBoundingClientRect();
+        laser.style.left = `${sRect.left - aRect.left + (sRect.width / 2) - 10}px`;
         arena.appendChild(laser);
 
         const rocks = document.querySelectorAll('.falling-rock');
@@ -274,12 +339,14 @@ export const Phase3 = {
         }
         this.updateUI();
 
-        // --- AQUI ESTÁ A MENSAGEM QUE VOCÊ PEDIU ---
         if (state.lives <= 0) {
-            this.gameOver("SISTEMA PERDIDO! Muitos vírus entraram.");
+            state.active = false;
+            this.clearTimers();
+            this.showCustomModal(false, GameState.getScore()); // Chama o novo modal
         }
     },
 
+    // --- VISUAL ---
     createExplosion(x, y, color) {
         for (let i = 0; i < 6; i++) {
             const p = document.createElement('div');
@@ -320,23 +387,5 @@ export const Phase3 = {
 
     safeMascotSay(text) { try { MascotUI.say(text); } catch (e) { } },
     safeMascotCelebrate() { try { MascotUI.celebrate(); } catch (e) { } },
-    safeMascotScared() { try { MascotUI.scared(); } catch (e) { } },
-
-    victory() {
-        state.active = false;
-        this.clearTimers();
-        PopupUI.show("SUCESSO! ⏱️", `Sistema protegido!\nPontuação Final: ${GameState.getScore()}`, "JOGAR DE NOVO", () => location.reload());
-    },
-
-    gameOver(motivo) {
-        state.active = false;
-        this.clearTimers();
-        // Popup específico de derrota
-        PopupUI.show(
-            "VOCÊ PERDEU O SISTEMA 💀", 
-            `${motivo}\nA barra de sistema zerou.`, 
-            "TENTAR RECUPERAR", 
-            () => location.reload()
-        );
-    }
+    safeMascotScared() { try { MascotUI.scared(); } catch (e) { } }
 };
