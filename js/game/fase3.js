@@ -157,7 +157,7 @@ export const Phase3 = {
 
         const btnText = victory ? "IR PARA FASE 4 ➡️" : "TENTAR DE NOVO 🔄";
         const btnAction = victory
-            ? () => window.location.href = "fase4.html" // Ajuste o caminho aqui se precisar (ex: ../fase4/fase4.html)
+            ? () => window.location.href = "fase4/fase4.html" // Ajuste o caminho aqui se precisar (ex: ../fase4/fase4.html)
             : () => location.reload();
 
         // Cria o HTML do Modal na força bruta
