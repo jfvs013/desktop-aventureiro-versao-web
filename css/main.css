@@ -385,29 +385,36 @@ body {
   margin-bottom: 10px;
 }
 
+/* =========================================
+   FASE 3: ESCUDO DE SENHAS (ESTILO FINAL)
+   ========================================= */
+/* --- 1. CONFIGURAÇÃO DA PÁGINA --- */
 .arcade-page {
-  background-color: #050a10;
+  background-color: #050a10; /* Fundo quase preto */
   color: #fff;
   margin: 0;
-  overflow: hidden;
+  overflow: hidden; /* Impede barras de rolagem */
   height: 100vh;
   font-family: "Segoe UI", Roboto, monospace;
   -webkit-user-select: none;
      -moz-user-select: none;
-          user-select: none;
+          user-select: none; /* Impede seleção de texto */
 }
 
+/* Container Principal com Grade de Fundo */
 .arcade-mode {
   display: flex;
   flex-direction: column;
   height: 100%;
   position: relative;
+  /* Efeito de "Grade Digital" (Matrix vibe) */
   background-image: linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
   background-size: 50px 50px;
 }
 
+/* --- 2. BARRA SUPERIOR (HUD) --- */
 .arcade-hud {
-  background: rgba(5, 10, 20, 0.95);
+  background: rgba(5, 15, 30, 0.95);
   border-bottom: 3px solid #00d2ff;
   display: flex;
   justify-content: space-between;
@@ -416,59 +423,70 @@ body {
   z-index: 100;
   box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
 }
-.arcade-hud .hud-left, .arcade-hud .hud-right {
+
+.hud-left, .hud-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
   font-size: 1.1rem;
   font-weight: bold;
   color: #aaddff;
 }
-.arcade-hud .hud-value {
+
+.hud-value {
   color: #fff;
-  font-family: monospace;
-  font-size: 1.4rem;
+  font-family: "Courier New", monospace;
+  font-size: 1.5rem;
   text-shadow: 0 0 10px #00d2ff;
 }
 
+/* Barra de Vida do Sistema */
 .life-bar-bg {
-  width: 200px;
-  height: 18px;
+  width: 250px;
+  height: 20px;
   background: #222;
   border: 2px solid #444;
   border-radius: 4px;
   overflow: hidden;
+  position: relative;
 }
 
 .life-bar-fill {
   height: 100%;
   background: linear-gradient(90deg, #ff4444, #ffcc00, #00ff88);
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, background-color 0.3s;
 }
 
+/* --- 3. ARENA E JOGADOR --- */
 #game-arena {
   position: relative;
   flex: 1;
   overflow: hidden;
-  cursor: none;
+  cursor: none; /* Esconde o mouse para não atrapalhar o escudo */
 }
 
+/* O Escudo (Jogador) */
 #player-shield {
   position: absolute;
   bottom: 40px;
-  width: 110px;
-  height: 12px;
+  width: 120px;
+  height: 15px;
   background: #00d2ff;
-  border-radius: 6px;
-  box-shadow: 0 0 15px #00d2ff, 0 0 30px rgba(0, 210, 255, 0.4);
+  border-radius: 8px;
+  box-shadow: 0 0 15px #00d2ff, 0 0 40px rgba(0, 210, 255, 0.4);
   z-index: 50;
-  will-change: transform;
-}
-#player-shield.shield-ready {
-  background: #fff;
-  box-shadow: 0 0 20px #fff, 0 0 50px #00ff88;
+  will-change: transform; /* Otimiza performance */
 }
 
+/* Estado quando o Super Laser está carregado */
+#player-shield.shield-ready {
+  background: #fff;
+  box-shadow: 0 0 20px #fff, 0 0 60px #00ff88;
+  border: 2px solid #00ff88;
+}
+
+/* --- 4. ITENS QUE CAEM --- */
+/* INIMIGO: Senha Fraca (Pedra) */
 .falling-rock {
   position: absolute;
   background: #3a3a3a;
@@ -479,20 +497,23 @@ body {
   font-weight: bold;
   font-size: 1rem;
   border: 2px solid #222;
-  border-bottom: 5px solid #1a1a1a;
+  border-bottom: 5px solid #1a1a1a; /* Efeito 3D */
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   z-index: 10;
   white-space: nowrap;
 }
+
+/* Ícone de alerta antes do texto */
 .falling-rock::before {
   content: "⚠️ ";
   filter: grayscale(1);
 }
 
+/* AMIGO: Senha Forte (Chip Seguro) */
 .falling-chip {
   position: absolute;
-  background: rgba(0, 30, 0, 0.95);
-  color: #00ff88;
+  background: rgba(0, 40, 0, 0.9);
+  color: #00ff88; /* Verde Neon */
   padding: 8px 16px;
   border-radius: 6px;
   font-family: "Courier New", monospace;
@@ -504,10 +525,69 @@ body {
   white-space: nowrap;
   animation: floatGlow 2s infinite alternate;
 }
+
+/* Ícone de cadeado antes do texto */
 .falling-chip::before {
   content: "🔒 ";
 }
 
+/* --- 5. O MASCOTE (NOVO ESTILO) --- */
+.mascot-overlay {
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 900;
+  pointer-events: none; /* Permite clicar através dele se necessário */
+}
+
+#mascot-character {
+  width: 180px; /* Ajuste conforme necessário para sua imagem */
+  height: auto;
+  filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
+  animation: mascotFloat 4s ease-in-out infinite;
+}
+
+/* Balão de Fala */
+.speech-bubble {
+  background: #03032c;
+  color: #000;
+  padding: 12px 18px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  position: relative;
+  max-width: 220px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.95rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  /* Estado inicial invisível */
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.speech-bubble.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Triângulo do balão */
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px 8px 0;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}
+
+/* --- 6. EFEITOS VISUAIS --- */
+/* Super Laser */
 .super-laser {
   position: absolute;
   bottom: 40px;
@@ -521,11 +601,7 @@ body {
   opacity: 0.9;
 }
 
-.floating-text {
-  text-shadow: 0 2px 0 #000;
-  font-weight: bold;
-}
-
+/* Partículas */
 .particle {
   position: fixed;
   width: 6px;
@@ -535,40 +611,27 @@ body {
   z-index: 999;
 }
 
+/* Animação de Tremor (Dano) */
 .shake-anim {
   animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
-.overlay-hint {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.9);
-  border: 1px solid #00d2ff;
-  padding: 30px;
-  border-radius: 12px;
-  text-align: center;
-  pointer-events: none;
-  animation: fadeOutHint 0.5s ease-in forwards 4s;
+/* --- 7. ANIMAÇÕES (KEYFRAMES) --- */
+@keyframes mascotFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
-.overlay-hint h2 {
-  color: #00d2ff;
-  margin: 0 0 10px 0;
-}
-.overlay-hint p {
-  color: #ccc;
-  font-size: 1.1rem;
-}
-
 @keyframes floatGlow {
   from {
-    transform: translateY(0);
     box-shadow: 0 0 5px #00ff88;
   }
   to {
-    transform: translateY(-3px);
     box-shadow: 0 0 15px #00ff88;
+    transform: scale(1.05);
   }
 }
 @keyframes laserBlast {
@@ -577,7 +640,7 @@ body {
     opacity: 0;
   }
   10% {
-    transform: scaleX(1.5);
+    transform: scaleX(1.8);
     opacity: 1;
   }
   100% {
@@ -597,12 +660,6 @@ body {
   }
   40%, 60% {
     transform: translate3d(6px, 0, 0);
-  }
-}
-@keyframes fadeOutHint {
-  to {
-    opacity: 0;
-    visibility: hidden;
   }
 }
 body {

@@ -1,11 +1,10 @@
 /**
  * js/game/fase3.js
- * Fase 3: Escudo de Senhas (Versão Blindada)
- * Correção: Popup integrado para garantir que o fim de jogo apareça.
+ * Fase 3: Escudo de Senhas (Versão Final + Mascote Explicativo)
+ * Lógica: Time Attack (60s), Pontos Seguros, Mascote fala no balão.
  */
 import { $, on } from '../core/helpers.js';
 import { GameState } from '../core/state.js';
-import { MascotUI } from '../ui/mascote.js';
 
 // --- CONFIGURAÇÕES ---
 const CONFIG = {
@@ -31,20 +30,25 @@ let state = {
     time: CONFIG.timeLimit,
     timerInterval: null,
     timers: [],
+    mascotTimeout: null, // Para controlar o tempo do balão
     dom: {}
 };
 
 export const Phase3 = {
     init() {
-        console.log("🛡️ Iniciando Fase 3 (Modo Seguro)...");
+        console.log("🛡️ Iniciando Fase 3 (Com Mascote)...");
         GameState.setPhase(3);
 
+        // 1. Captura Elementos (INCLUINDO O MASCOTE NOVO)
         state.dom = {
             arena: $('#game-arena'),
             shield: $('#player-shield'),
             score: $('#arcade-score'),
             livesBar: $('#arcade-lives-bar'),
-            hudRight: $('.hud-right')
+            hudRight: $('.hud-right'),
+            // Elementos do Mascote no HTML novo
+            bubble: $('#mascot-speech-bubble'),
+            bubbleText: $('#mascot-text')
         };
 
         if (!state.dom.arena) return;
@@ -54,14 +58,14 @@ export const Phase3 = {
         // Limpeza Visual
         state.dom.arena.innerHTML = '';
         if (state.dom.shield) state.dom.arena.appendChild(state.dom.shield);
-
+        
         // Reset
         state.active = true;
         state.lives = 100;
         state.charge = 0;
         state.hits = 0;
         state.time = CONFIG.timeLimit;
-
+        
         this.clearTimers();
         this.updateUI();
 
@@ -69,7 +73,27 @@ export const Phase3 = {
         this.gameLoop();
         this.startTimer();
 
-        this.safeMascotSay("O tempo está correndo! Filtre os dados!");
+        // --- MASCOTE EXPLICA AS REGRAS AQUI ---
+        this.mascotSay("Bem-vindo! Bloqueie as SENHAS FRACAS, mas deixe os SENHAS FORTES passarem!");
+    },
+
+    // --- CONTROLE DO MASCOTE (LOCAL) ---
+    mascotSay(text) {
+        const { bubble, bubbleText } = state.dom;
+        if (bubble && bubbleText) {
+            // Atualiza o texto
+            bubbleText.innerText = text;
+            // Mostra o balão
+            bubble.classList.add('visible');
+            
+            // Remove mensagem anterior se houver
+            if (state.mascotTimeout) clearTimeout(state.mascotTimeout);
+            
+            // Esconde depois de 5 segundos
+            state.mascotTimeout = setTimeout(() => {
+                bubble.classList.remove('visible');
+            }, 5000);
+        }
     },
 
     // --- SISTEMA DE PONTOS ---
@@ -94,49 +118,46 @@ export const Phase3 = {
         }
         const container = document.createElement('div');
         container.innerHTML = `<span style="font-size:1.2rem;margin-right:5px;">⏳</span><span id="arcade-timer" style="font-family:monospace;font-size:1.5rem;color:#ffcc00;">${CONFIG.timeLimit}</span>`;
-        Object.assign(container.style, { display: 'flex', alignItems: 'center', marginLeft: '20px', background: 'rgba(0,0,0,0.5)', padding: '5px 12px', borderRadius: '6px', border: '1px solid #ffcc00' });
-
+        Object.assign(container.style, { display:'flex', alignItems:'center', marginLeft:'20px', background:'rgba(0,0,0,0.5)', padding:'5px 12px', borderRadius:'6px', border:'1px solid #ffcc00' });
+        
         const hud = document.querySelector('.arcade-hud') || document.body;
         hud.appendChild(container);
-
-        // Fix para caso não tenha HUD
-        if (hud === document.body) {
+        
+        if(hud === document.body) {
             container.style.position = 'fixed'; container.style.top = '10px'; container.style.right = '10px'; container.style.zIndex = '1000';
         }
-
+        
         state.dom.timerDisplay = $('#arcade-timer');
     },
 
     startTimer() {
         if (state.timerInterval) clearInterval(state.timerInterval);
-
+        
         state.timerInterval = setInterval(() => {
             if (!state.active) { clearInterval(state.timerInterval); return; }
 
             state.time--;
             this.updateUI();
 
-            // CHECAGEM DE FIM DE TEMPO
+            // FIM DO TEMPO
             if (state.time <= 0) {
                 clearInterval(state.timerInterval);
-                state.time = 0; // Trava no zero visualmente
+                state.time = 0; 
                 this.updateUI();
-                this.handleTimeOut(); // Chama o fim de jogo
-            }
+                this.handleTimeOut();
+            } 
             else if (state.time === 10) {
                 if (state.dom.timerDisplay) state.dom.timerDisplay.style.color = "#ff4444";
-                this.safeMascotSay("Reta final! 10 segundos!");
+                this.mascotSay("Reta final! Só faltam 10 segundos!");
             }
         }, 1000);
     },
 
     handleTimeOut() {
-        console.log("Tempo esgotado! Verificando vitória...");
         state.active = false;
         this.clearTimers();
-
+        
         const finalScore = GameState.getScore();
-
         if (finalScore >= CONFIG.winScore) {
             this.showCustomModal(true, finalScore);
         } else {
@@ -144,23 +165,21 @@ export const Phase3 = {
         }
     },
 
-    // --- POPUP MANUAL (GARANTIA DE FUNCIONAMENTO) ---
+    // --- POPUP MANUAL ---
     showCustomModal(victory, score) {
-        // Remove modal antigo se existir
         const old = document.getElementById('custom-modal-overlay');
         if (old) old.remove();
 
-        const title = victory ? "PARABÉNS! FASE CONCLUÍDA 🚀" : "GAME OVER 💀";
-        const message = victory
-            ? `Você protegeu o sistema!\nPontuação Final: <strong style="color:#00ff88; font-size:1.5rem">${score}</strong>`
-            : `Tempo esgotado!\nPontuação: ${score} (Meta: ${CONFIG.winScore})`;
-
+        const title = victory ? "Fase 3 Concluída! 🚀" : "Tempo Esgotado 💀";
+        const message = victory 
+            ? `Você protegeu o sistema!\nPontuação Final: <strong style="color:#00ff88; font-size:1.5rem">${score}</strong>` 
+            : `Pontuação: ${score} (Meta: ${CONFIG.winScore})`;
+        
         const btnText = victory ? "IR PARA FASE 4 ➡️" : "TENTAR DE NOVO 🔄";
-        const btnAction = victory
-            ? () => window.location.href = "../fase4/fase4.html" // Ajuste o caminho aqui se precisar (ex: ../fase4/fase4.html)
+        const btnAction = victory 
+            ? () => window.location.href = "../fase4/fase4.html" // Ajuste o caminho conforme sua pasta
             : () => location.reload();
 
-        // Cria o HTML do Modal na força bruta
         const overlay = document.createElement('div');
         overlay.id = 'custom-modal-overlay';
         Object.assign(overlay.style, {
@@ -189,8 +208,6 @@ export const Phase3 = {
 
         overlay.appendChild(box);
         document.body.appendChild(overlay);
-
-        // Adiciona evento ao botão
         document.getElementById('modal-btn').onclick = btnAction;
     },
 
@@ -199,7 +216,7 @@ export const Phase3 = {
         const { arena, shield } = state.dom;
         if (!shield) return;
         shield.style.transition = 'transform 0.05s linear';
-
+        
         const newArena = arena.cloneNode(true);
         arena.parentNode.replaceChild(newArena, arena);
         state.dom.arena = newArena;
@@ -212,7 +229,7 @@ export const Phase3 = {
             let x = e.clientX - r.left - (s.offsetWidth / 2);
             x = Math.max(0, Math.min(x, r.width - s.offsetWidth));
             s.style.transform = `translateX(${x}px)`;
-
+            
             if (state.charge >= CONFIG.chargeRequired) s.classList.add('shield-ready');
             else s.classList.remove('shield-ready');
         });
@@ -228,41 +245,39 @@ export const Phase3 = {
     spawnItem() {
         const { arena } = state.dom;
         const isWeak = Math.random() > 0.4;
-
+        
         const item = document.createElement('div');
         const type = isWeak ? 'weak' : 'strong';
         const list = isWeak ? DATA.weak : DATA.strong;
         item.innerText = list[Math.floor(Math.random() * list.length)];
         item.className = isWeak ? 'falling-rock' : 'falling-chip';
         item.dataset.type = type;
-
+        
         const maxPos = arena.offsetWidth - 160;
         item.style.left = `${Math.random() * maxPos}px`;
         item.style.top = '-60px';
-
+        
         arena.appendChild(item);
 
         let posY = -60;
         const speed = isWeak ? CONFIG.gravity : (CONFIG.gravity + 0.5);
 
         const fallTimer = setInterval(() => {
-            if (!state.active || !document.body.contains(item)) {
-                clearInterval(fallTimer);
-                if (item.parentNode) item.remove();
-                return;
+            if (!state.active || !document.body.contains(item)) { 
+                clearInterval(fallTimer); 
+                if(item.parentNode) item.remove(); 
+                return; 
             }
 
             posY += speed;
             item.style.top = `${posY}px`;
 
-            // COLISÃO
             if (this.checkCollision(item, state.dom.shield)) {
                 if (type === 'weak') this.handleGoodBlock(item);
                 else this.handleBadBlock(item);
                 clearInterval(fallTimer);
                 item.remove();
             }
-            // PASSOU DIRETO
             else if (posY > arena.offsetHeight) {
                 if (type === 'weak') this.handleBadPass(item);
                 else this.handleGoodPass(item);
@@ -276,46 +291,52 @@ export const Phase3 = {
         if (!item || !shield) return false;
         const r1 = item.getBoundingClientRect();
         const r2 = shield.getBoundingClientRect();
-        return !(r1.right < r2.left + 5 || r1.left > r2.right - 5 ||
-            r1.bottom < r2.top + 5 || r1.top > r2.bottom - 5);
+        return !(r1.right < r2.left + 5 || r1.left > r2.right - 5 || 
+                 r1.bottom < r2.top + 5 || r1.top > r2.bottom - 5);
     },
 
-    // --- EVENTOS DE JOGO ---
+    // --- EVENTOS DO JOGO + FALAS DO MASCOTE ---
+    
     handleGoodBlock(item) {
         this.addSafeScore(10);
         state.hits++;
         this.createExplosion(parseFloat(item.style.left), parseFloat(item.style.top), '#aaaaaa');
         this.showFloatingText(parseFloat(item.style.left), parseFloat(item.style.top), "Bloqueado!", "#fff");
     },
+    
     handleBadBlock(item) {
         this.addSafeScore(-CONFIG.penaltyStrong);
         this.createExplosion(parseFloat(item.style.left), parseFloat(item.style.top), '#ff4444');
         this.showFloatingText(parseFloat(item.style.left), parseFloat(item.style.top), `-${CONFIG.penaltyStrong}`, "#ff4444");
-        this.safeMascotSay("Não bloqueie chips verdes!");
+        // Mascote reclama
+        this.mascotSay("Não bloqueie as SENHA FORTES!");
     },
+    
     handleBadPass(item) {
         this.takeDamage(20);
         this.addSafeScore(-CONFIG.penaltyWeak);
         this.showFloatingText(parseFloat(item.style.left), state.dom.arena.offsetHeight - 50, "Invasão!", "#ff0000");
-        this.safeMascotScared();
+        // Mascote avisa
+        this.mascotSay("Cuidado! Bloqueie as SENHAS FRACAS!");
     },
+    
     handleGoodPass(item) {
         state.charge++;
         state.hits++;
         this.addSafeScore(30);
         this.createExplosion(parseFloat(item.style.left), state.dom.arena.offsetHeight - 20, '#00ff88');
         this.showFloatingText(parseFloat(item.style.left), state.dom.arena.offsetHeight - 60, "Segura!", "#00ff88");
-
+        
         if (state.charge >= CONFIG.chargeRequired) this.activateSuperLaser();
-        else this.safeMascotCelebrate();
     },
 
     activateSuperLaser() {
-        this.safeMascotSay("SUPER LASER!");
+        this.mascotSay("SUPER LASER ATIVADO!"); // Mascote avisa
+        
         const { arena, shield } = state.dom;
         const laser = document.createElement('div');
         laser.className = 'super-laser';
-
+        
         const sRect = shield.getBoundingClientRect();
         const aRect = arena.getBoundingClientRect();
         laser.style.left = `${sRect.left - aRect.left + (sRect.width / 2) - 10}px`;
@@ -342,11 +363,10 @@ export const Phase3 = {
         if (state.lives <= 0) {
             state.active = false;
             this.clearTimers();
-            this.showCustomModal(false, GameState.getScore()); // Chama o novo modal
+            this.showCustomModal(false, GameState.getScore());
         }
     },
 
-    // --- VISUAL ---
     createExplosion(x, y, color) {
         for (let i = 0; i < 6; i++) {
             const p = document.createElement('div');
@@ -383,9 +403,5 @@ export const Phase3 = {
         state.timers.forEach(clearInterval);
         state.timers = [];
         if (state.timerInterval) clearInterval(state.timerInterval);
-    },
-
-    safeMascotSay(text) { try { MascotUI.say(text); } catch (e) { } },
-    safeMascotCelebrate() { try { MascotUI.celebrate(); } catch (e) { } },
-    safeMascotScared() { try { MascotUI.scared(); } catch (e) { } }
+    }
 };
