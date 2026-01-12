@@ -33,7 +33,7 @@ function verificarCriptografia() {
                 }    
             }
             console.log(`${contador}: valor de verificarCriptografia.`);
-        }, 45000 // Chama-se a cada 30 segundos.
+        }, 45000 // Chama-se a cada 45 segundos.
     );
     return verificando; // Lembre-se de fechar o setInterval(), use clearInterval(nomeDaVariavel).
 }
