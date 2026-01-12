@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fase 3: O Escudo de Senhas</title>
+    <link rel="stylesheet" href="../css/main.css">
+    
+    <style>
+        /* CSS RÁPIDO PARA GARANTIR QUE O MASCOTE APAREÇA NO LUGAR CERTO */
+        .mascot-overlay {
+            position: fixed;
+            bottom: 0;
+            right: 20px;
+            width: 150px;
+            height: 150px;
+            z-index: 999; /* Fica acima de tudo */
+            pointer-events: none; /* Deixa clicar através dele */
+        }
+        
+        #mascot-character {
+            font-size: 5rem; /* Tamanho do emoji do cãozinho */
+            text-shadow: 0 0 20px cyan;
+            animation: floatMascot 3s ease-in-out infinite;
+        }
+
+        .speech-bubble {
+            position: absolute;
+            bottom: 110%;
+            right: 0;
+            background: white;
+            color: #000;
+            padding: 10px 15px;
+            border-radius: 15px;
+            width: 200px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .speech-bubble.visible { opacity: 1; }
+
+        @keyframes floatMascot {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="arcade-page">
+
+    <section id="phase3-arcade" class="game-phase arcade-mode">
+
+        <header class="arcade-hud">
+            <div class="hud-left">
+                <span class="hud-icon">🛡️</span>
+                <span class="hud-label">PONTOS:</span>
+                <span id="arcade-score" class="hud-value">0</span>
+            </div>
+
+            <div class="hud-right">
+                <span class="hud-label">SISTEMA:</span>
+                <div class="life-bar-bg">
+                    <div id="arcade-lives-bar" class="life-bar-fill" style="width: 100%;"></div>
+                </div>
+            </div>
+        </header>
+
+        <main id="game-arena">
+            
+            <div id="player-shield">
+                <div class="shield-energy"></div>
+            </div>
+
+            <div id="start-hint" class="overlay-hint">
+                <h2>DEFESA DE SENHAS</h2>
+                <p>Mova o mouse para proteger o sistema!</p>
+                <div class="hint-grid">
+                    <div class="hint-item bad">
+                        <span>🪨</span>
+                        <small>BLOQUEIE<br>Senhas Fracas</small>
+                    </div>
+                    <div class="hint-item good">
+                        <span>✨</span>
+                        <small>PEGUE<br>Símbolos Fortes</small>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="arcade-footer">
+            <p><strong>Missão:</strong> Não deixe senhas como "12345" entrarem no computador!</p>
+        </footer>
+
+        <div id="mascot-container" class="mascot-overlay">
+            <div id="mascot-speech-bubble" class="speech-bubble"></div>
+            <div id="mascot-character">🐶</div>
+        </div>
+
+    </section>
+
+    <script type="module" src="../js/fase3-boot.js"></script>
+
+</body>
+</html>

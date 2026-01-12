@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Desktop Aventureiro - Início</title>
+    <style>
+        /* ==========================================
+           RESET E BASE
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a0a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Efeito de grid animado no fundo */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Partículas flutuantes */
+        body::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle, rgba(0, 212, 255, 0.3) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255, 107, 53, 0.2) 1px, transparent 1px);
+            background-size: 150px 150px, 200px 200px;
+            background-position: 0 0, 50px 50px;
+            animation: particleFloat 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(50px);
+            }
+        }
+
+        @keyframes particleFloat {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* ==========================================
+           LAYOUT PRINCIPAL
+           ========================================== */
+        main.centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ==========================================
+           CARD PRINCIPAL
+           ========================================== */
+        .intro-card {
+            display: flex;
+            gap: 40px;
+            background: rgba(26, 31, 58, 0.95);
+            border-radius: 24px;
+            padding: 50px;
+            max-width: 1100px;
+            width: 100%;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(0, 212, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: cardEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Brilho animado no canto */
+        .intro-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        /* Borda luminosa */
+        .intro-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 2px;
+            background: linear-gradient(135deg, #00d4ff, #ff6b35, #00d4ff);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.3;
+            animation: borderRotate 4s linear infinite;
+        }
+
+        @keyframes cardEntrance {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes borderRotate {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        /* ==========================================
+           ÁREA DO MASCOTE
+           ========================================== */
+        .left-art {
+            flex: 0 0 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            max-height: 400px;
+        }
+
+        #mascote {
+            width: 100%;
+            height: auto;
+            max-width: 280px;
+            max-height: 400px;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(0, 212, 255, 0.4));
+            animation: mascotFloat 3s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+
+        #mascote:hover {
+            transform: scale(1.05) rotate(2deg);
+            filter: drop-shadow(0 15px 40px rgba(0, 212, 255, 0.6));
+        }
+
+        /* Círculo de destaque atrás do mascote */
+        .left-art::before {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulseGlow 2s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes mascotFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.5;
+            }
+        }
+
+        /* ==========================================
+           ÁREA DE INTERFACE (DIREITA)
+           ========================================== */
+        .right-ui {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ==========================================
+           TÍTULOS
+           ========================================== */
+        .title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow:
+                0 0 20px rgba(0, 212, 255, 0.5),
+                0 2px 4px rgba(0, 0, 0, 0.5);
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        .title .big {
+            display: block;
+            font-size: 4rem;
+            background: linear-gradient(135deg, #00d4ff 0%, #ff6b35 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+
+        @keyframes titleGlow {
+            0% {
+                text-shadow:
+                    0 0 20px rgba(0, 212, 255, 0.5),
+                    0 2px 4px rgba(0, 0, 0, 0.5);
+            }
+
+            100% {
+                text-shadow:
+                    0 0 30px rgba(0, 212, 255, 0.8),
+                    0 0 40px rgba(255, 107, 53, 0.4),
+                    0 2px 4px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ff6b35;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+            margin-top: -10px;
+        }
+
+        /* ==========================================
+           ÁREA DE INPUT
+           ========================================== */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .input-label {
+            display: block;
+            width: 100%;
+        }
+
+        .input-label input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 1.1rem;
+            background: rgba(42, 49, 80, 0.6);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+        }
+
+        .input-label input::placeholder {
+            color: #a0aec0;
+        }
+
+        .input-label input:focus {
+            border-color: #00d4ff;
+            background: rgba(42, 49, 80, 0.9);
+            box-shadow:
+                0 0 0 3px rgba(0, 212, 255, 0.2),
+                0 0 20px rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .input-label input:hover:not(:focus) {
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
+        /* ==========================================
+           BOTÃO PRINCIPAL
+           ========================================== */
+        .primary-btn {
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow:
+                0 6px 20px rgba(0, 212, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            font-family: 'Arial', 'Helvetica', sans-serif;
+        }
+
+        /* Efeito de brilho ao passar o mouse */
+        .primary-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    transparent 70%);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                0 10px 30px rgba(0, 212, 255, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .primary-btn:hover::before {
+            left: 100%;
+        }
+
+        .primary-btn:active {
+            transform: translateY(-1px);
+            box-shadow:
+                0 4px 15px rgba(0, 212, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .primary-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .primary-btn:disabled:hover {
+            transform: none;
+            box-shadow:
+                0 6px 20px rgba(0, 212, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* ==========================================
+           CRÉDITOS
+           ========================================== */
+        .credits {
+            font-size: 0.9rem;
+            color: #a0aec0;
+            text-align: center;
+            margin-top: 10px;
+            opacity: 0.7;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        /* ==========================================
+           RESPONSIVIDADE
+           ========================================== */
+        @media (max-width: 968px) {
+            .intro-card {
+                flex-direction: column;
+                padding: 40px 30px;
+                gap: 30px;
+            }
+
+            .left-art {
+                flex: 0 0 auto;
+            }
+
+            #mascote {
+                max-width: 250px;
+            }
+
+            .left-art::before {
+                width: 200px;
+                height: 200px;
+            }
+
+            .title {
+                font-size: 2.2rem;
+                text-align: center;
+            }
+
+            .title .big {
+                font-size: 3rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body::before {
+                background-size: 30px 30px;
+            }
+
+            .intro-card {
+                padding: 30px 20px;
+                border-radius: 16px;
+            }
+
+            #mascote {
+                max-width: 200px;
+            }
+
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .title .big {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+                letter-spacing: 2px;
+            }
+
+            .input-label input {
+                font-size: 1rem;
+                padding: 14px 16px;
+            }
+
+            .primary-btn {
+                font-size: 1.1rem;
+                padding: 16px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="centered">
+        <div class="intro-card">
+            <div class="left-art">
+                <img id="mascote" src="assets/mascote.png" alt="Mascote Desktop Aventureiro" />
+            </div>
+
+            <div class="right-ui">
+                <h1 class="title">DESKTOP<br /><span class="big">AVENTUREIRO</span></h1>
+                <p class="subtitle">⚠ AMEAÇA VIRTUAL ⚠</p>
+
+                <div class="input-area">
+                    <label class="input-label">
+                        <input id="playerName" type="text" placeholder="Digite seu nome, defensor..." maxlength="20"
+                            autocomplete="off" />
+                    </label>
+                    <button id="startBtn" class="primary-btn">
+                        🛡️ INICIAR MISSÃO
+                    </button>
+                </div>
+
+                <p class="credits">💡 Pressione Enter para iniciar</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="scripts/main.js"></script>
+</body>
+
+</html>
