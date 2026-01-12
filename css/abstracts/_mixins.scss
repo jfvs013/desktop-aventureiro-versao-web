@@ -1,0 +1,11 @@
+// css/sass/abstracts/_mixins.scss
+
+@mixin flex-center($direction: row) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: $direction;
+}
+@mixin card-shadow {
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}

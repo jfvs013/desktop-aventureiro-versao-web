@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fase 1 — Triagem de E-mails</title>
+
+    <!-- CSS gerado a partir do SCSS do projeto -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <style>
+        /* Estilos adicionais para os botões do modal */
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            min-width: 150px;
+            max-width: 200px;
+        }
+
+        #nextPhaseBtn {
+            background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #nextPhaseBtn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    transparent 70%);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        #nextPhaseBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+        }
+
+        #nextPhaseBtn:hover::before {
+            left: 100%;
+        }
+
+        #nextPhaseBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 768px) {
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .modal-buttons button {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="game-topbar">
+        <div class="left-info">
+            <img id="mascote-small" src="../assets/mascote.png.png" alt="Mascote" />
+            <div class="player-area">
+                <div id="playerDisplay">Jogador: —</div>
+                <div id="scoreDisplay">Pontos: 0</div>
+            </div>
+        </div>
+
+        <div class="right-info">
+            <div id="timer">Tempo: 60</div>
+        </div>
+    </div>
+
+    <main class="game-area">
+        <section class="mail-column">
+            <h3>E-mails</h3>
+            <div id="mailList" class="mail-list"></div>
+        </section>
+
+        <section class="drop-column">
+            <h3>Caixas</h3>
+            <div class="drop-zones">
+                <div id="inbox" class="drop-zone inbox">
+                    📥 Caixa (Legítimos)
+                </div>
+                <div id="trash" class="drop-zone trash">
+                    🗑️ Lixeira (Phishing)
+                </div>
+            </div>
+        </section>
+
+        <aside class="help-column">
+            <div class="lupa">
+                <button id="inspectBtn" class="secondary-btn">
+                    🔍 Lupa Segura
+                </button>
+                <p class="hint">
+                    Use a Lupa para ver mais detalhes do e-mail (-3 pontos)
+                </p>
+            </div>
+
+            <div id="feedbackBox" class="feedback-box">
+                Feedback aparecerá aqui
+            </div>
+        </aside>
+    </main>
+
+    <div id="endModal" class="modal hidden">
+        <div class="modal-inner">
+            <h2>Missão concluída!</h2>
+            <p id="endText">Você fez X pontos</p>
+
+            <div class="modal-buttons">
+                <button id="retryBtn" class="primary-btn">
+                    🔄 Jogar Novamente
+                </button>
+                <button id="nextPhaseBtn" class="primary-btn">
+                    ➤ Avançar para Fase 2
+                </button>
+                <button id="backBtn" class="secondary-btn">
+                    🏠 Voltar ao Início
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="fase1.js"></script>
+</body>
+
+</html>

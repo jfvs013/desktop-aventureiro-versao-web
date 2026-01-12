@@ -1,0 +1,262 @@
+@use '../abstracts/main' as abs;
+
+// Variáveis de Paleta para Crianças
+$color-bg: #1a1a2e;
+$color-card: #16213e;
+$color-accent: #4ecca3;
+$color-danger: #e94560;
+$color-warning: #f1c40f;
+$color-text: #ffffff;
+
+body {
+    background: $color-bg;
+    color: $color-text;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+}
+
+// ---------- Topbar (Painel de Controle) ----------
+.game-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba($color-accent, 0.3);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    box-sizing: border-box;
+    z-index: 100;
+
+    .left-info {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+
+        #mascote-small {
+            width: 50px;
+            height: 50px;
+            border: 2px solid $color-accent;
+            border-radius: 50%;
+            background: $color-card;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .player-area {
+            font-weight: bold;
+
+            #scoreDisplay {
+                color: $color-accent;
+                font-size: 1.2rem;
+            }
+        }
+    }
+
+    .right-info #timer {
+        background: rgba($color-danger, 0.2);
+        padding: 8px 15px;
+        border-radius: 20px;
+        border: 1px solid $color-danger;
+        font-weight: 800;
+    }
+}
+
+// ---------- Área Principal ----------
+.game-area {
+    display: grid;
+    grid-template-columns: 1fr 350px 300px;
+    gap: 20px;
+    padding: 100px 25px 25px;
+    height: 90vh;
+    box-sizing: border-box;
+}
+
+// ---------- Colunas Estilizadas ----------
+.mail-column,
+.drop-column,
+.help-column {
+    background: rgba($color-card, 0.6);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+    h3 {
+        margin-top: 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+        opacity: 0.7;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 10px;
+    }
+}
+
+// ---------- Lista de E-mails (Onde a mágica acontece) ----------
+.mail-column {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: $color-accent transparent;
+
+    .mail-item {
+        background: linear-gradient(135deg, #1f4068, #162447);
+        margin-bottom: 12px;
+        padding: 15px;
+        border-radius: 12px;
+        border-left: 5px solid $color-accent;
+        cursor: grab;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #234a7a, #1b2d58);
+        }
+
+        &:active {
+            cursor: grabbing;
+        }
+
+        .mail-title {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .mail-sender {
+            font-family: monospace;
+            color: rgba($color-accent, 0.8);
+            font-size: 0.85rem;
+        }
+    }
+}
+
+// ---------- Zonas de Drop (Visual de Alvo) ----------
+.drop-zones {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+
+    .drop-zone {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 3px dashed rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        text-align: center;
+        padding: 20px;
+
+        &.inbox {
+            color: $color-accent;
+
+            &.over {
+                background: rgba($color-accent, 0.1);
+                border-color: $color-accent;
+                transform: scale(1.02);
+            }
+        }
+
+        &.trash {
+            color: $color-danger;
+
+            &.over {
+                background: rgba($color-danger, 0.1);
+                border-color: $color-danger;
+                transform: scale(1.02);
+            }
+        }
+    }
+}
+
+// ---------- Lupa e Feedback ----------
+.help-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .secondary-btn {
+        background: $color-warning;
+        color: #000;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    .hint {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        opacity: 0.8;
+    }
+
+    .feedback-box {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-weight: 500;
+        transition: all 0.4s ease;
+    }
+}
+
+// ---------- Modal de Fim de Jogo ----------
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+
+    &.hidden {
+        display: none;
+    }
+
+    .modal-inner {
+        background: $color-card;
+        padding: 40px;
+        border-radius: 25px;
+        text-align: center;
+        border: 2px solid $color-accent;
+        max-width: 400px;
+
+        h2 {
+            color: $color-accent;
+            margin-bottom: 10px;
+        }
+
+        .primary-btn {
+            background: $color-accent;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 10px;
+            cursor: pointer;
+        }
+    }
+}
