@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fase 5 - O Enigma da Criptografia</title>
+    <style>
+        /* CSS BASEADO NO TUTORIAL */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a0a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Fundo animado do Tutorial */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(40px);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        /* GRID DE ARQUIVOS */
+        .files-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .file-card {
+            background: rgba(26, 31, 58, 0.9);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            width: 250px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .file-card:hover {
+            transform: translateY(-10px);
+            border-color: #00d4ff;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .file-card.unlocked {
+            border-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.1);
+        }
+
+        .icon-lock {
+            font-size: 60px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* MODAIS (Estilo Tutorial) */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #1a1f3a;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            border: 2px solid #00d4ff;
+            position: relative;
+            text-align: center;
+        }
+
+        /* MECÂNICA DE PALAVRAS */
+        .word-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .letter-input {
+            width: 45px;
+            height: 55px;
+            background: #2a3150;
+            border: 2px solid #3d466e;
+            border-radius: 8px;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .letter-input:focus {
+            border-color: #00d4ff;
+            outline: none;
+        }
+
+        /* MASCOTE NO MODAL */
+        .mascot-mini {
+            width: 100px;
+            animation: mascotFloat 3s infinite ease-in-out;
+        }
+
+        @keyframes mascotFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* BOTÕES DO TUTORIAL */
+        .btn {
+            padding: 12px 25px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #00a8cc);
+            color: white;
+            margin-top: 15px;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            border: 2px solid #ff6b35;
+            margin-right: 10px;
+        }
+
+        /* PERGAMINHO DO CONHECIMENTO */
+        #knowledge-scroll {
+            background: #fdf5e6;
+            color: #2c3e50;
+            border: 10px solid #d4af37;
+            border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cpath d='M0 0h20v20H0z' fill='%23d4af37'/%3E%3C/svg%3E") 30;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        #knowledge-scroll h2 {
+            color: #b8860b;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #d4af37;
+            padding-bottom: 10px;
+        }
+
+        #knowledge-scroll .info-text {
+            text-align: left;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Fase 5: Descriptografia de Arquivos</h1>
+            <p>Clique nos arquivos para descriptografar os segredos de segurança digital.</p>
+        </header>
+
+        <div class="files-grid">
+            <div class="file-card" id="file-0" onclick="openPuzzle(0)">
+                <span class="icon-lock">🔒</span>
+                <h3>Arquivo_01.dat</h3>
+                <p id="status-0">Trancado</p>
+            </div>
+            <div class="file-card" id="file-1" onclick="openPuzzle(1)">
+                <span class="icon-lock">🔒</span>
+                <h3>Arquivo_02.dat</h3>
+                <p id="status-1">Trancado</p>
+            </div>
+            <div class="file-card" id="file-2" onclick="openPuzzle(2)">
+                <span class="icon-lock">🔒</span>
+                <h3>Arquivo_03.dat</h3>
+                <p id="status-2">Trancado</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="puzzle-modal">
+        <div class="modal-content">
+            <img src="../assets/mascote.png.png" class="mascot-mini" alt="Mascote" id="modal-mascot">
+            <h2 id="puzzle-title" style="color: #00d4ff; margin-top: 15px;">Sistema de Decriptação</h2>
+            <p id="puzzle-hint">Dica: A palavra tem <span id="word-len"></span> letras.</p>
+
+            <div class="word-display" id="word-inputs"></div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="useLupa()">🔍 Lupa (Dica)</button>
+                <button class="btn btn-primary" onclick="verifyWord()">🔓 Descriptografar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="knowledge-modal">
+        <div class="modal-content" id="knowledge-scroll">
+            <h2>📜 Pergaminho do Conhecimento</h2>
+            <div class="info-text" id="knowledge-text"></div>
+            <button class="btn btn-primary" onclick="closeKnowledge()">Entendido!</button>
+        </div>
+    </div>
+
+    <script>
+        const gameData = [
+            {
+                word: "FAKENEWS",
+                info: `<h3>Proteção contra FAKE NEWS (2026):</h3><br>
+                       <strong>1. Avalie a Fonte:</strong> Verifique URLs estranhas (ex: .com.co).<br>
+                       <strong>2. Autoria Clara:</strong> Portais sérios mostram quem escreveu.<br>
+                       <strong>3. Data de Publicação:</strong> Notícias antigas costumam ser requentadas como novas.<br>
+                       <strong>4. Busque em outros sites:</strong> Se só um site fala algo absurdo, é falso.<br>
+                       <strong>5. Não compartilhe pelo título:</strong> Leia antes de espalhar!`
+            },
+            {
+                word: "PHISHING",
+                info: `<h3>O que é Phishing e como agir:</h3><br>
+                       <strong>Definição:</strong> É uma técnica de pescaria digital onde criminosos usam links falsos para roubar senhas.<br><br>
+                       <strong>Como se proteger:</strong><br>
+                       - Nunca clique em links de SMS ou E-mail dizendo que sua conta foi bloqueada.<br>
+                       - Verifique o remetente cuidadosamente.<br>
+                       - Use autenticação de dois fatores (2FA) em tudo!`
+            },
+            {
+                word: "SENHA",
+                info: `<h3>A Força da sua Identidade:</h3><br>
+                       <strong>1. Tamanho importa:</strong> Use pelo menos 12 caracteres.<br>
+                       <strong>2. Misture tudo:</strong> Letras maiúsculas, minúsculas, números e símbolos.<br>
+                       <strong>3. Gerenciadores:</strong> Use um gerenciador de senhas para não repetir a mesma em vários sites.<br>
+                       <strong>4. Troca Periódica:</strong> Mude senhas importantes a cada 6 meses.`
+            }
+        ];
+
+        let currentFileIndex = null;
+
+        function openPuzzle(index) {
+            const file = document.getElementById(`file-${index}`);
+            if (file.classList.contains('unlocked')) {
+                showKnowledge(index);
+                return;
+            }
+
+            currentFileIndex = index;
+            const data = gameData[index];
+            const inputContainer = document.getElementById('word-inputs');
+            inputContainer.innerHTML = '';
+
+            document.getElementById('word-len').innerText = data.word.length;
+            document.getElementById('puzzle-modal').style.display = 'flex';
+
+            // Criar inputs
+            for (let i = 0; i < data.word.length; i++) {
+                const input = document.createElement('input');
+                input.className = 'letter-input';
+                input.maxLength = 1;
+                input.dataset.index = i;
+                input.id = `l-${i}`;
+
+                // Auto-pulo para o próximo input
+                input.addEventListener('input', (e) => {
+                    if (e.target.value.length === 1) {
+                        const next = document.getElementById(`l-${i + 1}`);
+                        if (next) next.focus();
+                    }
+                });
+
+                inputContainer.appendChild(input);
+            }
+        }
+
+        function verifyWord() {
+            const data = gameData[currentFileIndex];
+            let guess = "";
+            for (let i = 0; i < data.word.length; i++) {
+                guess += document.getElementById(`l-${i}`).value.toUpperCase();
+            }
+
+            if (guess === data.word) {
+                // SUCESSO
+                document.getElementById('puzzle-modal').style.display = 'none';
+                unlockFile(currentFileIndex);
+            } else {
+                // ERRO
+                alert("Código incorreto! Tente analisar melhor ou use a lupa.");
+            }
+        }
+
+        function useLupa() {
+            const data = gameData[currentFileIndex];
+            // Preencher a primeira e última letra como dica
+            document.getElementById('l-0').value = data.word[0];
+            document.getElementById(`l-${data.word.length - 1}`).value = data.word[data.word.length - 1];
+
+            // Opcional: Mostrar a palavra completa se você quiser que seja uma "ajuda total"
+            // alert("Dica do Cãozinho Azul: A palavra é " + data.word);
+        }
+
+        function unlockFile(index) {
+            const file = document.getElementById(`file-${index}`);
+            const status = document.getElementById(`status-${index}`);
+            const lock = file.querySelector('.icon-lock');
+
+            file.classList.add('unlocked');
+            status.innerText = "Descriptografado!";
+            status.style.color = "#2ecc71";
+            lock.innerText = "🔓";
+
+            showKnowledge(index);
+        }
+
+        function showKnowledge(index) {
+            const data = gameData[index];
+            document.getElementById('knowledge-text').innerHTML = data.info;
+            document.getElementById('knowledge-modal').style.display = 'flex';
+        }
+
+        function closeKnowledge() {
+            document.getElementById('knowledge-modal').style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora (opcional)
+        window.onclick = function (event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>
