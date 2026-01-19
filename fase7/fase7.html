@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desktop Aventureiro - Fase 7</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Arial', 'Segoe UI', Tahoma, sans-serif; 
+            background: linear-gradient(135deg,#0a0e27 0%,#1a0a2e 50%,#16213e 100%); 
+            color:#fff; 
+            min-height:100vh; 
+            overflow-x:hidden; 
+            position:relative; 
+        }
+        
+        body::before { 
+            content:''; 
+            position:fixed; 
+            top:0; left:0; 
+            width:100%; 
+            height:100%; 
+            background-image: linear-gradient(rgba(0,212,255,0.1) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(0,212,255,0.1) 1px, transparent 1px); 
+            background-size: 40px 40px; 
+            animation: gridMove 20s linear infinite; 
+            pointer-events:none; 
+            z-index:0; 
+        }
+        
+        @keyframes gridMove { 
+            0%{ transform: translateY(0);} 
+            100%{ transform: translateY(40px);} 
+        }
+        
+        .container { 
+            position:relative; 
+            z-index:1; 
+            min-height:100vh; 
+            display:flex; 
+            flex-direction:column; 
+            align-items:center; 
+            justify-content:center; 
+            padding:40px 20px; 
+        }
+        
+        /* CARROSSEL */
+        .carousel { 
+            position: relative; 
+            width: 100%; 
+            max-width: 900px; 
+        }
+        
+        .carousel-item { 
+            display: none; 
+            animation: fadeIn 0.5s ease-in; 
+        }
+        
+        .carousel-item.active { 
+            display: block; 
+        }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
+        
+        /* CARD DO TUTORIAL */
+        .tutorial-card { 
+            background: rgba(26,31,58,0.95); 
+            border-radius:24px; 
+            padding:50px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.2); 
+            position:relative; 
+            animation: fadeInScale .8s cubic-bezier(.34,1.56,.64,1); 
+        }
+        
+        @keyframes fadeInScale { 
+            0%{ opacity:0; transform: scale(.9) translateY(30px);} 
+            100%{ opacity:1; transform: scale(1) translateY(0);} 
+        }
+        
+        .tutorial-card::after { 
+            content:''; 
+            position:absolute; 
+            inset:0; 
+            border-radius:24px; 
+            padding:2px; 
+            background:linear-gradient(135deg,#00d4ff,#ff6b35,#00d4ff); 
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); 
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); 
+            -webkit-mask-composite: xor; 
+            mask-composite: exclude; 
+            opacity:0.3; 
+            animation: borderRotate 4s linear infinite; 
+        }
+        
+        @keyframes borderRotate { 
+            0% { filter: hue-rotate(0deg); } 
+            100% { filter: hue-rotate(360deg); } 
+        }
+        
+        .mascot-section { 
+            display:flex; 
+            gap:30px; 
+            margin-bottom:30px; 
+            align-items:flex-start; 
+            position:relative; 
+            z-index:2; 
+        }
+        
+        .mascot-avatar { 
+            flex:0 0 180px; 
+            position:relative; 
+        }
+        
+        #fase7-mascot { 
+            width:100%; 
+            height:auto; 
+            max-width:180px; 
+            filter: drop-shadow(0 10px 20px rgba(0,212,255,0.3)); 
+            animation: mascotFloat 3s ease-in-out infinite; 
+        }
+        
+        @keyframes mascotFloat { 
+            0%,100% { transform: translateY(0); } 
+            50% { transform: translateY(-10px); } 
+        }
+        
+        .mascot-avatar::before { 
+            content:''; 
+            position:absolute; 
+            width:150px; 
+            height:150px; 
+            top:50%; 
+            left:50%; 
+            transform: translate(-50%,-50%); 
+            background: radial-gradient(circle, rgba(0,212,255,0.2) 0%, transparent 70%); 
+            border-radius:50%; 
+            animation:pulseGlow 2s ease-in-out infinite; 
+            z-index:-1; 
+        }
+        
+        @keyframes pulseGlow { 
+            0%,100%{ transform: translate(-50%,-50%) scale(1); opacity:0.3; } 
+            50%{ transform: translate(-50%,-50%) scale(1.1); opacity:0.5; } 
+        }
+        
+        @keyframes virusGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #ff6b35); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 20px #ff6b35); }
+        }
+        
+        .dialogue-box { 
+            flex:1; 
+            background: rgba(42,49,80,0.8); 
+            border:2px solid rgba(0,212,255,0.3); 
+            border-radius:16px; 
+            padding:25px; 
+            position:relative; 
+        }
+        
+        .dialogue-box::before { 
+            content:''; 
+            position:absolute; 
+            left:-12px; 
+            top:30px; 
+            width:0; 
+            height:0; 
+            border-top:10px solid transparent; 
+            border-bottom:10px solid transparent; 
+            border-right:12px solid rgba(0,212,255,0.3); 
+        }
+        
+        .dialogue-text { 
+            font-size:1.1rem; 
+            line-height:1.6; 
+            color:#e0e6ed; 
+            margin-bottom:20px; 
+            min-height:80px; 
+        }
+        
+        .dialogue-text strong { 
+            color:#00d4ff; 
+            font-weight:700; 
+        }
+        
+        .dialogue-text em { 
+            color:#ff6b35; 
+            font-style:normal; 
+        }
+        
+        .button-group { 
+            display:flex; 
+            gap:15px; 
+            justify-content:flex-end; 
+            margin-top:20px; 
+        }
+        
+        .btn { 
+            padding:12px 30px; 
+            font-size:1rem; 
+            font-weight:700; 
+            text-transform:uppercase; 
+            letter-spacing:1px; 
+            border:none; 
+            border-radius:10px; 
+            cursor:pointer; 
+            transition: all .3s ease; 
+            font-family:inherit; 
+            position:relative; 
+            overflow:hidden; 
+        }
+        
+        .btn-primary { 
+            background: linear-gradient(135deg,#00d4ff 0%, #00a8cc 100%); 
+            color:#fff; 
+            box-shadow: 0 4px 15px rgba(0,212,255,0.4); 
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,212,255,0.6);
+        }
+        
+        .btn-secondary { 
+            background: rgba(255,107,53,0.2); 
+            color:#ff6b35; 
+            border:2px solid #ff6b35; 
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,107,53,0.4);
+            transform: translateY(-3px);
+        }
+        
+        .progress-indicator { 
+            display:flex; 
+            gap:10px; 
+            justify-content:center; 
+            margin-top:30px; 
+            position:relative; 
+            z-index:2; 
+        }
+        
+        .progress-dot { 
+            width:12px; 
+            height:12px; 
+            border-radius:50%; 
+            background: rgba(255,255,255,0.2); 
+            transition: all .3s ease; 
+            cursor:pointer; 
+        }
+        
+        .progress-dot.active { 
+            background:#00d4ff; 
+            box-shadow:0 0 10px rgba(0,212,255,0.6); 
+            transform:scale(1.3); 
+        }
+        
+        /* MINI FASE - EMAIL GAME */
+        .mini-fase-card {
+            background: rgba(26,31,58,0.95);
+            border-radius:24px;
+            padding:40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.2);
+            position:relative;
+            animation: fadeInScale .8s cubic-bezier(.34,1.56,.64,1);
+        }
+        
+        .mini-fase-card::after {
+            content:'';
+            position:absolute;
+            inset:0;
+            border-radius:24px;
+            padding:2px;
+            background:linear-gradient(135deg,#00d4ff,#ff6b35,#00d4ff);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity:0.3;
+            animation: borderRotate 4s linear infinite;
+        }
+        
+        .mini-fase-header {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .mini-fase-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        
+        .mini-fase-subtitle {
+            font-size: 1.1rem;
+            color: #b0bec5;
+        }
+        
+        .email-item {
+            background: rgba(42,49,80,0.6);
+            border: 2px solid rgba(0,212,255,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .email-item:hover {
+            border-color: rgba(0,212,255,0.6);
+            transform: translateX(5px);
+            background: rgba(42,49,80,0.9);
+        }
+        
+        .email-item.suspicious {
+            border-color: #ff6b35;
+        }
+        
+        .email-item.suspicious:hover {
+            background: rgba(255,107,53,0.2);
+        }
+        
+        .email-from {
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 5px;
+        }
+        
+        .email-subject {
+            color: #e0e6ed;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .email-preview {
+            color: #a0aec0;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        
+        .result-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            display: none;
+        }
+        
+        .result-message.success {
+            color: #00ff88;
+            display: block;
+        }
+        
+        .result-message.error {
+            color: #ff6b35;
+            display: block;
+        }
+        
+        .result-message.warning {
+            color: #ffaa00;
+            display: block;
+        }
+
+        /* MINI FASE 3 - SENHA */
+        .password-requirement {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(42,49,80,0.4);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #ff6b35;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .password-requirement.completed {
+            background: rgba(0,255,136,0.15);
+            border-left-color: #00ff88;
+        }
+
+        .requirement-icon {
+            font-size: 1.2rem;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .requirement-text {
+            color: #b0bec5;
+            font-size: 0.95rem;
+        }
+
+        .password-requirement.completed .requirement-text {
+            color: #00ff88;
+            font-weight: 600;
+        }
+
+        #passwordInput {
+            color: #fff;
+        }
+
+        #passwordInput::placeholder {
+            color: #666;
+        }
+
+        #passwordInput:focus {
+            outline: none;
+            border-color: #00d4ff !important;
+            box-shadow: 0 0 20px rgba(0,212,255,0.3);
+            background: rgba(42,49,80,0.6);
+        }
+
+        #tipsBtn {
+            cursor: pointer;
+        }
+
+        #tipsBtn:hover {
+            background: rgba(77,184,255,0.3) !important;
+        }
+
+        #tipsBox ul {
+            list-style: none;
+        }
+
+        #tipsBox li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        #tipsBox li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4db8ff;
+            font-weight: bold;
+        }
+        
+        @media (max-width:768px){ 
+            .tutorial-card, .mini-fase-card { 
+                padding:30px 20px;
+            } 
+            .mascot-section{ 
+                flex-direction:column; 
+                align-items:center; 
+                gap:20px;
+            } 
+            .mascot-avatar{ 
+                flex:0 0 auto;
+            } 
+            #fase7-mascot{ 
+                max-width:150px;
+            } 
+            .dialogue-box::before{ 
+                display:none;
+            } 
+            .dialogue-text{ 
+                font-size:1rem;
+            } 
+            .button-group{ 
+                flex-direction:column;
+            } 
+            .btn{ 
+                width:100%; 
+            }
+            .mini-fase-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="carousel">
+            <!-- SLIDE 1: TUTORIAL -->
+            <div class="carousel-item active">
+                <div class="tutorial-card">
+                    <div class="mascot-section">
+                        <div class="mascot-avatar" id="mascot-container">
+                            <img src="../assets/mascote.png.png" alt="Mascote" id="fase7-mascot">
+                        </div>
+
+                        <div class="dialogue-box">
+                            <p class="dialogue-text" id="dialogue-text">Bem-vindo à <strong>Fase 7</strong> — o teste final! 🎯<br><br>
+                               Você já aprendeu tudo sobre segurança digital. Agora vamos fazer um desafio rápido!</p>
+
+                            <div class="button-group">
+                                <button class="btn btn-primary" id="btn-next">Começar Desafio ➤</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="progress-indicator">
+                        <div class="progress-dot active" data-slide="0"></div>
+                        <div class="progress-dot" data-slide="1"></div>
+                        <div class="progress-dot" data-slide="2"></div>
+                        <div class="progress-dot" data-slide="3"></div>
+                        <div class="progress-dot" data-slide="4"></div>
+                        <div class="progress-dot" data-slide="5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 2: MINI FASE 1 - EMAIL -->
+            <div class="carousel-item">
+                <div class="mini-fase-card">
+                    <div class="mini-fase-header">
+                        <div class="mini-fase-title">🎯 Desafio 1</div>
+                        <div class="mini-fase-subtitle">Identifique qual email é MALICIOSO</div>
+                    </div>
+
+                    <div id="emailsContainer">
+                        <div class="email-item" data-index="0">
+                            <div class="email-from">📧 noreply@amazon.com</div>
+                            <div class="email-subject">Seu pedido foi entregue!</div>
+                            <div class="email-preview">Você recebeu sua compra. Clique aqui para rastrear...</div>
+                        </div>
+
+                        <div class="email-item suspicious" data-index="1">
+                            <div class="email-from">📧 suport@amazn-verify.ru</div>
+                            <div class="email-subject">⚠️ Verifique sua conta URGENTE!</div>
+                            <div class="email-preview">Detectamos atividade suspeita. Clique AQUI para verificar agora...</div>
+                        </div>
+
+                        <div class="email-item" data-index="2">
+                            <div class="email-from">📧 contato@microsoft.com</div>
+                            <div class="email-subject">Atualização de segurança disponível</div>
+                            <div class="email-preview">Uma nova atualização de segurança está disponível para seu Windows...</div>
+                        </div>
+                    </div>
+
+                    <div class="result-message" id="resultMessage"></div>
+
+                    <div class="button-group" style="margin-top: 30px;">
+                        <button class="btn btn-secondary" id="btn-back">← Voltar</button>
+                        <button class="btn btn-primary" id="btn-retry" style="display:none;">Tentar Novamente</button>
+                        <button class="btn btn-primary" id="btn-next-2" style="display:none;">Próxima Fase ➤</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: MINI FASE 2 - DESKTOP VIRTUAL -->
+            <div class="carousel-item">
+                <div class="mini-fase-card">
+                    <div class="mini-fase-header">
+                        <div class="mini-fase-title">🗂️ Desafio 2 - Limpeza do Desktop</div>
+                        <div class="mini-fase-subtitle">Clique APENAS nos ícones de LIXO (🦴 e 🕸️) para liberar espaço</div>
+                    </div>
+
+                    <div id="desktopContainer" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin: 40px 0; padding: 30px; background: rgba(42,49,80,0.4); border-radius: 15px; min-height: 300px; align-items: start; position: relative; z-index: 2;">
+                        <!-- Arquivo Pessoal 1 - Imagens (NÃO pode deletar) -->
+                        <div style="text-align: center;">
+                            <div style="font-size: 60px; margin-bottom: 15px; cursor: pointer; transition: transform 0.2s ease;" class="personal-file" data-type="image" title="Clique para ver o aviso">🖼️</div>
+                            <div style="color: #b0bec5; font-size: 0.9rem; margin-bottom: 20px;">minhas_fotos.jpg</div>
+                            <div style="color: #4db8ff; font-size: 0.85rem; font-style: italic;">📌 Arquivo pessoal</div>
+                        </div>
+
+                        <!-- Lixo 1 -->
+                        <div style="text-align: center;">
+                            <div style="font-size: 60px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" class="trash-item" data-trash="1" title="Clique para remover">🦴</div>
+                            <div style="color: #ff6b35; font-size: 0.9rem; margin-bottom: 20px;">lixo_1</div>
+                            <div style="color: #ff6b35; font-size: 0.85rem; font-style: italic;">🗑️ Remover</div>
+                        </div>
+
+                        <!-- Arquivo Pessoal 2 - Músicas (NÃO pode deletar) -->
+                        <div style="text-align: center;">
+                            <div style="font-size: 60px; margin-bottom: 15px; cursor: pointer; transition: transform 0.2s ease;" class="personal-file" data-type="music" title="Clique para ver o aviso">🎵</div>
+                            <div style="color: #b0bec5; font-size: 0.9rem; margin-bottom: 20px;">minhas_musicas.mp3</div>
+                            <div style="color: #4db8ff; font-size: 0.85rem; font-style: italic;">📌 Arquivo pessoal</div>
+                        </div>
+
+                        <!-- Lixo 2 -->
+                        <div style="text-align: center;">
+                            <div style="font-size: 60px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" class="trash-item" data-trash="2" title="Clique para remover">🕸️</div>
+                            <div style="color: #ff6b35; font-size: 0.9rem; margin-bottom: 20px;">lixo_2</div>
+                            <div style="color: #ff6b35; font-size: 0.85rem; font-style: italic;">🗑️ Remover</div>
+                        </div>
+
+                        <!-- Arquivo Pessoal 3 - Jogos (NÃO pode deletar) -->
+                        <div style="text-align: center;">
+                            <div style="font-size: 60px; margin-bottom: 15px; cursor: pointer; transition: transform 0.2s ease;" class="personal-file" data-type="game" title="Clique para ver o aviso">🎮</div>
+                            <div style="color: #b0bec5; font-size: 0.9rem; margin-bottom: 20px;">meus_jogos.exe</div>
+                            <div style="color: #4db8ff; font-size: 0.85rem; font-style: italic;">📌 Arquivo pessoal</div>
+                        </div>
+
+                        <!-- Lixo 3 -->
+                        <div style="text-align: center;">
+                            <div style="font-size: 60px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" class="trash-item" data-trash="3" title="Clique para remover">🦴</div>
+                            <div style="color: #ff6b35; font-size: 0.9rem; margin-bottom: 20px;">lixo_3</div>
+                            <div style="color: #ff6b35; font-size: 0.85rem; font-style: italic;">🗑️ Remover</div>
+                        </div>
+
+                        <!-- Lixo 4 -->
+                        <div style="text-align: center;">
+                            <div style="font-size: 60px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" class="trash-item" data-trash="4" title="Clique para remover">🕸️</div>
+                            <div style="color: #ff6b35; font-size: 0.9rem; margin-bottom: 20px;">lixo_4</div>
+                            <div style="color: #ff6b35; font-size: 0.85rem; font-style: italic;">🗑️ Remover</div>
+                        </div>
+
+                        <!-- Lixo 5 -->
+                        <div style="text-align: center;">
+                            <div style="font-size: 60px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" class="trash-item" data-trash="5" title="Clique para remover">🦴</div>
+                            <div style="color: #ff6b35; font-size: 0.9rem; margin-bottom: 20px;">lixo_5</div>
+                            <div style="color: #ff6b35; font-size: 0.85rem; font-style: italic;">🗑️ Remover</div>
+                        </div>
+                    </div>
+
+                    <div class="result-message" id="resultMessage2"></div>
+
+                    <div class="button-group" style="margin-top: 30px;">
+                        <button class="btn btn-secondary" id="btn-back-2">← Voltar</button>
+                        <button class="btn btn-primary" id="btn-next-3" style="display:none;">Próxima Fase ➤</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 4: MINI FASE 3 - FORÇA DE SENHA -->
+            <div class="carousel-item">
+                <div class="mini-fase-card">
+                    <div class="mini-fase-header">
+                        <div class="mini-fase-title">🔐 Desafio 3 - Criar Senha Forte</div>
+                        <div class="mini-fase-subtitle">Crie uma senha que atenda a todos os requisitos</div>
+                    </div>
+
+                    <!-- BARRA DE FORÇA DA SENHA -->
+                    <div style="margin: 30px 0; position: relative; z-index: 2;">
+                        <div style="font-size: 0.9rem; color: #b0bec5; margin-bottom: 10px;">Força da Senha:</div>
+                        <div style="width: 100%; height: 10px; background: rgba(42,49,80,0.6); border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,212,255,0.2);">
+                            <div id="strengthBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ff6b35, #ffaa00, #00ff88); transition: width 0.3s ease; border-radius: 10px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- INPUT DE SENHA -->
+                    <div style="margin: 30px 0; position: relative; z-index: 2;">
+                        <input type="text" id="passwordInput" placeholder="Digite sua senha..." style="width: 100%; padding: 15px 20px; border: 2px solid rgba(0,212,255,0.3); border-radius: 12px; background: rgba(42,49,80,0.4); color: #fff; font-size: 1rem; transition: all 0.3s ease;" />
+                    </div>
+
+                    <!-- REQUISITOS -->
+                    <div style="margin: 30px 0; position: relative; z-index: 2;">
+                        <div style="font-size: 0.95rem; color: #b0bec5; margin-bottom: 15px; font-weight: 600;">Requisitos da Senha:</div>
+                        
+                        <div class="password-requirement" data-requirement="length">
+                            <span class="requirement-icon">❌</span>
+                            <span class="requirement-text">Mínimo de 8 caracteres</span>
+                        </div>
+                        
+                        <div class="password-requirement" data-requirement="numbers">
+                            <span class="requirement-icon">❌</span>
+                            <span class="requirement-text">Mínimo de 2 números</span>
+                        </div>
+                        
+                        <div class="password-requirement" data-requirement="special">
+                            <span class="requirement-icon">❌</span>
+                            <span class="requirement-text">Mínimo de 1 caractere especial (!@#$%^&*)</span>
+                        </div>
+                        
+                        <div class="password-requirement" data-requirement="uppercase">
+                            <span class="requirement-icon">❌</span>
+                            <span class="requirement-text">Mínimo de 1 letra MAIÚSCULA</span>
+                        </div>
+                        
+                        <div class="password-requirement" data-requirement="lowercase">
+                            <span class="requirement-icon">❌</span>
+                            <span class="requirement-text">Mínimo de 1 letra minúscula</span>
+                        </div>
+                    </div>
+
+                    <!-- BOTÃO DE DICAS -->
+                    <div style="margin: 20px 0; position: relative; z-index: 2; text-align: center;">
+                        <button id="tipsBtn" class="btn btn-secondary" style="background: rgba(77,184,255,0.2); border: 1px solid #4db8ff; color: #4db8ff; width: auto; padding: 10px 20px;">💡 Ver Dicas</button>
+                        <div id="tipsBox" style="display: none; background: rgba(77,184,255,0.1); border: 1px solid #4db8ff; border-radius: 12px; padding: 20px; margin-top: 15px; color: #4db8ff; font-size: 0.9rem; line-height: 1.6; text-align: left;">
+                            <strong>Dicas para uma senha forte:</strong>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Use uma combinação de diferentes tipos de caracteres</li>
+                                <li>Quanto maior a senha, mais segura será</li>
+                                <li>Evite nomes pessoais ou datas importantes</li>
+                                <li>Use caracteres especiais como !@#$%^&*</li>
+                                <li>Inclua números espalhados pela senha</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="result-message" id="resultMessage3"></div>
+
+                    <div class="button-group" style="margin-top: 30px;">
+                        <button class="btn btn-secondary" id="btn-back-3">← Voltar</button>
+                        <button class="btn btn-primary" id="btn-next-3" style="display:none;">Próximo →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5: MINI FASE 4 - FAKE NEWS -->
+            <div class="carousel-item">
+                <div class="mini-fase-card">
+                    <div class="mini-fase-header">
+                        <div class="mini-festa-title">📰 Desafio 4 - Detectar Fake News</div>
+                        <div class="mini-fase-subtitle">Identifique as 4 notícias FALSAS entre 6 manchetes</div>
+                    </div>
+
+                    <!-- PONTUAÇÃO -->
+                    <div style="margin: 20px 0; position: relative; z-index: 2; text-align: center; font-weight: bold;">
+                        <span style="color: #4db8ff;">Acertos: <span id="newsCorrect">0</span>/4</span> | 
+                        <span style="color: #ff6b35;">Erros: <span id="newsErrors">0</span>/2</span>
+                    </div>
+
+                    <!-- NOTÍCIAS -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; max-height: 400px; overflow-y: auto;">
+                        <div class="news-item" data-news-id="0" style="background: rgba(42,49,80,0.6); border: 2px solid rgba(0,212,255,0.3); border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.3s; position: relative; z-index: 2;">
+                            <strong style="color: #00d4ff;">🍌 Notícia 1</strong>
+                            <p style="margin-top: 10px; font-size: 0.9rem; color: #b0bec5;">Cientistas descobrem que bananas têm inteligência artificial</p>
+                            <small style="color: #888;">Fonte: FakeSite.com</small>
+                        </div>
+
+                        <div class="news-item" data-news-id="1" style="background: rgba(42,49,80,0.6); border: 2px solid rgba(0,212,255,0.3); border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.3s; position: relative; z-index: 2;">
+                            <strong style="color: #00d4ff;">💻 Notícia 2</strong>
+                            <p style="margin-top: 10px; font-size: 0.9rem; color: #b0bec5;">Segurança digital: como proteger suas senhas online</p>
+                            <small style="color: #888;">Fonte: CyberGuard</small>
+                        </div>
+
+                        <div class="news-item" data-news-id="2" style="background: rgba(42,49,80,0.6); border: 2px solid rgba(0,212,255,0.3); border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.3s; position: relative; z-index: 2;">
+                            <strong style="color: #00d4ff;">🦆 Notícia 3</strong>
+                            <p style="margin-top: 10px; font-size: 0.9rem; color: #b0bec5;">Patos revolucionam política internacional com novo tratado</p>
+                            <small style="color: #888;">Fonte: FakeNews.fake</small>
+                        </div>
+
+                        <div class="news-item" data-news-id="3" style="background: rgba(42,49,80,0.6); border: 2px solid rgba(0,212,255,0.3); border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.3s; position: relative; z-index: 2;">
+                            <strong style="color: #00d4ff;">📱 Notícia 4</strong>
+                            <p style="margin-top: 10px; font-size: 0.9rem; color: #b0bec5;">Novo Smartphone com bateria que dura 1 mês foi lançado</p>
+                            <small style="color: #888;">Fonte: TechNews</small>
+                        </div>
+
+                        <div class="news-item" data-news-id="4" style="background: rgba(42,49,80,0.6); border: 2px solid rgba(0,212,255,0.3); border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.3s; position: relative; z-index: 2;">
+                            <strong style="color: #00d4ff;">🚀 Notícia 5</strong>
+                            <p style="margin-top: 10px; font-size: 0.9rem; color: #b0bec5;">NASA confirma missão tripulada para Marte em 2030</p>
+                            <small style="color: #888;">Fonte: NASA Official</small>
+                        </div>
+
+                        <div class="news-item" data-news-id="5" style="background: rgba(42,49,80,0.6); border: 2px solid rgba(0,212,255,0.3); border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.3s; position: relative; z-index: 2;">
+                            <strong style="color: #00d4ff;">⚡ Notícia 6</strong>
+                            <p style="margin-top: 10px; font-size: 0.9rem; color: #b0bec5;">Gatos agora falam português e querem direto de voto</p>
+                            <small style="color: #888;">Fonte: Fake News Daily</small>
+                        </div>
+                    </div>
+
+                    <div class="result-message" id="resultMessage4" style="margin-top: 20px; position: relative; z-index: 2;"></div>
+
+                    <div class="button-group" style="margin-top: 30px;">
+                        <button class="btn btn-secondary" id="btn-back-4">← Voltar</button>
+                        <button class="btn btn-primary" id="btn-finish" style="display:none;">Finalizar Fase 🏆</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 6: MINI FASE 5 - LABIRINTO + SENHA -->
+            <div class="carousel-item">
+                <div class="mini-fase-card">
+                    <div class="mini-fase-header">
+                        <div class="mini-fase-title">🧩 Desafio 5 - Labirinto do Vírus</div>
+                        <div class="mini-fase-subtitle">Navegue pelo labirinto pra encontrar a pasta com o vírus e deletá-la 🔒</div>
+                    </div>
+
+                    <!-- LABIRINTO -->
+                    <div id="mazeContainer" style="position: relative; width: 100%; height: 400px; background: rgba(26,31,58,0.6); border: 2px solid rgba(0,212,255,0.2); border-radius: 12px; overflow: hidden; margin: 20px 0; z-index: 2;">
+                        <svg id="mazeSVG" width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+                            <!-- Paredes do Labirinto em Azul Neon -->
+                            <g stroke="#00d4ff" stroke-width="3" fill="none">
+                                <!-- Parede Externa -->
+                                <rect x="10" y="10" width="980" height="380" stroke="#00d4ff" stroke-width="2" fill="none"/>
+                                
+                                <!-- Seção 1: Parede Vertical Esquerda com Passagem -->
+                                <line x1="120" y1="50" x2="120" y2="120" stroke="#00d4ff"/>
+                                <line x1="120" y1="160" x2="120" y2="230" stroke="#00d4ff"/>
+                                
+                                <!-- Seção 2: Parede Vertical Horizontal -->
+                                <line x1="180" y1="80" x2="280" y2="80" stroke="#00d4ff"/>
+                                <line x1="280" y1="80" x2="280" y2="150" stroke="#00d4ff"/>
+                                
+                                <!-- Seção 3: Parede Central Esquerda -->
+                                <line x1="150" y1="200" x2="150" y2="300" stroke="#00d4ff"/>
+                                <line x1="150" y1="300" x2="250" y2="300" stroke="#00d4ff"/>
+                                
+                                <!-- Seção 4: Parede Central Direita -->
+                                <line x1="350" y1="60" x2="350" y2="140" stroke="#00d4ff"/>
+                                <line x1="350" y1="200" x2="350" y2="280" stroke="#00d4ff"/>
+                                
+                                <!-- Seção 5: Parede Direita Superior -->
+                                <line x1="480" y1="70" x2="480" y2="180" stroke="#00d4ff"/>
+                                <line x1="480" y1="180" x2="600" y2="180" stroke="#00d4ff"/>
+                                <line x1="600" y1="100" x2="600" y2="180" stroke="#00d4ff"/>
+                                
+                                <!-- Seção 6: Parede Inferior Direita -->
+                                <line x1="700" y1="250" x2="700" y2="350" stroke="#00d4ff"/>
+                                <line x1="700" y1="350" x2="850" y2="350" stroke="#00d4ff"/>
+                                
+                                <!-- Seção 7: Parede Média Inferior -->
+                                <line x1="400" y1="320" x2="500" y2="320" stroke="#00d4ff"/>
+                            </g>
+                        </svg>
+
+                        <!-- JOGADOR (Quadrado Azul) -->
+                        <div id="player" style="position: absolute; width: 25px; height: 25px; background: #00d4ff; border: 2px solid #00ffff; top: 30px; left: 30px; border-radius: 3px; box-shadow: 0 0 10px #00d4ff; z-index: 10;"></div>
+
+                        <!-- PASTA ENCRIPTADA (Alvo Final) - Acessível à direita -->
+                        <div id="virus" style="position: absolute; width: 50px; height: 50px; top: 270px; right: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; animation: virusGlow 2s ease-in-out infinite; z-index: 10; font-size: 40px;">🔐</div>
+                    </div>
+
+                    <!-- Controles -->
+                    <div style="text-align: center; margin-top: 15px; color: #b0bec5; font-size: 0.9rem; position: relative; z-index: 2;">
+                        Use as setas ⬆️⬇️⬅️➡️ ou WASD para se mover
+                    </div>
+
+                    <!-- MODAL DE POPUP ENCONTROU A PASTA -->
+                    <div id="virusModal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(26,31,58,0.98); border: 3px solid #00d4ff; border-radius: 16px; padding: 40px; text-align: center; z-index: 1000; box-shadow: 0 0 40px rgba(0,212,255,0.5); max-width: 500px;">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">🔐</div>
+                        <h2 style="color: #00d4ff; margin-bottom: 15px; font-size: 1.5rem;">Você Achou a Pasta Encriptada!</h2>
+                        <p style="color: #b0bec5; margin-bottom: 20px; font-size: 1rem;">Para deletar o vírus, você precisa descobrir a senha correta.</p>
+                        <p style="color: #00ff88; margin-bottom: 30px; font-weight: bold; font-size: 1.1rem;">Você tem até 4 dicas para adivinhar!</p>
+                        <button id="btnStartDecoder" class="btn btn-primary" style="width: 200px; margin: 0 auto; display: block;">Começar Decodificador 🔓</button>
+                    </div>
+
+                    <!-- OVERLAY DO MODAL -->
+                    <div id="virusOverlay" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999;"></div>
+
+                    <!-- DECODIFICADOR DE SENHA -->
+                    <div id="decoderSection" style="display:none; margin-top: 30px; position: relative; z-index: 2; text-align: center;">
+                        <div style="font-size: 1.2rem; color: #00ff88; margin-bottom: 20px; font-weight: bold;">🔐 Decodificador de Senha</div>
+                        
+                        <!-- Dicas -->
+                        <div style="background: rgba(42,49,80,0.6); border: 2px solid rgba(0,212,255,0.2); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                            <div style="color: #b0bec5; margin-bottom: 15px; font-size: 0.95rem;">Dicas Descobertas: <span id="hintsUsed" style="color: #00d4ff; font-weight: bold;">0</span>/4</div>
+                            <div id="hintDisplay" style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px; font-family: monospace; font-size: 1.2rem; color: #00ff88; letter-spacing: 3px; min-height: 40px;">_ _ _ _ _ _ _</div>
+                            <button id="btnGetHint" class="btn btn-secondary" style="width: 150px;">Solicitar Dica 💡</button>
+                        </div>
+
+                        <!-- Input de Senha -->
+                        <div style="max-width: 400px; margin: 0 auto;">
+                            <input type="text" id="virusPassword" placeholder="Digite a senha decifrada..." style="width: 100%; padding: 12px 15px; border: 2px solid rgba(0,212,255,0.3); border-radius: 10px; background: rgba(42,49,80,0.6); color: #fff; font-size: 1rem; margin-bottom: 15px;" />
+                            <div style="display: flex; gap: 10px; justify-content: center;">
+                                <button id="btnSubmitPassword" class="btn btn-primary" style="flex: 1;">Deletar Vírus 🗑️</button>
+                                <button id="btnCancelPassword" class="btn btn-secondary" style="flex: 1;">Cancelar</button>
+                            </div>
+                        </div>
+                        <div id="passwordResult" class="result-message" style="margin-top: 15px;"></div>
+                    </div>
+
+                    <div class="result-message" id="resultMessage5" style="margin-top: 20px; position: relative; z-index: 2;"></div>
+
+                    <div class="button-group" style="margin-top: 30px;">
+                        <button class="btn btn-secondary" id="btn-back-5">← Voltar</button>
+                        <button class="btn btn-primary" id="btn-end-game" style="display:none;">Jogo Finalizado 🏆</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sucesso -->
+    <div id="successModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(26,31,58,0.98); border: 3px solid #00ff88; border-radius: 20px; padding: 60px 40px; text-align: center; z-index: 2000; box-shadow: 0 0 40px rgba(0,255,136,0.5); min-width: 400px;">
+        <div style="font-size: 4rem; margin-bottom: 30px;">✅</div>
+        <h2 style="color: #00ff88; margin-bottom: 20px; font-size: 2.5rem; font-weight: 900;">Muito Bem!</h2>
+        <p style="color: #b0bec5; margin-bottom: 30px; font-size: 1.2rem; line-height: 1.6;">Você completou este desafio com sucesso!</p>
+        <p style="color: #4db8ff; font-size: 1rem;">Redirecionando para o próximo desafio...</p>
+    </div>
+
+    <!-- Overlay do Modal -->
+    <div id="successOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1999;"></div>
+
+    <script>
+        const carousel = document.querySelector('.carousel');
+        const items = document.querySelectorAll('.carousel-item');
+        const dots = document.querySelectorAll('.progress-dot');
+        const emailItems = document.querySelectorAll('.email-item');
+        const trashItems = document.querySelectorAll('.trash-item');
+        const personalFiles = document.querySelectorAll('.personal-file');
+        const newsItems = document.querySelectorAll('.news-item');
+        const btnNext = document.getElementById('btn-next');
+        const btnBack = document.getElementById('btn-back');
+        const btnRetry = document.getElementById('btn-retry');
+        const btnNext2 = document.getElementById('btn-next-2');
+        const btnBack2 = document.getElementById('btn-back-2');
+        const btnNext3 = document.getElementById('btn-next-3');
+        const btnBack3 = document.getElementById('btn-back-3');
+        const btnBack4 = document.getElementById('btn-back-4');
+        const btnFinish = document.getElementById('btn-finish');
+        const resultMessage = document.getElementById('resultMessage');
+        const resultMessage2 = document.getElementById('resultMessage2');
+        const resultMessage3 = document.getElementById('resultMessage3');
+        const resultMessage4 = document.getElementById('resultMessage4');
+        const passwordInput = document.getElementById('passwordInput');
+        const strengthBar = document.getElementById('strengthBar');
+        const requirementItems = document.querySelectorAll('.password-requirement');
+        const tipsBtn = document.getElementById('tipsBtn');
+        const tipsBox = document.getElementById('tipsBox');
+        const player = document.getElementById('player');
+        const virus = document.getElementById('virus');
+        const mazeContainer = document.getElementById('mazeContainer');
+        const virusModal = document.getElementById('virusModal');
+        const virusOverlay = document.getElementById('virusOverlay');
+        const decoderSection = document.getElementById('decoderSection');
+        const virusPasswordInput = document.getElementById('virusPassword');
+        const btnGetHint = document.getElementById('btnGetHint');
+        const btnSubmitPassword = document.getElementById('btnSubmitPassword');
+        const btnCancelPassword = document.getElementById('btnCancelPassword');
+        const btnStartDecoder = document.getElementById('btnStartDecoder');
+        const hintDisplay = document.getElementById('hintDisplay');
+        const hintsUsed = document.getElementById('hintsUsed');
+        const passwordResult = document.getElementById('passwordResult');
+        const resultMessage5 = document.getElementById('resultMessage5');
+        const btnBack5 = document.getElementById('btn-back-5');
+        const btnEndGame = document.getElementById('btn-end-game');
+        const successModal = document.getElementById('successModal');
+        const successOverlay = document.getElementById('successOverlay');
+        
+        let currentSlide = 0;
+        let emailAnswered = false;
+        let trashesRemoved = 0;
+        let passwordValid = false;
+        let newsCorrect = 0;
+        let newsErrors = 0;
+        let playerX = 30;
+        let playerY = 30;
+        let mazeCompleted = false;
+        let currentPassword = '';
+        let hintCount = 0;
+        const possiblePasswords = ['cavalo', 'pulapula', 'elefante'];
+        let revealedLetters = [];
+        
+        // Função para mostrar modal de sucesso e redirecionar
+        function showSuccessModal(nextSlide) {
+            successOverlay.style.display = 'block';
+            successModal.style.display = 'block';
+            setTimeout(() => {
+                successOverlay.style.display = 'none';
+                successModal.style.display = 'none';
+                showSlide(nextSlide);
+            }, 2500);
+        }
+        
+        function showSlide(n) {
+            items.forEach(item => item.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            if (n >= items.length) n = items.length - 1;
+            if (n < 0) n = 0;
+            
+            items[n].classList.add('active');
+            if (dots[n]) dots[n].classList.add('active');
+            
+            currentSlide = n;
+            emailAnswered = false;
+            trashesRemoved = 0;
+            passwordValid = false;
+            
+            if (n === 1) resetEmailGame();
+            if (n === 2) resetDesktopGame();
+            if (n === 3) resetPasswordGame();
+            if (n === 4) resetNewsGame();
+            if (n === 5) resetMazeGame();
+        }
+        
+        function resetNewsGame() {
+            newsCorrect = 0;
+            newsErrors = 0;
+            document.getElementById('newsCorrect').textContent = '0';
+            document.getElementById('newsErrors').textContent = '0';
+            newsItems.forEach(item => {
+                item.style.opacity = '1';
+                item.style.borderColor = 'rgba(0,212,255,0.3)';
+                item.style.pointerEvents = 'auto';
+            });
+            resultMessage4.textContent = '';
+            resultMessage4.className = 'result-message';
+            btnFinish.style.display = 'none';
+        }
+        
+        function resetEmailGame() {
+            emailItems.forEach(item => item.style.opacity = '1');
+            resultMessage.textContent = '';
+            resultMessage.className = 'result-message';
+            btnRetry.style.display = 'none';
+            btnNext2.style.display = 'none';
+        }
+
+        function resetDesktopGame() {
+            trashesRemoved = 0;
+            trashItems.forEach(item => {
+                item.style.opacity = '1';
+                item.style.transform = 'scale(1)';
+                item.style.pointerEvents = 'auto';
+            });
+            personalFiles.forEach(file => {
+                file.style.opacity = '1';
+                file.style.pointerEvents = 'auto';
+            });
+            resultMessage2.textContent = '';
+            resultMessage2.className = 'result-message';
+            btnNext3.style.display = 'none';
+        }
+
+        function resetPasswordGame() {
+            passwordInput.value = '';
+            passwordValid = false;
+            strengthBar.style.width = '0%';
+            requirementItems.forEach(req => req.classList.remove('completed'));
+            requirementItems.forEach(req => {
+                const icon = req.querySelector('.requirement-icon');
+                icon.textContent = '❌';
+            });
+            resultMessage3.textContent = '';
+            resultMessage3.className = 'result-message';
+            btnNext3.style.display = 'none';
+            tipsBox.style.display = 'none';
+        }
+
+        // Reset do Labirinto
+        function resetMazeGame() {
+            playerX = 30;
+            playerY = 30;
+            mazeCompleted = false;
+            player.style.left = playerX + 'px';
+            player.style.top = playerY + 'px';
+            virusModal.style.display = 'none';
+            virusOverlay.style.display = 'none';
+            decoderSection.style.display = 'none';
+            virusPasswordInput.value = '';
+            passwordResult.textContent = '';
+            passwordResult.className = 'result-message';
+            resultMessage5.textContent = '';
+            resultMessage5.className = 'result-message';
+            btnEndGame.style.display = 'none';
+            hintCount = 0;
+            currentPassword = '';
+            revealedLetters = [];
+        }
+
+        // Validar força de senha
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                numbers: (password.match(/\d/g) || []).length >= 2,
+                special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password)
+            };
+
+            // Atualizar requisitos visualmente
+            requirementItems.forEach(req => {
+                const type = req.getAttribute('data-requirement');
+                const icon = req.querySelector('.requirement-icon');
+                
+                if (requirements[type]) {
+                    req.classList.add('completed');
+                    icon.textContent = '✅';
+                } else {
+                    req.classList.remove('completed');
+                    icon.textContent = '❌';
+                }
+            });
+
+            // Calcular força (0-5)
+            const strength = Object.values(requirements).filter(Boolean).length;
+
+            // Atualizar barra de força
+            const strengthPercent = (strength / 5) * 100;
+            strengthBar.style.width = strengthPercent + '%';
+
+            // Verificar se todas as 5 características foram atendidas
+            const allMet = Object.values(requirements).every(Boolean);
+
+            if (allMet) {
+                passwordValid = true;
+                resultMessage3.textContent = '✅ Perfeito! Sua senha é forte! 🔐';
+                resultMessage3.classList.add('success');
+                setTimeout(() => showSuccessModal(4), 800);
+            } else {
+                passwordValid = false;
+                resultMessage3.textContent = '';
+                resultMessage3.className = 'result-message';
+                btnNext3.style.display = 'none';
+            }
+
+            return allMet;
+        }
+        
+        btnNext.addEventListener('click', () => showSlide(1));
+        btnBack.addEventListener('click', () => showSlide(0));
+        btnRetry.addEventListener('click', () => showSlide(1));
+        btnNext2.addEventListener('click', () => showSlide(2));
+        btnBack2.addEventListener('click', () => showSlide(1));
+        btnNext3.addEventListener('click', () => showSlide(3));
+        btnBack3.addEventListener('click', () => showSlide(2));
+        btnBack4.addEventListener('click', () => showSlide(3));
+        btnFinish.addEventListener('click', () => showSlide(4));
+        btnBack5.addEventListener('click', () => showSlide(4));
+        btnEndGame.addEventListener('click', () => {
+            window.location.href = '../index.html';
+        });
+        
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => showSlide(index));
+        });
+        
+        // Definir quais notícias são falsas (índices: 0, 2, 3, 5 são falsas; 1, 4 são reais)
+        const fakeNewsIds = [0, 2, 3, 5]; // Notícias 1, 3, 4, 6 são fake
+        
+        // Desafio 4 - Fake News
+        newsItems.forEach((item, index) => {
+            item.addEventListener('click', function() {
+                const isFake = fakeNewsIds.includes(index);
+                
+                if (isFake) {
+                    // Acertou: é fake
+                    newsCorrect++;
+                    this.style.borderColor = '#ff6b35';
+                    this.style.background = 'rgba(255, 107, 53, 0.2)';
+                    this.style.opacity = '0.6';
+                    this.style.pointerEvents = 'none';
+                    document.getElementById('newsCorrect').textContent = newsCorrect;
+                    
+                    // Verificar vitória
+                    if (newsCorrect === 4) {
+                        resultMessage4.textContent = '✅ Perfeito! Você identificou todas as fake news!';
+                        resultMessage4.classList.add('success');
+                        resultMessage4.classList.remove('error');
+                        btnFinish.style.display = 'inline-block';
+                    }
+                } else {
+                    // Errou: é real
+                    newsErrors++;
+                    this.style.borderColor = '#2ecc71';
+                    this.style.background = 'rgba(46, 204, 113, 0.2)';
+                    this.style.opacity = '0.6';
+                    this.style.pointerEvents = 'none';
+                    document.getElementById('newsErrors').textContent = newsErrors;
+                    
+                    // Game Over se atingir 2 erros
+                    if (newsErrors >= 2) {
+                        resultMessage4.textContent = '❌ Game Over! Você cometeu 2 erros. Tente novamente!';
+                        resultMessage4.classList.add('error');
+                        resultMessage4.classList.remove('success');
+                        setTimeout(() => {
+                            resetNewsGame();
+                            resultMessage4.textContent = '';
+                        }, 3000);
+                    }
+                }
+            });
+        });
+        
+        // Desafio 1 - Email
+        emailItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if (emailAnswered) return;
+                
+                emailAnswered = true;
+                const isSuspicious = this.classList.contains('suspicious');
+                
+                if (isSuspicious) {
+                    resultMessage.textContent = '✅ Acertou! Este é um email malicioso!';
+                    resultMessage.classList.add('success');
+                    setTimeout(() => showSuccessModal(2), 800);
+                } else {
+                    resultMessage.textContent = '❌ Errado! Este é um email legítimo.';
+                    resultMessage.classList.add('error');
+                    btnRetry.style.display = 'inline-block';
+                }
+                
+                emailItems.forEach(e => {
+                    if (e !== this) e.style.opacity = '0.5';
+                    if (e.classList.contains('suspicious')) {
+                        e.style.borderColor = '#ff6b35';
+                    }
+                });
+            });
+        });
+
+        // Desafio 2 - Desktop com Lixo e Arquivos Pessoais
+        // Clique em ícones de LIXO para remover
+        trashItems.forEach((item) => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (this.style.opacity === '0.3') return; // Já foi removido
+                
+                trashesRemoved++;
+                
+                this.style.opacity = '0.3';
+                this.style.transform = 'scale(0.5) rotate(45deg)';
+                this.style.pointerEvents = 'none';
+                
+                if (trashesRemoved === 5) {
+                    resultMessage2.textContent = '✅ Perfeito! Você limpou todo o lixo!';
+                    resultMessage2.classList.add('success');
+                    resultMessage2.classList.remove('warning');
+                    setTimeout(() => showSuccessModal(3), 800);
+                }
+            });
+        });
+
+        // Clique em ARQUIVOS PESSOAIS mostra aviso
+        personalFiles.forEach(file => {
+            file.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                resultMessage2.textContent = '⚠️ É melhor não excluir seus arquivos pessoais! Remova apenas o LIXO.';
+                resultMessage2.classList.remove('success');
+                resultMessage2.classList.add('warning');
+                
+                // Animar o arquivo para indicar que não pode
+                this.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    if (this.style.opacity !== '0') {
+                        this.style.transform = 'scale(1)';
+                    }
+                }, 300);
+            });
+        });
+
+        // Desafio 3 - Validação de Senha
+        passwordInput.addEventListener('input', function() {
+            validatePassword(this.value);
+        });
+
+        tipsBtn.addEventListener('click', function() {
+            if (tipsBox.style.display === 'none') {
+                tipsBox.style.display = 'block';
+            } else {
+                tipsBox.style.display = 'none';
+            }
+        });
+        
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                if (currentSlide === 0) {
+                    btnNext.click();
+                } else if (currentSlide === 1 && emailAnswered) {
+                    if (btnNext2.style.display === 'inline-block') {
+                        btnNext2.click();
+                    } else if (btnRetry.style.display === 'inline-block') {
+                        btnRetry.click();
+                    }
+                } else if (currentSlide === 2 && trashesRemoved === 5) {
+                    btnNext3.click();
+                } else if (currentSlide === 3 && passwordValid) {
+                    btnFinish.click();
+                } else if (currentSlide === 4 && newsCorrect === 4) {
+                    btnFinish.click();
+                }
+            }
+        });
+        
+        // ========== DESAFIO 5 - LABIRINTO ==========
+        
+        // Função para verificar colisão com paredes
+        function checkCollision(x, y) {
+            const PLAYER_SIZE = 25;
+            const CONTAINER_WIDTH = mazeContainer.offsetWidth;
+            const CONTAINER_HEIGHT = mazeContainer.offsetHeight;
+            
+            // Paredes externas
+            if (x < 10 || y < 10 || x + PLAYER_SIZE > CONTAINER_WIDTH - 10 || y + PLAYER_SIZE > CONTAINER_HEIGHT - 10) {
+                return true;
+            }
+            
+            // Paredes internas - Ajustadas para o novo labirinto
+            const walls = [
+                // Seção 1: Parede Vertical Esquerda
+                { x1: 120, y1: 50, x2: 120, y2: 120 },
+                { x1: 120, y1: 160, x2: 120, y2: 230 },
+                
+                // Seção 2: Parede Horizontal
+                { x1: 180, y1: 80, x2: 280, y2: 80 },
+                { x1: 280, y1: 80, x2: 280, y2: 150 },
+                
+                // Seção 3: Parede Central Esquerda
+                { x1: 150, y1: 200, x2: 150, y2: 300 },
+                { x1: 150, y1: 300, x2: 250, y2: 300 },
+                
+                // Seção 4: Parede Central Direita
+                { x1: 350, y1: 60, x2: 350, y2: 140 },
+                { x1: 350, y1: 200, x2: 350, y2: 280 },
+                
+                // Seção 5: Parede Direita Superior
+                { x1: 480, y1: 70, x2: 480, y2: 180 },
+                { x1: 480, y1: 180, x2: 600, y2: 180 },
+                { x1: 600, y1: 100, x2: 600, y2: 180 },
+                
+                // Seção 6: Parede Inferior Direita
+                { x1: 700, y1: 250, x2: 700, y2: 350 },
+                { x1: 700, y1: 350, x2: 850, y2: 350 },
+                
+                // Seção 7: Parede Média Inferior
+                { x1: 400, y1: 320, x2: 500, y2: 320 }
+            ];
+            
+            for (let wall of walls) {
+                const x1 = Math.min(wall.x1, wall.x2) - 5;
+                const x2 = Math.max(wall.x1, wall.x2) + 5;
+                const y1 = Math.min(wall.y1, wall.y2) - 5;
+                const y2 = Math.max(wall.y1, wall.y2) + 5;
+                
+                if (x < x2 && x + PLAYER_SIZE > x1 && y < y2 && y + PLAYER_SIZE > y1) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        // Função para verificar se chegou ao vírus
+        function checkVirusCollision() {
+            const virusRect = virus.getBoundingClientRect();
+            const containerRect = mazeContainer.getBoundingClientRect();
+            
+            const virusX = virusRect.left - containerRect.left;
+            const virusY = virusRect.top - containerRect.top;
+            
+            if (playerX < virusX + virusRect.width &&
+                playerX + 25 > virusX &&
+                playerY < virusY + virusRect.height &&
+                playerY + 25 > virusY) {
+                return true;
+            }
+            return false;
+        }
+
+        // Controle do jogador com setas
+        document.addEventListener('keydown', function(e) {
+            if (currentSlide !== 5 || mazeCompleted) return;
+            
+            const STEP = 15;
+            let newX = playerX;
+            let newY = playerY;
+            
+            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+                newY -= STEP;
+                e.preventDefault();
+            } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+                newY += STEP;
+                e.preventDefault();
+            } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                newX -= STEP;
+                e.preventDefault();
+            } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                newX += STEP;
+                e.preventDefault();
+            }
+            
+            // Verificar colisão e atualizar posição
+            if (!checkCollision(newX, newY)) {
+                playerX = newX;
+                playerY = newY;
+                player.style.left = playerX + 'px';
+                player.style.top = playerY + 'px';
+                
+                // Verificar se chegou ao vírus
+                if (checkVirusCollision()) {
+                    mazeCompleted = true;
+                    // Mostrar modal
+                    virusModal.style.display = 'block';
+                    virusOverlay.style.display = 'block';
+                    resultMessage5.textContent = '✅ Pasta Encriptada Encontrada!';
+                    resultMessage5.classList.add('success');
+                }
+            }
+        });
+
+        // Função para gerar dica
+        function generateHint() {
+            if (hintCount >= 4) {
+                passwordResult.textContent = '❌ Você usou todas as 4 dicas!';
+                passwordResult.classList.add('error');
+                return;
+            }
+
+            // Escolher posições aleatórias para revelar
+            const passwordLength = currentPassword.length;
+            const availablePositions = Array.from({length: passwordLength}, (_, i) => i)
+                .filter(i => !revealedLetters.includes(i));
+            
+            if (availablePositions.length === 0) {
+                // Todas as letras já foram reveladas
+                updateHintDisplay();
+                return;
+            }
+
+            // Escolher posição aleatória
+            const randomIndex = Math.floor(Math.random() * availablePositions.length);
+            const position = availablePositions[randomIndex];
+            revealedLetters.push(position);
+            revealedLetters.sort((a, b) => a - b);
+            
+            hintCount++;
+            hintsUsed.textContent = hintCount;
+            
+            updateHintDisplay();
+            
+            if (hintCount >= 4) {
+                btnGetHint.disabled = true;
+                btnGetHint.style.opacity = '0.5';
+            }
+        }
+
+        function updateHintDisplay() {
+            let display = '';
+            for (let i = 0; i < currentPassword.length; i++) {
+                if (revealedLetters.includes(i)) {
+                    display += currentPassword[i].toUpperCase() + ' ';
+                } else {
+                    display += '_ ';
+                }
+            }
+            hintDisplay.textContent = display.trim();
+        }
+
+        // Botão para iniciar decodificador
+        btnStartDecoder.addEventListener('click', function() {
+            // Escolher senha aleatória
+            currentPassword = possiblePasswords[Math.floor(Math.random() * possiblePasswords.length)];
+            hintCount = 0;
+            revealedLetters = [];
+            hintsUsed.textContent = '0';
+            virusPasswordInput.value = '';
+            passwordResult.textContent = '';
+            passwordResult.className = 'result-message';
+            virusPasswordInput.disabled = false;
+            btnSubmitPassword.disabled = false;
+            btnCancelPassword.disabled = false;
+            btnGetHint.disabled = false;
+            btnGetHint.style.opacity = '1';
+            
+            updateHintDisplay();
+            
+            virusModal.style.display = 'none';
+            virusOverlay.style.display = 'none';
+            decoderSection.style.display = 'block';
+            virusPasswordInput.focus();
+        });
+
+        // Botões da Senha
+        btnGetHint.addEventListener('click', function() {
+            generateHint();
+        });
+
+        btnSubmitPassword.addEventListener('click', function() {
+            const inputPassword = virusPasswordInput.value.trim().toLowerCase();
+            
+            if (inputPassword === currentPassword) {
+                passwordResult.textContent = '✅ Senha Correta! Vírus Deletado com Sucesso! 🎉';
+                passwordResult.classList.add('success');
+                passwordResult.classList.remove('error');
+                virusPasswordInput.disabled = true;
+                btnSubmitPassword.disabled = true;
+                btnCancelPassword.disabled = true;
+                btnGetHint.disabled = true;
+                btnEndGame.style.display = 'inline-block';
+            } else {
+                passwordResult.textContent = '❌ Senha Incorreta! Tente Novamente.';
+                passwordResult.classList.add('error');
+                passwordResult.classList.remove('success');
+                virusPasswordInput.value = '';
+                virusPasswordInput.focus();
+            }
+        });
+
+        btnCancelPassword.addEventListener('click', function() {
+            decoderSection.style.display = 'none';
+            virusModal.style.display = 'block';
+            virusOverlay.style.display = 'block';
+            mazeCompleted = false;
+            resultMessage5.textContent = '';
+            resultMessage5.className = 'result-message';
+        });
+
+        virusPasswordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                btnSubmitPassword.click();
+            }
+        });
+
+        showSlide(0);
+    </script>
+</body>
+
+</html>
