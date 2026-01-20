@@ -269,6 +269,13 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.2);
             position:relative;
             animation: fadeInScale .8s cubic-bezier(.34,1.56,.64,1);
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        
+        .mini-fase-content {
+            flex: 1;
         }
         
         .mini-fase-card::after {
@@ -376,6 +383,68 @@
             display: block;
         }
 
+        /* VÍRUS FIXO (Adversário) */
+        .virus-fixed {
+            position: fixed;
+            right: 50px;
+            top: 200px;
+            width: 120px;
+            height: 120px;
+            z-index: 500;
+            animation: virusBounce 3s ease-in-out infinite;
+        }
+
+        @keyframes virusBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .virus-body {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 35% 35%, #ff8888, #ff4444);
+            border-radius: 50%;
+            position: relative;
+            margin: 10px;
+            box-shadow: 0 8px 20px rgba(255, 68, 68, 0.4);
+            border: 3px solid #cc0000;
+        }
+
+        .virus-eye {
+            position: absolute;
+            width: 16px;
+            height: 20px;
+            background: #000;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
+        }
+
+        .virus-eye-left {
+            top: 30px;
+            left: 20px;
+            transform: rotate(-20deg);
+        }
+
+        .virus-eye-right {
+            top: 30px;
+            right: 20px;
+            transform: rotate(20deg);
+        }
+
+        .virus-spike {
+            position: absolute;
+            background: #cc0000;
+            border-radius: 50%;
+        }
+
+        .spike-1 { width: 12px; height: 12px; top: -8px; left: 44px; box-shadow: 0 -20px 0 #cc0000; }
+        .spike-2 { width: 12px; height: 12px; bottom: -8px; left: 44px; box-shadow: 0 20px 0 #cc0000; }
+        .spike-3 { width: 12px; height: 12px; top: 44px; left: -8px; box-shadow: -20px 0 0 #cc0000; }
+        .spike-4 { width: 12px; height: 12px; top: 44px; right: -8px; box-shadow: 20px 0 0 #cc0000; }
+        .spike-5 { width: 12px; height: 12px; top: 15px; left: -8px; box-shadow: -15px -15px 0 #cc0000; }
+        .spike-6 { width: 12px; height: 12px; top: 15px; right: -8px; box-shadow: 15px -15px 0 #cc0000; }
+        .spike-7 { width: 12px; height: 12px; bottom: 15px; left: -8px; box-shadow: -15px 15px 0 #cc0000; }
+        .spike-8 { width: 12px; height: 12px; bottom: 15px; right: -8px; box-shadow: 15px 15px 0 #cc0000; }
+
         /* MINI FASE 3 - SENHA */
         .password-requirement {
             display: flex;
@@ -453,6 +522,37 @@
             font-weight: bold;
         }
         
+        /* BARRA DE PROGRESSO (TIMER) */
+        .timer-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.3);
+            z-index: 3000;
+            border-bottom: 2px solid rgba(0,212,255,0.2);
+        }
+
+        .timer-bar-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #00d4ff 0%, #00ff88 50%, #ff6b35 100%);
+            transition: width 0.1s linear, background 0.3s ease;
+            box-shadow: 0 0 10px rgba(0,212,255,0.5);
+        }
+
+        .timer-text {
+            position: fixed;
+            top: 15px;
+            right: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #00d4ff;
+            z-index: 3000;
+            text-shadow: 0 0 10px rgba(0,212,255,0.3);
+        }
+
         @media (max-width:768px){ 
             .tutorial-card, .mini-fase-card { 
                 padding:30px 20px;
@@ -483,11 +583,23 @@
             .mini-fase-title {
                 font-size: 1.5rem;
             }
+            
+            .timer-text {
+                top: 12px;
+                right: 15px;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 
 <body>
+    <!-- Barra de Progresso (Timer) -->
+    <div class="timer-bar-container">
+        <div class="timer-bar-fill" id="timerBar"></div>
+    </div>
+    <div class="timer-text" id="timerText">2:00</div>
+
     <div class="container">
         <div class="carousel">
             <!-- SLIDE 1: TUTORIAL -->
@@ -522,37 +634,39 @@
             <!-- SLIDE 2: MINI FASE 1 - EMAIL -->
             <div class="carousel-item">
                 <div class="mini-fase-card">
-                    <div class="mini-fase-header">
-                        <div class="mini-fase-title">🎯 Desafio 1</div>
-                        <div class="mini-fase-subtitle">Identifique qual email é MALICIOSO</div>
-                    </div>
-
-                    <div id="emailsContainer">
-                        <div class="email-item" data-index="0">
-                            <div class="email-from">📧 noreply@amazon.com</div>
-                            <div class="email-subject">Seu pedido foi entregue!</div>
-                            <div class="email-preview">Você recebeu sua compra. Clique aqui para rastrear...</div>
+                    <div class="mini-fase-content">
+                        <div class="mini-fase-header">
+                            <div class="mini-fase-title">🎯 Desafio 1</div>
+                            <div class="mini-fase-subtitle">Identifique qual email é MALICIOSO</div>
                         </div>
 
-                        <div class="email-item suspicious" data-index="1">
-                            <div class="email-from">📧 suport@amazn-verify.ru</div>
-                            <div class="email-subject">⚠️ Verifique sua conta URGENTE!</div>
-                            <div class="email-preview">Detectamos atividade suspeita. Clique AQUI para verificar agora...</div>
+                        <div id="emailsContainer">
+                            <div class="email-item" data-index="0">
+                                <div class="email-from">📧 noreply@amazon.com</div>
+                                <div class="email-subject">Seu pedido foi entregue!</div>
+                                <div class="email-preview">Você recebeu sua compra. Clique aqui para rastrear...</div>
+                            </div>
+
+                            <div class="email-item suspicious" data-index="1">
+                                <div class="email-from">📧 suport@amazn-verify.ru</div>
+                                <div class="email-subject">⚠️ Verifique sua conta URGENTE!</div>
+                                <div class="email-preview">Detectamos atividade suspeita. Clique AQUI para verificar agora...</div>
+                            </div>
+
+                            <div class="email-item" data-index="2">
+                                <div class="email-from">📧 contato@microsoft.com</div>
+                                <div class="email-subject">Atualização de segurança disponível</div>
+                                <div class="email-preview">Uma nova atualização de segurança está disponível para seu Windows...</div>
+                            </div>
                         </div>
 
-                        <div class="email-item" data-index="2">
-                            <div class="email-from">📧 contato@microsoft.com</div>
-                            <div class="email-subject">Atualização de segurança disponível</div>
-                            <div class="email-preview">Uma nova atualização de segurança está disponível para seu Windows...</div>
+                        <div class="result-message" id="resultMessage"></div>
+
+                        <div class="button-group" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" id="btn-back">← Voltar</button>
+                            <button class="btn btn-primary" id="btn-retry" style="display:none;">Tentar Novamente</button>
+                            <button class="btn btn-primary" id="btn-next-2" style="display:none;">Próxima Fase ➤</button>
                         </div>
-                    </div>
-
-                    <div class="result-message" id="resultMessage"></div>
-
-                    <div class="button-group" style="margin-top: 30px;">
-                        <button class="btn btn-secondary" id="btn-back">← Voltar</button>
-                        <button class="btn btn-primary" id="btn-retry" style="display:none;">Tentar Novamente</button>
-                        <button class="btn btn-primary" id="btn-next-2" style="display:none;">Próxima Fase ➤</button>
                     </div>
                 </div>
             </div>
@@ -560,12 +674,13 @@
             <!-- SLIDE 3: MINI FASE 2 - DESKTOP VIRTUAL -->
             <div class="carousel-item">
                 <div class="mini-fase-card">
-                    <div class="mini-fase-header">
-                        <div class="mini-fase-title">🗂️ Desafio 2 - Limpeza do Desktop</div>
-                        <div class="mini-fase-subtitle">Clique APENAS nos ícones de LIXO (🦴 e 🕸️) para liberar espaço</div>
-                    </div>
+                    <div class="mini-fase-content">
+                        <div class="mini-fase-header">
+                            <div class="mini-fase-title">🗂️ Desafio 2 - Limpeza do Desktop</div>
+                            <div class="mini-fase-subtitle">Clique APENAS nos ícones de LIXO (🦴 e 🕸️) para liberar espaço</div>
+                        </div>
 
-                    <div id="desktopContainer" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin: 40px 0; padding: 30px; background: rgba(42,49,80,0.4); border-radius: 15px; min-height: 300px; align-items: start; position: relative; z-index: 2;">
+                        <div id="desktopContainer" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin: 40px 0; padding: 30px; background: rgba(42,49,80,0.4); border-radius: 15px; min-height: 300px; align-items: start; position: relative; z-index: 2;">
                         <!-- Arquivo Pessoal 1 - Imagens (NÃO pode deletar) -->
                         <div style="text-align: center;">
                             <div style="font-size: 60px; margin-bottom: 15px; cursor: pointer; transition: transform 0.2s ease;" class="personal-file" data-type="image" title="Clique para ver o aviso">🖼️</div>
@@ -621,13 +736,14 @@
                             <div style="color: #ff6b35; font-size: 0.9rem; margin-bottom: 20px;">lixo_5</div>
                             <div style="color: #ff6b35; font-size: 0.85rem; font-style: italic;">🗑️ Remover</div>
                         </div>
-                    </div>
+                        </div>
 
-                    <div class="result-message" id="resultMessage2"></div>
+                        <div class="result-message" id="resultMessage2"></div>
 
-                    <div class="button-group" style="margin-top: 30px;">
-                        <button class="btn btn-secondary" id="btn-back-2">← Voltar</button>
-                        <button class="btn btn-primary" id="btn-next-3" style="display:none;">Próxima Fase ➤</button>
+                        <div class="button-group" style="margin-top: 30px;">
+                            <button class="btn btn-secondary" id="btn-back-2">← Voltar</button>
+                            <button class="btn btn-primary" id="btn-next-3" style="display:none;">Próxima Fase ➤</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -635,27 +751,28 @@
             <!-- SLIDE 4: MINI FASE 3 - FORÇA DE SENHA -->
             <div class="carousel-item">
                 <div class="mini-fase-card">
-                    <div class="mini-fase-header">
-                        <div class="mini-fase-title">🔐 Desafio 3 - Criar Senha Forte</div>
-                        <div class="mini-fase-subtitle">Crie uma senha que atenda a todos os requisitos</div>
-                    </div>
-
-                    <!-- BARRA DE FORÇA DA SENHA -->
-                    <div style="margin: 30px 0; position: relative; z-index: 2;">
-                        <div style="font-size: 0.9rem; color: #b0bec5; margin-bottom: 10px;">Força da Senha:</div>
-                        <div style="width: 100%; height: 10px; background: rgba(42,49,80,0.6); border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,212,255,0.2);">
-                            <div id="strengthBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ff6b35, #ffaa00, #00ff88); transition: width 0.3s ease; border-radius: 10px;"></div>
+                    <div class="mini-fase-content">
+                        <div class="mini-fase-header">
+                            <div class="mini-fase-title">🔐 Desafio 3 - Criar Senha Forte</div>
+                            <div class="mini-fase-subtitle">Crie uma senha que atenda a todos os requisitos</div>
                         </div>
-                    </div>
 
-                    <!-- INPUT DE SENHA -->
-                    <div style="margin: 30px 0; position: relative; z-index: 2;">
-                        <input type="text" id="passwordInput" placeholder="Digite sua senha..." style="width: 100%; padding: 15px 20px; border: 2px solid rgba(0,212,255,0.3); border-radius: 12px; background: rgba(42,49,80,0.4); color: #fff; font-size: 1rem; transition: all 0.3s ease;" />
-                    </div>
+                        <!-- BARRA DE FORÇA DA SENHA -->
+                        <div style="margin: 30px 0; position: relative; z-index: 2;">
+                            <div style="font-size: 0.9rem; color: #b0bec5; margin-bottom: 10px;">Força da Senha:</div>
+                            <div style="width: 100%; height: 10px; background: rgba(42,49,80,0.6); border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,212,255,0.2);">
+                                <div id="strengthBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ff6b35, #ffaa00, #00ff88); transition: width 0.3s ease; border-radius: 10px;"></div>
+                            </div>
+                        </div>
 
-                    <!-- REQUISITOS -->
-                    <div style="margin: 30px 0; position: relative; z-index: 2;">
-                        <div style="font-size: 0.95rem; color: #b0bec5; margin-bottom: 15px; font-weight: 600;">Requisitos da Senha:</div>
+                        <!-- INPUT DE SENHA -->
+                        <div style="margin: 30px 0; position: relative; z-index: 2;">
+                            <input type="text" id="passwordInput" placeholder="Digite sua senha..." style="width: 100%; padding: 15px 20px; border: 2px solid rgba(0,212,255,0.3); border-radius: 12px; background: rgba(42,49,80,0.4); color: #fff; font-size: 1rem; transition: all 0.3s ease;" />
+                        </div>
+
+                        <!-- REQUISITOS -->
+                        <div style="margin: 30px 0; position: relative; z-index: 2;">
+                            <div style="font-size: 0.95rem; color: #b0bec5; margin-bottom: 15px; font-weight: 600;">Requisitos da Senha:</div>
                         
                         <div class="password-requirement" data-requirement="length">
                             <span class="requirement-icon">❌</span>
@@ -704,12 +821,14 @@
                         <button class="btn btn-secondary" id="btn-back-3">← Voltar</button>
                         <button class="btn btn-primary" id="btn-next-3" style="display:none;">Próximo →</button>
                     </div>
+                    </div>
                 </div>
             </div>
 
             <!-- SLIDE 5: MINI FASE 4 - FAKE NEWS -->
             <div class="carousel-item">
                 <div class="mini-fase-card">
+                    <div class="mini-fase-content">
                     <div class="mini-fase-header">
                         <div class="mini-festa-title">📰 Desafio 4 - Detectar Fake News</div>
                         <div class="mini-fase-subtitle">Identifique as 4 notícias FALSAS entre 6 manchetes</div>
@@ -766,12 +885,14 @@
                         <button class="btn btn-secondary" id="btn-back-4">← Voltar</button>
                         <button class="btn btn-primary" id="btn-finish" style="display:none;">Finalizar Fase 🏆</button>
                     </div>
+                    </div> <!-- Fecha mini-fase-content -->
                 </div>
             </div>
 
             <!-- SLIDE 6: MINI FASE 5 - LABIRINTO + SENHA -->
             <div class="carousel-item">
                 <div class="mini-fase-card">
+                    <div class="mini-fase-content">
                     <div class="mini-fase-header">
                         <div class="mini-fase-title">🧩 Desafio 5 - Labirinto do Vírus</div>
                         <div class="mini-fase-subtitle">Navegue pelo labirinto pra encontrar a pasta com o vírus e deletá-la 🔒</div>
@@ -867,6 +988,7 @@
                         <button class="btn btn-secondary" id="btn-back-5">← Voltar</button>
                         <button class="btn btn-primary" id="btn-end-game" style="display:none;">Jogo Finalizado 🏆</button>
                     </div>
+                    </div> <!-- Fecha mini-fase-content -->
                 </div>
             </div>
         </div>
@@ -882,6 +1004,18 @@
 
     <!-- Overlay do Modal -->
     <div id="successOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1999;"></div>
+
+    <!-- Modal de Derrota (Tempo Esgotado) -->
+    <div id="defeatModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(26,31,58,0.98); border: 3px solid #ff6b35; border-radius: 20px; padding: 60px 40px; text-align: center; z-index: 2000; box-shadow: 0 0 40px rgba(255,107,53,0.5); min-width: 400px;">
+        <div style="font-size: 4rem; margin-bottom: 30px;">💀</div>
+        <h2 style="color: #ff6b35; margin-bottom: 20px; font-size: 2.5rem; font-weight: 900;">O Vírus Venceu!</h2>
+        <p style="color: #b0bec5; margin-bottom: 30px; font-size: 1.2rem; line-height: 1.6;">Você não conseguiu completar todos os desafios a tempo.</p>
+        <p style="color: #ffaa00; font-size: 1rem; margin-bottom: 30px; font-weight: 700;">⏱️ Tempo Esgotado!</p>
+        <button id="btnTryAgain" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.1rem;">Tente de Novo 🔄</button>
+    </div>
+
+    <!-- Overlay do Modal de Derrota -->
+    <div id="defeatOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1999;"></div>
 
     <script>
         const carousel = document.querySelector('.carousel');
@@ -928,6 +1062,11 @@
         const btnEndGame = document.getElementById('btn-end-game');
         const successModal = document.getElementById('successModal');
         const successOverlay = document.getElementById('successOverlay');
+        const defeatModal = document.getElementById('defeatModal');
+        const defeatOverlay = document.getElementById('defeatOverlay');
+        const btnTryAgain = document.getElementById('btnTryAgain');
+        const timerBar = document.getElementById('timerBar');
+        const timerText = document.getElementById('timerText');
         
         let currentSlide = 0;
         let emailAnswered = false;
@@ -943,6 +1082,11 @@
         const possiblePasswords = ['cavalo', 'pulapula', 'elefante'];
         let revealedLetters = [];
         
+        // Timer Global (2 minutos = 120 segundos)
+        let timeRemaining = 120;
+        let timerInterval = null;
+        let gameEnded = false;
+        
         // Função para mostrar modal de sucesso e redirecionar
         function showSuccessModal(nextSlide) {
             successOverlay.style.display = 'block';
@@ -952,6 +1096,82 @@
                 successModal.style.display = 'none';
                 showSlide(nextSlide);
             }, 2500);
+        }
+
+        // Função para atualizar a barra de progresso
+        function updateTimerBar() {
+            const percentage = (timeRemaining / 120) * 100;
+            timerBar.style.width = percentage + '%';
+            
+            // Mudar cor de acordo com o tempo restante
+            if (percentage > 50) {
+                timerBar.style.background = 'linear-gradient(90deg, #00d4ff 0%, #00ff88 50%, #ff6b35 100%)';
+            } else if (percentage > 25) {
+                timerBar.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff6b35 100%)';
+            } else {
+                timerBar.style.background = 'linear-gradient(90deg, #ff6b35 0%, #ff3333 100%)';
+            }
+            
+            // Atualizar texto do timer
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Função para iniciar o timer
+        function startGlobalTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            gameEnded = false;
+            
+            timerInterval = setInterval(() => {
+                if (gameEnded) return;
+                
+                timeRemaining--;
+                updateTimerBar();
+                
+                // Se o tempo acabou
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    showDefeatModal();
+                }
+            }, 1000);
+        }
+
+        // Função para exibir modal de derrota
+        function showDefeatModal() {
+            gameEnded = true;
+            if (timerInterval) clearInterval(timerInterval);
+            defeatOverlay.style.display = 'block';
+            defeatModal.style.display = 'block';
+        }
+
+        // Função para reiniciar o jogo
+        function restartGame() {
+            defeatOverlay.style.display = 'none';
+            defeatModal.style.display = 'none';
+            timeRemaining = 120;
+            gameEnded = false;
+            currentSlide = 0;
+            emailAnswered = false;
+            trashesRemoved = 0;
+            passwordValid = false;
+            newsCorrect = 0;
+            newsErrors = 0;
+            playerX = 30;
+            playerY = 30;
+            mazeCompleted = false;
+            currentPassword = '';
+            hintCount = 0;
+            revealedLetters = [];
+            updateTimerBar();
+            showSlide(0);
+            startGlobalTimer();
+        }
+        
+        // Função para completar o jogo (todos os desafios)
+        function completeGame() {
+            gameEnded = true;
+            if (timerInterval) clearInterval(timerInterval);
         }
         
         function showSlide(n) {
@@ -969,7 +1189,10 @@
             trashesRemoved = 0;
             passwordValid = false;
             
-            if (n === 1) resetEmailGame();
+            if (n === 1) {
+                resetEmailGame();
+                startGlobalTimer();
+            }
             if (n === 2) resetDesktopGame();
             if (n === 3) resetPasswordGame();
             if (n === 4) resetNewsGame();
@@ -1113,6 +1336,7 @@
         btnEndGame.addEventListener('click', () => {
             window.location.href = '../index.html';
         });
+        btnTryAgain.addEventListener('click', () => restartGame());
         
         dots.forEach((dot, index) => {
             dot.addEventListener('click', () => showSlide(index));
@@ -1137,10 +1361,10 @@
                     
                     // Verificar vitória
                     if (newsCorrect === 4) {
-                        resultMessage4.textContent = '✅ Perfeito! Você identificou todas as fake news!';
+                        resultMessage4.textContent = '🎉 Parabéns! Você identificou todas as fake news!';
                         resultMessage4.classList.add('success');
                         resultMessage4.classList.remove('error');
-                        btnFinish.style.display = 'inline-block';
+                        setTimeout(() => showSuccessModal(5), 800);
                     }
                 } else {
                     // Errou: é real
@@ -1470,6 +1694,7 @@
                 btnSubmitPassword.disabled = true;
                 btnCancelPassword.disabled = true;
                 btnGetHint.disabled = true;
+                completeGame();
                 btnEndGame.style.display = 'inline-block';
             } else {
                 passwordResult.textContent = '❌ Senha Incorreta! Tente Novamente.';
@@ -1495,6 +1720,8 @@
             }
         });
 
+        // Inicializar barra de progresso e timer
+        updateTimerBar();
         showSlide(0);
     </script>
 </body>
