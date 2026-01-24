@@ -196,7 +196,7 @@ function ransowareEmAcao() {
             }
             
             //callback(copiaIcones); // Retorna um vetor assim que terminar a execução do código, com uma cópia de cada div antes da substituição ou "criptografia".
-        }, 600 // Este codigo é executado a cada 600 milisegundos.
+        }, 490 // Este codigo é executado a cada 490 milisegundos.
     );
     return copiaIcones; // Retorna um vetor com os ícones originais.
 }
@@ -431,6 +431,10 @@ async function estagiosGameplay() {
             
             console.log("A fase 4 terminou.");
             console.log("exibirPontuacao(pontuacaoGlobal) deve criar elementos html para redirecionar a página, avançando para a fase seguinte.");
+        
+            clearInterval(state.spywareIntervalo); // Limpa o setInterval() dentro do atributo do objeto state.
+            clearInterval(intervaloVerificacao);
+            clearInterval(atualizarPontosAtuais);
         }, (2* 60000) // A fase dura 2:00 (2 minutos).
     );
 }
