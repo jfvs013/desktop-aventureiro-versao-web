@@ -84,7 +84,7 @@ function mascoteConversando(condicao) { // Pertence ao mascote do jogo.
             );
 
             if(condicao) {
-                spanMascote.textContent = "Bem vindo a fase 4, para continuar pressione o botão abaixo.";
+                spanMascote.textContent = "Bem vindo a fase 6, para continuar pressione o botão abaixo.";
             }
             else {
                 botaoContinuar.click(); // Avança + 1, impedindo a aparição da última fala anterior. 
@@ -196,7 +196,7 @@ function ransowareEmAcao() {
             }
             
             //callback(copiaIcones); // Retorna um vetor assim que terminar a execução do código, com uma cópia de cada div antes da substituição ou "criptografia".
-        }, 20 // Este codigo é executado a cada 900 milisegundos.
+        }, 600 // Este codigo é executado a cada 600 milisegundos.
     );
     return copiaIcones; // Retorna um vetor com os ícones originais.
 }

@@ -2,9 +2,41 @@ body {
     background: linear-gradient(135deg, #0a0e27 0%, #1a0a2e 50%, #16213e 100%);
 }
 
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMove 20s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
 main {
     width: 100vh; /* 100% da largura da janela. */
     height: 90vh; /* 90% da altura da janela. */
+}
+
+#continuar {
+    position: relative;
+    right: 20%;
+    color: white;
+    border-radius: 10%;
+    border: 2px solid white;
+    background-color: transparent;
+    width: 20vh;
+    height: 8vh;
+}
+
+#continuar:active {
+    color: black;
+    background-color: white;
 }
 
 #dialogo-mascote_1 {
@@ -176,4 +208,10 @@ main {
     background-color: transparent;
     width: 20vh;
     height: 8vh;
+}
+
+#botaoReiniciarFase, 
+#botaoAvancarFase:active {
+    color: black;
+    background-color: white;
 }

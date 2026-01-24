@@ -79,7 +79,7 @@ function exibirPontuacao(pontuacaoGlobal) { // Use ao terminar a fase 4.
 
         botaoAvancar.addEventListener("click", 
             () => {
-                window.location.href = "../endereco/placeholder.html"; // Este método recarrega a página.
+                window.location.href = "../fase7/fase7.html"; // Este método recarrega a página.
             }
         );
 
