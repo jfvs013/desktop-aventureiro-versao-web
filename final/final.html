@@ -39,8 +39,13 @@
         }
 
         @keyframes gridMove {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(40px); }
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(40px);
+            }
         }
 
         /* Container principal */
@@ -76,6 +81,7 @@
                 opacity: 0;
                 transform: scale(0.9) translateY(30px);
             }
+
             100% {
                 opacity: 1;
                 transform: scale(1) translateY(0);
@@ -99,8 +105,13 @@
         }
 
         @keyframes borderRotate {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
+            0% {
+                filter: hue-rotate(0deg);
+            }
+
+            100% {
+                filter: hue-rotate(360deg);
+            }
         }
 
         /* Área do conteúdo do slide */
@@ -122,6 +133,7 @@
                 opacity: 0;
                 transform: translateX(50px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -143,12 +155,16 @@
         }
 
         @keyframes mascotCelebrate {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: scale(1, 1) translateY(0) rotate(0deg);
             }
+
             25% {
                 transform: scale(1.05, 0.95) translateY(5px) rotate(-5deg);
             }
+
             75% {
                 transform: scale(0.95, 1.05) translateY(-15px) rotate(5deg);
             }
@@ -169,10 +185,13 @@
         }
 
         @keyframes pulseGlow {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translate(-50%, -50%) scale(1);
                 opacity: 0.3;
             }
+
             50% {
                 transform: translate(-50%, -50%) scale(1.2);
                 opacity: 0.6;
@@ -355,6 +374,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -508,7 +528,7 @@
                         Olá, aventureiro(a)! ✋ Bem-vindo ao final do game<strong> Desktop Aventureiro</strong>!
                     </p>
                     <p>
-                        Eu sou o <em>Cãozinho Azul</em>, e fui seu guia nesta jornada de segurança digital. 
+                        Eu sou o <em>Cãozinho Azul</em>, e fui seu guia nesta jornada de segurança digital.
                         Juntos, aprendemos a proteger computadores contra ameaças virtuais! 🛡️
                     </p>
                 </div>
@@ -525,7 +545,7 @@
                         Uau! Você concluiu toda a aventura pelo universo da <strong>segurança digital</strong>!
                     </p>
                     <p>
-                        Cada fase trouxe desafios reais que existem no mundo virtual — 
+                        Cada fase trouxe desafios reais que existem no mundo virtual —
                         e você mostrou habilidade, atenção e raciocínio rápido! 🌟
                     </p>
                 </div>
@@ -560,7 +580,7 @@
                         Mas lembre-se: <em>a jornada do conhecimento nunca termina!</em>
                     </p>
                     <p>
-                        Continue estudando, praticando e compartilhando o que aprendeu com amigos e família. 
+                        Continue estudando, praticando e compartilhando o que aprendeu com amigos e família.
                         Juntos, podemos tornar a internet um lugar mais seguro para todos! 🌐
                     </p>
                     <p style="margin-top: 15px; color: #ffc107; font-weight: bold; text-align: center;">
@@ -586,7 +606,7 @@
         <!-- Seção de Desenvolvedores (aparece depois) -->
         <div class="developers-section" id="developers">
             <h2>🌟 Equipe de Desenvolvimento</h2>
-            
+
             <div class="devs-grid">
                 <div class="dev-card">
                     <div class="dev-icon">👨‍💻</div>
@@ -603,13 +623,15 @@
                 <div class="dev-card">
                     <div class="dev-icon">⚙️</div>
                     <div class="dev-name">Luigi Aranha</div>
-                    <div class="dev-role">Desenvolvimento da fase 6 e apoio na estrutura do jogo</div>
+                    <div class="dev-role">Desenvolvimento da fase 6, slide e apoio no relatório e estrutura do jogo
+                    </div>
                 </div>
 
                 <div class="dev-card">
                     <div class="dev-icon">🚀</div>
                     <div class="dev-name">Jacson Francisco</div>
-                    <div class="dev-role">Desenvolvimento das fases 1, 4 e 5, tutorial, créditos, login e integração geral</div>
+                    <div class="dev-role">Desenvolvimento das fases 1, 4 e 5, tutorial, créditos, login e integração
+                        geral</div>
                 </div>
             </div>
 
@@ -634,7 +656,7 @@
         // Tocar som ao carregar
         window.addEventListener('load', () => {
             setTimeout(() => {
-                document.getElementById('victory-sound').play().catch(() => {});
+                document.getElementById('victory-sound').play().catch(() => { });
             }, 500);
         });
 
@@ -643,14 +665,14 @@
             document.querySelectorAll('.slide-content').forEach(slide => {
                 slide.classList.remove('active');
             });
-            
+
             document.querySelectorAll('.progress-dot').forEach(dot => {
                 dot.classList.remove('active');
             });
 
             document.getElementById(`slide-${slideNumber}`).classList.add('active');
             document.querySelector(`[data-slide="${slideNumber}"]`).classList.add('active');
-            
+
             currentSlide = slideNumber;
 
             // Último slide: mudar botão e mostrar desenvolvedores
@@ -675,7 +697,7 @@
         function showDevelopers() {
             document.querySelector('.main-card').style.display = 'none';
             document.getElementById('developers').classList.add('show');
-            
+
             // Scroll suave para os desenvolvedores
             document.getElementById('developers').scrollIntoView({ behavior: 'smooth' });
         }
