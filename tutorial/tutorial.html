@@ -448,13 +448,20 @@
             animation: typing 2s steps(40) 1;
         }
     </style>
+    <link rel="stylesheet" href="../css/volumeControl.css">
 </head>
 
 <body>
+    <!-- Música de fundo em loop -->
+    <audio id="bgMusic" autoplay loop muted style="display: none;">
+        <source src="../musics/Aspertia City.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="tutorial-container">
         <div class="tutorial-card">
             <div class="mascot-section">
                 <div class="mascot-avatar" id="mascot-container">
+                    <a href="../fase7/fase7.html">ola</a>
                     <img src="../assets/mascote.png.png" alt="Mascote Cãozinho Azul" id="tutorial-mascot">
                 </div>
 
@@ -592,6 +599,11 @@
         // Inicializar
         updateDialogue(0);
     </script>
+    <script src="../js/volumeControl.js"></script>
+    <script src="../js/fadeAudio.js"></script>
+    <script src="../js/soundEffects.js"></script>
+    <script src="../js/soundIntegration.js"></script>
+    <script src="../js/blockBackNavigation.js"></script>
 </body>
 
 </html>

@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fase 5 - O Enigma da Criptografia (Refatorada)</title>
 
+    <!-- Música de fundo em loop -->
+    <audio id="bgMusic" autoplay loop muted style="display: none;">
+        <source src="../musics/Empire_City.mp3" type="audio/mpeg">
+    </audio>
+
     <style>
         :root {
             --primary: #00d4ff;
@@ -209,6 +214,7 @@
             border: 3px solid #d4af37;
         }
     </style>
+    <link rel="stylesheet" href="../css/volumeControl.css">
 </head>
 
 <body>
@@ -389,9 +395,14 @@
         }
 
         function goToPhase6() {
-            window.location.href = "../fase6/fase6.html";
+            window.location.href = "../fase6/index.html";
         }
     </script>
+    <script src="../js/volumeControl.js"></script>
+    <script src="../js/fadeAudio.js"></script>
+    <script src="../js/soundEffects.js"></script>
+    <script src="../js/soundIntegration.js"></script>
+    <script src="../js/blockBackNavigation.js"></script>
 
 </body>
 

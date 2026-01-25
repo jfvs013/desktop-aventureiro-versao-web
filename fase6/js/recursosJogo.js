@@ -1,8 +1,6 @@
-// Lista de músicas.
+// Vetor(array) de músicas.
 const playlist = [
-    "../fase4/songs/cheerful-02-439081.mp3",
-    "../fase4/songs/happy-childr-461921.mp3",
-    "../fase4/songs/happy-children-disco-pop-267214.mp3"
+    "../musics/Empire_City.mp3"
 ];
 
 let index = 0; // Começa na primeira música.
@@ -18,7 +16,7 @@ function tocarMusica() {
 player.addEventListener("ended", 
     () => {
         index++;
-        if (index >= playlist.length) {
+        if (index <= playlist.length) {
             index = 0; // Volta para o início (loop infinito).
         }
         tocarMusica();

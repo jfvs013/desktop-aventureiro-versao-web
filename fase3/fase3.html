@@ -6,6 +6,20 @@
     <title>Fase 3: Escudo de Senhas</title>
     
     <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/volumeControl.css">
+
+    <!-- Música de fundo em loop (2x velocidade) -->
+    <audio id="bgMusic" autoplay loop muted style="display: none;">
+        <source src="../musics/Mii_Maker.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Configurar velocidade da música para 2x
+        window.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById('bgMusic');
+            audio.playbackRate = 2.0;
+        });
+    </script>
 </head>
 <body class="arcade-page">
 
@@ -40,6 +54,11 @@
 
     </section>
 
+    <script src="../js/volumeControl.js"></script>
+    <script src="../js/fadeAudio.js"></script>
+    <script src="../js/soundEffects.js"></script>
+    <script src="../js/soundIntegration.js"></script>
+    <script src="../js/blockBackNavigation.js"></script>
     <script type="module" src="../js/fase3-boot.js"></script>
 
 </body>

@@ -321,9 +321,15 @@
             max-width: 500px;
         }
     </style>
+    <link rel="stylesheet" href="../css/volumeControl.css">
 </head>
 
 <body>
+    <!-- Música de fundo em loop -->
+    <audio id="bgMusic" autoplay loop muted style="display: none;">
+        <source src="../musics/Empire_City.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="game-topbar">
         <div class="player-info">
             <div id="playerDisplay">Jogador: —</div>
@@ -373,7 +379,7 @@
             <h2 id="endTitle" style="color: var(--primary); margin-bottom: 20px;">Missão Concluída!</h2>
             <div id="endText" style="margin-bottom: 30px; line-height: 1.6;"></div>
             <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
-                <button onclick="window.location.href='/../fase5/fase5.html'" class="btn btn-success">Próxima Fase
+                <button onclick="window.location.href='../fase5/fase5.html'" class="btn btn-success">Próxima Fase
                     ➡️</button>
                 <button onclick="location.reload()" class="btn btn-primary">Tentar Novamente</button>
                 <button id="backBtn" class="btn btn-secondary">Voltar ao Início</button>
@@ -381,7 +387,7 @@
         </div>
     </div>
 
-
+    <!--Teste vazio.-->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const headlinesData = [
@@ -509,6 +515,11 @@
             document.getElementById('backBtn').addEventListener('click', () => window.location.href = '../index.html');
         });
     </script>
+    <script src="../js/volumeControl.js"></script>
+    <script src="../js/fadeAudio.js"></script>
+    <script src="../js/soundEffects.js"></script>
+    <script src="../js/soundIntegration.js"></script>
+    <script src="../js/blockBackNavigation.js"></script>
 </body>
 
 </html>
