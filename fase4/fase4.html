@@ -321,9 +321,15 @@
             max-width: 500px;
         }
     </style>
+    <link rel="stylesheet" href="../css/volumeControl.css">
 </head>
 
 <body>
+    <!-- Música de fundo em loop -->
+    <audio id="bgMusic" autoplay loop muted style="display: none;">
+        <source src="../musics/Empire_City.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="game-topbar">
         <div class="player-info">
             <div id="playerDisplay">Jogador: —</div>
@@ -509,6 +515,11 @@
             document.getElementById('backBtn').addEventListener('click', () => window.location.href = '../index.html');
         });
     </script>
+    <script src="../js/volumeControl.js"></script>
+    <script src="../js/fadeAudio.js"></script>
+    <script src="../js/soundEffects.js"></script>
+    <script src="../js/soundIntegration.js"></script>
+    <script src="../js/blockBackNavigation.js"></script>
 </body>
 
 </html>

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desktop Aventureiro - Fase 7</title>
+    <link rel="stylesheet" href="../css/volumeControl.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -553,6 +554,178 @@
             text-shadow: 0 0 10px rgba(0,212,255,0.3);
         }
 
+        /* ============================================
+           VÍRUS-MASCOTE (Adversário na esquerda)
+           ============================================ */
+        .virus-mascot-container {
+            position: fixed;
+            left: 30px;
+            top: 200px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .virus-mascot {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            animation: virus-float 3s ease-in-out infinite;
+        }
+
+        @keyframes virus-float {
+            0%, 100% { transform: translateY(0) rotateZ(0deg); }
+            50% { transform: translateY(-15px) rotateZ(3deg); }
+        }
+
+        /* CORPO DO VÍRUS */
+        .virus-body {
+            width: 130px;
+            height: 130px;
+            margin: 10px;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #ff3333);
+            border-radius: 50%;
+            position: relative;
+            border: 3px solid #cc0000;
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.6), inset -5px -5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* PICOS DO VÍRUS */
+        .virus-spike {
+            position: absolute;
+            background: #cc0000;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+        }
+
+        .spike-1 { width: 14px; height: 14px; top: -12px; left: 58px; }
+        .spike-2 { width: 14px; height: 14px; bottom: -12px; left: 58px; }
+        .spike-3 { width: 14px; height: 14px; top: 58px; left: -12px; }
+        .spike-4 { width: 14px; height: 14px; top: 58px; right: -12px; }
+        .spike-5 { width: 12px; height: 12px; top: 10px; left: -10px; }
+        .spike-6 { width: 12px; height: 12px; top: 10px; right: -10px; }
+        .spike-7 { width: 12px; height: 12px; bottom: 10px; left: -10px; }
+        .spike-8 { width: 12px; height: 12px; bottom: 10px; right: -10px; }
+
+        /* OLHOS DO VÍRUS */
+        .virus-eye {
+            position: absolute;
+            width: 18px;
+            height: 24px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .virus-eye::after {
+            content: '';
+            width: 8px;
+            height: 12px;
+            background: #ff0000;
+            border-radius: 50%;
+        }
+
+        .eye-left {
+            top: 40px;
+            left: 25px;
+        }
+
+        .eye-right {
+            top: 40px;
+            right: 25px;
+        }
+
+        /* ANIMAÇÕES DE REAÇÃO */
+        .virus-mascot.virus-talk {
+            animation: virus-talk 0.3s ease-in-out infinite;
+        }
+
+        @keyframes virus-talk {
+            0%, 100% { transform: translateY(0) rotateZ(0deg); }
+            50% { transform: translateY(-5px) rotateZ(2deg); }
+        }
+
+        .virus-mascot.virus-scared {
+            animation: virus-scared 0.5s ease !important;
+        }
+
+        @keyframes virus-scared {
+            0%, 100% { transform: translateX(0) rotateZ(0deg); }
+            25% { transform: translateX(-12px) rotateZ(-8deg); }
+            75% { transform: translateX(12px) rotateZ(8deg); }
+        }
+
+        .virus-mascot.virus-angry {
+            animation: virus-angry 0.4s ease !important;
+        }
+
+        @keyframes virus-angry {
+            0%, 100% { transform: translateX(0) rotateZ(0deg); }
+            25% { transform: translateX(-8px) rotateZ(-5deg); }
+            75% { transform: translateX(8px) rotateZ(5deg); }
+        }
+
+        /* ============================================
+           BALÃO DE FALA DO VÍRUS
+           ============================================ */
+        .virus-speech-bubble {
+            position: fixed;
+            left: 180px;
+            top: 150px;
+            background: rgba(255, 51, 51, 0.95);
+            border: 2px solid #ff0000;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 280px;
+            z-index: 150;
+            pointer-events: none;
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.6);
+            display: none;
+            animation: bubble-appear 0.4s ease-out;
+        }
+
+        @keyframes bubble-appear {
+            0% { opacity: 0; transform: scale(0.8) translateY(-10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .virus-speech-bubble.show {
+            display: block;
+        }
+
+        .virus-speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 30px;
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 0 solid transparent;
+            border-top: 12px solid #ff0000;
+        }
+
+        .virus-speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 34px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 0 solid transparent;
+            border-top: 8px solid rgba(255, 51, 51, 0.95);
+        }
+
+        .virus-speech-text {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.5;
+            text-align: center;
+        }
+
         @media (max-width:768px){ 
             .tutorial-card, .mini-fase-card { 
                 padding:30px 20px;
@@ -593,7 +766,11 @@
     </style>
 </head>
 
-<body>
+<body class="fase7">
+    <audio id="bgMusic" autoplay loop muted style="display: none;">
+        <source src="../musics/Mii_Maker.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Barra de Progresso (Timer) -->
     <div class="timer-bar-container">
         <div class="timer-bar-fill" id="timerBar"></div>
@@ -601,6 +778,29 @@
     <div class="timer-text" id="timerText">2:00</div>
 
     <div class="container">
+        <!-- VÍRUS-MASCOTE (Adversário à Esquerda) -->
+        <div class="virus-mascot-container" id="virusMascotContainer">
+            <div class="virus-mascot" id="virusMascot">
+                <div class="virus-body">
+                    <div class="virus-spike spike-1"></div>
+                    <div class="virus-spike spike-2"></div>
+                    <div class="virus-spike spike-3"></div>
+                    <div class="virus-spike spike-4"></div>
+                    <div class="virus-spike spike-5"></div>
+                    <div class="virus-spike spike-6"></div>
+                    <div class="virus-spike spike-7"></div>
+                    <div class="virus-spike spike-8"></div>
+                    <div class="virus-eye eye-left"></div>
+                    <div class="virus-eye eye-right"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BALÃO DE FALA DO VÍRUS -->
+        <div class="virus-speech-bubble" id="virusSpeechBubble">
+            <div class="virus-speech-text" id="virusSpeechText">Hehe! Você caiu! 😈</div>
+        </div>
+
         <div class="carousel">
             <!-- SLIDE 1: TUTORIAL -->
             <div class="carousel-item active">
@@ -1123,6 +1323,13 @@
             if (timerInterval) clearInterval(timerInterval);
             gameEnded = false;
             
+            // Iniciar aceleração da música quando o timer começa
+            if (typeof MusicAccelerator !== 'undefined') {
+                setTimeout(() => {
+                    MusicAccelerator.startAcceleration(2.0);
+                }, 100);
+            }
+            
             timerInterval = setInterval(() => {
                 if (gameEnded) return;
                 
@@ -1163,6 +1370,10 @@
             currentPassword = '';
             hintCount = 0;
             revealedLetters = [];
+            // Resetar música para velocidade normal
+            if (typeof MusicAccelerator !== 'undefined') {
+                MusicAccelerator.reset();
+            }
             updateTimerBar();
             showSlide(0);
             startGlobalTimer();
@@ -1172,6 +1383,7 @@
         function completeGame() {
             gameEnded = true;
             if (timerInterval) clearInterval(timerInterval);
+            // Manter música acelerada ao completar
         }
         
         function showSlide(n) {
@@ -1375,6 +1587,9 @@
                     this.style.pointerEvents = 'none';
                     document.getElementById('newsErrors').textContent = newsErrors;
                     
+                    VirusMascotUI.speak('Errado! Isso é notícia real!');
+                    VirusMascotUI.angry();
+                    
                     // Game Over se atingir 2 erros
                     if (newsErrors >= 2) {
                         resultMessage4.textContent = '❌ Game Over! Você cometeu 2 erros. Tente novamente!';
@@ -1404,6 +1619,8 @@
                 } else {
                     resultMessage.textContent = '❌ Errado! Este é um email legítimo.';
                     resultMessage.classList.add('error');
+                    VirusMascotUI.speak('Errado! Tente novamente!');
+                    VirusMascotUI.angry();
                     btnRetry.style.display = 'inline-block';
                 }
                 
@@ -1446,6 +1663,9 @@
                 resultMessage2.textContent = '⚠️ É melhor não excluir seus arquivos pessoais! Remova apenas o LIXO.';
                 resultMessage2.classList.remove('success');
                 resultMessage2.classList.add('warning');
+                
+                VirusMascotUI.speak('Burrão! Só delete o LIXO!');
+                VirusMascotUI.angry();
                 
                 // Animar o arquivo para indicar que não pode
                 this.style.transform = 'scale(1.2)';
@@ -1700,6 +1920,10 @@
                 passwordResult.textContent = '❌ Senha Incorreta! Tente Novamente.';
                 passwordResult.classList.add('error');
                 passwordResult.classList.remove('success');
+                
+                VirusMascotUI.speak('Errado! Tente decriptar!');
+                VirusMascotUI.angry();
+                
                 virusPasswordInput.value = '';
                 virusPasswordInput.focus();
             }
@@ -1720,10 +1944,133 @@
             }
         });
 
+        // ============================================
+        // ANIMAÇÕES DO VÍRUS-MASCOTE
+        // ============================================
+        const virusMascot = document.getElementById('virusMascot');
+        
+        // API para animar o vírus
+        const VirusMascotUI = {
+            say(message) {
+                if (!virusMascot) return;
+                virusMascot.classList.remove('virus-scared', 'virus-angry');
+                virusMascot.classList.add('virus-talk');
+                
+                const duration = Math.min(2000, message.length * 50);
+                setTimeout(() => {
+                    virusMascot.classList.remove('virus-talk');
+                }, duration);
+            },
+
+            scared() {
+                if (!virusMascot) return;
+                virusMascot.classList.remove('virus-talk', 'virus-angry');
+                virusMascot.classList.add('virus-scared');
+                
+                setTimeout(() => virusMascot.classList.remove('virus-scared'), 1200);
+            },
+
+            angry() {
+                if (!virusMascot) return;
+                virusMascot.classList.remove('virus-talk', 'virus-scared');
+                virusMascot.classList.add('virus-angry');
+                
+                setTimeout(() => virusMascot.classList.remove('virus-angry'), 1000);
+            },
+
+            speak(message) {
+                if (!virusMascot) return;
+                const speechBubble = document.getElementById('virusSpeechBubble');
+                const speechText = document.getElementById('virusSpeechText');
+                
+                if (!speechBubble || !speechText) return;
+                
+                speechText.textContent = message;
+                speechBubble.classList.add('show');
+                
+                this.say(message);
+                
+                // Remover balão após alguns segundos
+                setTimeout(() => {
+                    speechBubble.classList.remove('show');
+                }, 3000);
+            }
+        };
+
+        // Animar vírus conforme os desafios progridem
+        const originalShowSlide = showSlide;
+        const virusMascotContainer = document.getElementById('virusMascotContainer');
+        const virusSpeechBubble = document.getElementById('virusSpeechBubble');
+        
+        showSlide = function(n) {
+            originalShowSlide(n);
+            
+            // Esconder vírus na tela inicial, mostrar nas minifases
+            if (virusMascotContainer) {
+                virusMascotContainer.style.display = n === 0 ? 'none' : 'block';
+            }
+            if (virusSpeechBubble) {
+                virusSpeechBubble.style.display = n === 0 ? 'none' : 'block';
+            }
+            
+            // Ações do vírus baseadas no slide
+            if (n === 0) {
+                // Nada na tela inicial
+            } else if (n === 1) {
+                VirusMascotUI.angry();
+                VirusMascotUI.speak('Identifique o email malicioso!');
+            } else if (n === 2) {
+                VirusMascotUI.scared();
+                VirusMascotUI.speak('Limpe seu desktop!');
+            } else if (n === 3) {
+                VirusMascotUI.angry();
+                VirusMascotUI.speak('Crie uma senha forte!');
+            } else if (n === 4) {
+                VirusMascotUI.scared();
+                VirusMascotUI.speak('Identifique as fake news!');
+            } else if (n === 5) {
+                VirusMascotUI.angry();
+                setTimeout(() => VirusMascotUI.speak('Decripte meu código!'), 800);
+            }
+        };
+
+        // Animar vírus quando email correto é respondido
+        const emailAnswerListener = setInterval(() => {
+            if (currentSlide === 1 && emailAnswered && !window.emailAnimated) {
+                window.emailAnimated = true;
+                VirusMascotUI.scared();
+                clearInterval(emailAnswerListener);
+            }
+        }, 100);
+
+        // Animar vírus quando desktop é limpo
+        const desktopAnswerListener = setInterval(() => {
+            if (currentSlide === 2 && trashesRemoved === 5 && !window.desktopAnimated) {
+                window.desktopAnimated = true;
+                VirusMascotUI.scared();
+                clearInterval(desktopAnswerListener);
+            }
+        }, 100);
+
+        // Animar vírus quando senha é validada
+        const passwordAnswerListener = setInterval(() => {
+            if (currentSlide === 3 && passwordValid && !window.passwordAnimated) {
+                window.passwordAnimated = true;
+                VirusMascotUI.angry();
+                clearInterval(passwordAnswerListener);
+            }
+        }, 100);
+
         // Inicializar barra de progresso e timer
         updateTimerBar();
         showSlide(0);
     </script>
+
+    <script src="../js/volumeControl.js"></script>
+    <script src="../js/musicAcceleration.js"></script>
+    <script src="../js/soundEffects.js"></script>
+    <script src="../js/soundIntegration.js"></script>
+    <script src="../js/blockBackNavigation.js"></script>
 </body>
 
 </html>
