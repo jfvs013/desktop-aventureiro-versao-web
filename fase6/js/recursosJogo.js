@@ -1,39 +1,3 @@
-// Lista de músicas.
-const playlist = [
-    "../fase4/songs/cheerful-02-439081.mp3",
-    "../fase4/songs/happy-childr-461921.mp3",
-    "../fase4/songs/happy-children-disco-pop-267214.mp3"
-];
-
-let index = 0; // Começa na primeira música.
-const player = document.getElementById("musica");
-
-// Função para tocar a música atual.
-function tocarMusica() {
-    player.src = playlist[index];
-    player.play();
-}
-
-// Quando a música terminar, passa para a próxima.
-player.addEventListener("ended", 
-    () => {
-        index++;
-        if (index >= playlist.length) {
-            index = 0; // Volta para o início (loop infinito).
-        }
-        tocarMusica();
-    }
-);
-
-// O navegador não permite que a música execute automaticamente, sem algum evento ser detectado.
-function iniciarMusica() {
-        document.addEventListener("click", 
-        ()=> {
-            tocarMusica();
-        }, { once: true} // O once: true é uma opção que executa o evento apenas uma vez e depois o deleta.
-    );
-}
-
 function exibirPontuacao(pontuacaoGlobal) { // Use ao terminar a fase 4.
     const main = document.querySelector("main");
     const divGenerica = document.createElement("div");
@@ -143,6 +107,6 @@ function pontuacaoAtual(pontuacaoGlobal) {
         divId.innerHTML = `<strong>Pontos:</strong> ${pontuacaoGlobal}`
     }
 }
-export { iniciarMusica, exibirPontuacao, pontuacaoAtual }; // Exportando a função iniciar música, dessa forma pode ser usado o import em outros arquivos (.js).  
+export { exibirPontuacao, pontuacaoAtual }; // Exportando a função iniciar música, dessa forma pode ser usado o import em outros arquivos (.js).  
 
 
