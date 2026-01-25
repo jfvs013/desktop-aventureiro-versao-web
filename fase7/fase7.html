@@ -1915,7 +1915,11 @@
                 btnCancelPassword.disabled = true;
                 btnGetHint.disabled = true;
                 completeGame();
-                btnEndGame.style.display = 'inline-block';
+                
+                // Redirecionar para página final após 2 segundos
+                setTimeout(() => {
+                    window.location.href = '../final/final.html';
+                }, 2000);
             } else {
                 passwordResult.textContent = '❌ Senha Incorreta! Tente Novamente.';
                 passwordResult.classList.add('error');
