@@ -1,6 +1,6 @@
 // Vetor(array) de músicas.
 const playlist = [
-    "../musics/Empire_City.mp3"
+    "../../musics/Empire_City.mp3"
 ];
 
 let index = 0; // Começa na primeira música.
