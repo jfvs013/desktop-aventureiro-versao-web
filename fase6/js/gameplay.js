@@ -1,4 +1,4 @@
-import { exibirPontuacao, pontuacaoAtual } from "./recursosJogo.js"; // O (./) indica que está na mesma pasta.
+import { iniciarMusica, exibirPontuacao, pontuacaoAtual } from "./recursosJogo.js"; // O (./) indica que está na mesma pasta.
 
 var pontuacaoGlobal = 0;
 
@@ -346,7 +346,7 @@ async function firewallRecarregando(state) { // state é um objeto que é passad
 }
 async function estagiosGameplay() {
     // O await para a execução naquela linha, até que uma condição anterior seja satisfeita.
-    //iniciarMusica(); // Chamando a função vinda de ./recursosJogo.js .
+    iniciarMusica(); // Chamando a função vinda de ./recursosJogo.js .
     // Parte 1 da gameplay.
     const atualizarPontosAtuais = setInterval(
         ()=> {
