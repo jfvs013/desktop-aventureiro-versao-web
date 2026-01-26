@@ -331,6 +331,7 @@ async function firewallRecarregando(state) { // state é um objeto que é passad
     if(state.firewallCooldown) {
         setTimeout(
             () => {
+                clearInterval(state.spywareIntervalo); // Finaliza o antigo.
                 state.spywareIntervalo = setInterval(
                     () => {
                         state.firewallCooldown = false;
@@ -338,8 +339,9 @@ async function firewallRecarregando(state) { // state é um objeto que é passad
                         spywareEmAcao();
                         console.log(`O spyware foi executado: ${state.contadorSpyware} vez(es). \n`);
                         console.log(`O cooldown do Firewall se passou.`);
-                    }, 10000
+                    }, 12000
                 );
+
             }, 14000
         );
     }
@@ -360,7 +362,7 @@ async function estagiosGameplay() {
 
     let state = { // Criando um objeto. Para criar um objeto usa-se chaves, à esquerda dos :(dois pontos), está o atributo e à direita o valor armazenado nele.
         contadorSpyware: 0,
-        firewallCooldown: false,
+        firewallCooldown: true,
         spywareIntervalo: null
     };
 
@@ -389,7 +391,7 @@ async function estagiosGameplay() {
                 state.contadorSpyware++;
                 spywareEmAcao();
                 console.log(`O spyware foi executado: ${state.contadorSpyware} vez(es). \n`);
-            }, 10000
+            }, 12000
         );
 
         botaoFirewall.addEventListener("click", 
@@ -429,13 +431,19 @@ async function estagiosGameplay() {
             clearInterval(intervaloVerificacao);
             clearInterval(atualizarPontosAtuais);
             
-            console.log("A fase 4 terminou.");
+            console.log("A fase 6 terminou.");
             console.log("exibirPontuacao(pontuacaoGlobal) deve criar elementos html para redirecionar a página, avançando para a fase seguinte.");
-        
+        }, (2* 60000) // A fase dura 2:00 (2 minutos).
+    );
+
+    setTimeout( // Este trecho repitiu-se para finalizar o setInterval(...) contido no objeto state. Neste caso me refiro a state.spywareIntervalo.
+        ()=> {
             clearInterval(state.spywareIntervalo); // Limpa o setInterval() dentro do atributo do objeto state.
             clearInterval(intervaloVerificacao);
             clearInterval(atualizarPontosAtuais);
-        }, (2* 60000) // A fase dura 2:00 (2 minutos).
+            
+            console.log("O state.spywareIntervalo terminou.");
+        }, (2* 63999) // A fase dura 2:00 (2 minutos).
     );
 }
 
