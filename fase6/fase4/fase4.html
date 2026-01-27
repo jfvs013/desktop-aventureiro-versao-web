@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link href = "../css/fase4.css" rel = "stylesheet"/>
+    <link rel="stylesheet" href="../../css/volumeControl.css">
 
     <!--type="module" para permitir o import no gameplay.js .-->
     <script type="module" src="../js/gameplay.js" defer> </script> <!--
@@ -31,6 +32,25 @@
     <main>
         
         <div id="area-gameplay"></div>
+
+        <!-- HUD COM PONTUAÇÃO -->
+        <div id="hud-pontuacao" style="
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 10px;
+            padding: 8px 12px;
+            z-index: 1000;
+            font-weight: bold;
+            color: #00d4ff;
+            font-size: 0.9rem;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            backdrop-filter: blur(10px);
+        ">
+            Pontos: <span id="pontos-display">0</span>
+        </div>
 
         <div id="dialogo-mascote_1">
             <p>Ei… parece que esses arquivos estão presos!</p>
@@ -113,6 +133,8 @@
         </div>
         
     </main>
+
+    <script src="../../js/volumeControl.js"></script>
 
 <!--A tag div aninha o seu conteúdo interno de acordo com as regras impostas
 pelo seletor .css, observe as tags de início e fim da div. -->

@@ -560,7 +560,7 @@
         .virus-mascot-container {
             position: fixed;
             left: 30px;
-            top: 200px;
+            top: 280px;
             z-index: 100;
             pointer-events: none;
         }
@@ -671,8 +671,8 @@
            ============================================ */
         .virus-speech-bubble {
             position: fixed;
-            left: 180px;
-            top: 150px;
+            left: 10px;
+            top: 120px;
             background: rgba(255, 51, 51, 0.95);
             border: 2px solid #ff0000;
             border-radius: 15px;
@@ -724,6 +724,107 @@
             font-weight: 600;
             line-height: 1.5;
             text-align: center;
+        }
+
+        /* FOGOS DE ARTIFÍCIO */
+        .fireworks {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 200;
+        }
+
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+
+        /* BALÃO DO MASCOTE (AZUL) */
+        .mascot-speech-bubble {
+            position: fixed;
+            left: 10px;
+            top: 120px;
+            background: rgba(0, 212, 255, 0.95);
+            border: 2px solid #0088ff;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 280px;
+            z-index: 150;
+            pointer-events: none;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+            display: none;
+            animation: bubble-appear 0.4s ease-out;
+        }
+
+        .mascot-speech-bubble.show {
+            display: block;
+        }
+
+        .mascot-speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 30px;
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 0 solid transparent;
+            border-top: 12px solid #0088ff;
+        }
+
+        .mascot-speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 34px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 0 solid transparent;
+            border-top: 8px solid rgba(0, 212, 255, 0.95);
+        }
+
+        .mascot-speech-text {
+            color: #000;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* TRANSIÇÃO DE ESCURECIMENTO */
+        .fade-to-black {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 999;
+            animation: fadeToBlack 1.5s ease-in forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fadeToBlack {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         @media (max-width:768px){ 
@@ -799,6 +900,11 @@
         <!-- BALÃO DE FALA DO VÍRUS -->
         <div class="virus-speech-bubble" id="virusSpeechBubble">
             <div class="virus-speech-text" id="virusSpeechText">Hehe! Você caiu! 😈</div>
+        </div>
+
+        <!-- BALÃO DE FALA DO MASCOTE -->
+        <div class="mascot-speech-bubble" id="mascotSpeechBubble">
+            <div class="mascot-speech-text" id="mascotSpeechText">Ufa, essa foi por pouco!</div>
         </div>
 
         <div class="carousel">
@@ -1587,18 +1693,52 @@
                     this.style.pointerEvents = 'none';
                     document.getElementById('newsErrors').textContent = newsErrors;
                     
-                    VirusMascotUI.speak('Errado! Isso é notícia real!');
+                    VirusMascotUI.speak('hahahaaa voce e pessimo errou');
                     VirusMascotUI.angry();
                     
                     // Game Over se atingir 2 erros
                     if (newsErrors >= 2) {
-                        resultMessage4.textContent = '❌ Game Over! Você cometeu 2 erros. Tente novamente!';
+                        resultMessage4.textContent = '❌ Você cometeu 2 erros. Avançando...';
                         resultMessage4.classList.add('error');
                         resultMessage4.classList.remove('success');
-                        setTimeout(() => {
-                            resetNewsGame();
-                            resultMessage4.textContent = '';
-                        }, 3000);
+                        
+                        // Remover 30 segundos do timer
+                        timeRemaining = Math.max(0, timeRemaining - 30);
+                        
+                        // Atualizar barra imediatamente
+                        if (timerBar) {
+                            const percentage = (timeRemaining / 120) * 100;
+                            timerBar.style.width = percentage + '%';
+                            
+                            // Mudar cor
+                            if (percentage > 50) {
+                                timerBar.style.background = 'linear-gradient(90deg, #00d4ff 0%, #00ff88 50%, #ff6b35 100%)';
+                            } else if (percentage > 25) {
+                                timerBar.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff6b35 100%)';
+                            } else {
+                                timerBar.style.background = 'linear-gradient(90deg, #ff6b35 0%, #ff3333 100%)';
+                            }
+                        }
+                        
+                        // Atualizar texto do timer
+                        if (timerText) {
+                            const minutes = Math.floor(timeRemaining / 60);
+                            const seconds = timeRemaining % 60;
+                            timerText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        }
+                        
+                        // Se o tempo acabou
+                        if (timeRemaining <= 0) {
+                            clearInterval(timerInterval);
+                            setTimeout(() => showDefeatModal(), 800);
+                        } else {
+                            // Redirecionar após 2 segundos
+                            setTimeout(() => {
+                                resetNewsGame();
+                                resultMessage4.textContent = '';
+                                showSlide(5);
+                            }, 2500);
+                        }
                     }
                 }
             });
@@ -1619,9 +1759,42 @@
                 } else {
                     resultMessage.textContent = '❌ Errado! Este é um email legítimo.';
                     resultMessage.classList.add('error');
-                    VirusMascotUI.speak('Errado! Tente novamente!');
+                    VirusMascotUI.speak('haahhaahha errou!!!');
                     VirusMascotUI.angry();
-                    btnRetry.style.display = 'inline-block';
+                    
+                    // Remover 30 segundos do timer
+                    timeRemaining = Math.max(0, timeRemaining - 30);
+                    
+                    // Atualizar barra imediatamente
+                    if (timerBar) {
+                        const percentage = (timeRemaining / 120) * 100;
+                        timerBar.style.width = percentage + '%';
+                        
+                        // Mudar cor
+                        if (percentage > 50) {
+                            timerBar.style.background = 'linear-gradient(90deg, #00d4ff 0%, #00ff88 50%, #ff6b35 100%)';
+                        } else if (percentage > 25) {
+                            timerBar.style.background = 'linear-gradient(90deg, #ffaa00 0%, #ff6b35 100%)';
+                        } else {
+                            timerBar.style.background = 'linear-gradient(90deg, #ff6b35 0%, #ff3333 100%)';
+                        }
+                    }
+                    
+                    // Atualizar texto do timer
+                    if (timerText) {
+                        const minutes = Math.floor(timeRemaining / 60);
+                        const seconds = timeRemaining % 60;
+                        timerText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                    
+                    // Se o tempo acabou
+                    if (timeRemaining <= 0) {
+                        clearInterval(timerInterval);
+                        setTimeout(() => showDefeatModal(), 800);
+                    } else {
+                        // Redirecionar após 2 segundos mesmo se errou
+                        setTimeout(() => showSlide(2), 2500);
+                    }
                 }
                 
                 emailItems.forEach(e => {
@@ -1822,6 +1995,13 @@
                     virusOverlay.style.display = 'block';
                     resultMessage5.textContent = '✅ Pasta Encriptada Encontrada!';
                     resultMessage5.classList.add('success');
+                    
+                    // Fala do vírus ao ser encontrado
+                    VirusMascotUI.angry();
+                    VirusMascotUI.speak('Droga!');
+                    setTimeout(() => {
+                        VirusMascotUI.speak('Pode ter me encontrado, mas eu estou encriptado. Nunca descobrirá a senha que coloquei!');
+                    }, 1500);
                 }
             }
         });
@@ -1916,9 +2096,93 @@
                 btnGetHint.disabled = true;
                 completeGame();
                 
-                // Redirecionar para página final após 2 segundos
+                // Vírus diz a mensagem de derrota
+                VirusMascotUI.angry();
+                VirusMascotUI.speak('Nãoooooooooooo impossivelll');
+                
+                // Criar container de fogos de artifício
+                const fireworksContainer = document.createElement('div');
+                fireworksContainer.className = 'fireworks';
+                document.body.appendChild(fireworksContainer);
+                
+                // Função para gerar fogos de artifício
+                function createFireworks() {
+                    for (let i = 0; i < 50; i++) {
+                        const firework = document.createElement('div');
+                        firework.className = 'firework';
+                        
+                        // Cores aleatórias
+                        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                        firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        
+                        // Posição aleatória
+                        firework.style.left = Math.random() * 100 + '%';
+                        firework.style.top = Math.random() * 100 + '%';
+                        
+                        // Direção aleatória
+                        const angle = (Math.random() * Math.PI * 2);
+                        const distance = 100 + Math.random() * 200;
+                        const tx = Math.cos(angle) * distance;
+                        const ty = Math.sin(angle) * distance;
+                        
+                        firework.style.setProperty('--tx', tx + 'px');
+                        firework.style.setProperty('--ty', ty + 'px');
+                        
+                        fireworksContainer.appendChild(firework);
+                    }
+                }
+                
+                // Gerar fogos múltiplas vezes
+                createFireworks();
+                setTimeout(() => createFireworks(), 300);
+                setTimeout(() => createFireworks(), 600);
+                
+                // Mostrar mascote após 2 segundos
                 setTimeout(() => {
-                    window.location.href = '../final/final.html';
+                    // Esconder vírus e mostrar mascote
+                    const virusMascotContainer = document.getElementById('virusMascotContainer');
+                    if (virusMascotContainer) {
+                        virusMascotContainer.style.display = 'none';
+                    }
+                    
+                    // Criar elemento do mascote
+                    const mascoteDiv = document.createElement('div');
+                    mascoteDiv.id = 'mascote-victory';
+                    mascoteDiv.style.cssText = `
+                        position: fixed;
+                        left: 30px;
+                        top: 280px;
+                        z-index: 100;
+                        pointer-events: none;
+                    `;
+                    mascoteDiv.innerHTML = '<img src="../assets/mascote.png.png" alt="Mascote" style="width: 150px; height: auto; filter: drop-shadow(0 10px 20px rgba(0, 212, 255, 0.3));">';
+                    document.body.appendChild(mascoteDiv);
+                    
+                    // Mostrar balão azul do mascote
+                    const mascotSpeechBubble = document.getElementById('mascotSpeechBubble');
+                    const mascotSpeechText = document.getElementById('mascotSpeechText');
+                    if (mascotSpeechBubble && mascotSpeechText) {
+                        mascotSpeechText.textContent = 'Ufa, essa foi por pouco! Esse vírus quase acabou com a gente. Ainda bem que você conseguiu derrotá-lo. Muito bem!';
+                        mascotSpeechBubble.classList.add('show');
+                        
+                        // Esconder balão vermelho do vírus
+                        const virusSpeechBubble = document.getElementById('virusSpeechBubble');
+                        if (virusSpeechBubble) {
+                            virusSpeechBubble.classList.remove('show');
+                        }
+                    }
+                    
+                    // Iniciar fade to black após 2 segundos da aparição do mascote
+                    setTimeout(() => {
+                        const fadeOverlay = document.createElement('div');
+                        fadeOverlay.className = 'fade-to-black';
+                        document.body.appendChild(fadeOverlay);
+                        
+                        // Redirecionar após o fade
+                        setTimeout(() => {
+                            window.location.href = '../final/final.html';
+                        }, 1500);
+                    }, 2000);
                 }, 2000);
             } else {
                 passwordResult.textContent = '❌ Senha Incorreta! Tente Novamente.';
@@ -2028,13 +2292,13 @@
                 VirusMascotUI.speak('Limpe seu desktop!');
             } else if (n === 3) {
                 VirusMascotUI.angry();
-                VirusMascotUI.speak('Crie uma senha forte!');
+                VirusMascotUI.speak('voce nunca criara uma senha forte o suficiente pra me empedir');
             } else if (n === 4) {
                 VirusMascotUI.scared();
-                VirusMascotUI.speak('Identifique as fake news!');
+                VirusMascotUI.speak('voce nunca ira descobrir qual noticia e a verdadeira');
             } else if (n === 5) {
                 VirusMascotUI.angry();
-                setTimeout(() => VirusMascotUI.speak('Decripte meu código!'), 800);
+                setTimeout(() => VirusMascotUI.speak('Você é esperto, mas nunca irá achar meu código.'), 800);
             }
         };
 

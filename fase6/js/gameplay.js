@@ -277,6 +277,11 @@ function antivirus(descriptografar) {
                 // Lógica de pontuação.
                 pontuacaoGlobal = pontuacao(pontuacaoGlobal, 1);
                 console.log("Pontuação Atualizada:", pontuacaoGlobal);
+                // Atualizar HUD
+                const pontosDisplay = document.getElementById('pontos-display');
+                if (pontosDisplay) {
+                    pontosDisplay.textContent = pontuacaoGlobal;
+                }
             }
         }
     );
@@ -376,6 +381,12 @@ async function estagiosGameplay() {
         pontuacaoGlobal = pontuacao(pontuacaoGlobal, 2); // Adicionando pontos adequados.
         
         console.log("Pontuação Atualizada:", pontuacaoGlobal);
+        
+        // Atualizar HUD
+        const pontosDisplay = document.getElementById('pontos-display');
+        if (pontosDisplay) {
+            pontosDisplay.textContent = pontuacaoGlobal;
+        }
 
         await mascoteConversando(false); // Começa a parte 2 do diálogo, sendo este o último.
         
