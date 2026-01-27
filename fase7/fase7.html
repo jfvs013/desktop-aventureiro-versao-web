@@ -926,7 +926,7 @@
                         </div>
                     </div>
 
-                    <div class="progress-indicator">
+                    <div class="progress-indicator" style="display: none;">
                         <div class="progress-dot active" data-slide="0"></div>
                         <div class="progress-dot" data-slide="1"></div>
                         <div class="progress-dot" data-slide="2"></div>
@@ -1640,8 +1640,63 @@
 
             return allMet;
         }
+
+        // Função para substituir mascote pelo vírus na tela inicial
+        function substituirMascotePorVirus() {
+            const mascoteImg = document.getElementById('fase7-mascot');
+            const mascotContainer = document.getElementById('mascot-container');
+            const dialogueText = document.getElementById('dialogue-text');
+            
+            if (mascoteImg && dialogueText && mascotContainer) {
+                // Primeira: fala do cachorrinho
+                dialogueText.innerHTML = 'Nãooo! O que está acontecendo?';
+                
+                setTimeout(() => {
+                    // Substituir imagem pelo vírus
+                    mascoteImg.style.display = 'none';
+                    
+                    // Criar elemento do vírus no lugar
+                    if (!document.getElementById('virus-intro')) {
+                        const virusIntro = document.createElement('div');
+                        virusIntro.id = 'virus-intro';
+                        virusIntro.style.cssText = `
+                            width: 150px;
+                            height: 150px;
+                            position: relative;
+                            animation: virus-float 3s ease-in-out infinite;
+                        `;
+                        
+                        // Copiar o HTML do vírus original
+                        virusIntro.innerHTML = `
+                            <div class="virus-body">
+                                <div class="virus-spike spike-1"></div>
+                                <div class="virus-spike spike-2"></div>
+                                <div class="virus-spike spike-3"></div>
+                                <div class="virus-spike spike-4"></div>
+                                <div class="virus-spike spike-5"></div>
+                                <div class="virus-spike spike-6"></div>
+                                <div class="virus-spike spike-7"></div>
+                                <div class="virus-spike spike-8"></div>
+                                <div class="virus-eye eye-left"></div>
+                                <div class="virus-eye eye-right"></div>
+                            </div>
+                        `;
+                        
+                        mascotContainer.appendChild(virusIntro);
+                    }
+                    
+                    // Fala do vírus
+                    setTimeout(() => {
+                        dialogueText.innerHTML = 'Ahahaha! Tomei conta deste computador. Se você quiser ver seu amiguinho de volta, deve me vencer em 5 desafios!';
+                    }, 1000);
+                }, 2000);
+            }
+        }
         
-        btnNext.addEventListener('click', () => showSlide(1));
+        btnNext.addEventListener('click', () => {
+            substituirMascotePorVirus();
+            setTimeout(() => showSlide(1), 8000);
+        });
         btnBack.addEventListener('click', () => showSlide(0));
         btnRetry.addEventListener('click', () => showSlide(1));
         btnNext2.addEventListener('click', () => showSlide(2));
@@ -1837,7 +1892,7 @@
                 resultMessage2.classList.remove('success');
                 resultMessage2.classList.add('warning');
                 
-                VirusMascotUI.speak('Burrão! Só delete o LIXO!');
+                VirusMascotUI.speak('Errou! Só delete o LIXO!');
                 VirusMascotUI.angry();
                 
                 // Animar o arquivo para indicar que não pode
@@ -2292,10 +2347,10 @@
                 VirusMascotUI.speak('Limpe seu desktop!');
             } else if (n === 3) {
                 VirusMascotUI.angry();
-                VirusMascotUI.speak('voce nunca criara uma senha forte o suficiente pra me empedir');
+                VirusMascotUI.speak('Você nunca criará uma senha forte o suficiente pra me impedir');
             } else if (n === 4) {
                 VirusMascotUI.scared();
-                VirusMascotUI.speak('voce nunca ira descobrir qual noticia e a verdadeira');
+                VirusMascotUI.speak('Você nunca irá descobrir qual notícia é a verdadeira');
             } else if (n === 5) {
                 VirusMascotUI.angry();
                 setTimeout(() => VirusMascotUI.speak('Você é esperto, mas nunca irá achar meu código.'), 800);
